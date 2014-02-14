@@ -56,7 +56,7 @@ module MotionKit
     # Adds a view and allows for subviews or styling within the optional block.
     def add(element, element_id=nil, &block)
       # setup a default context, if needed
-      unless @view
+      if @view_hierarchy.empty?
         root(default_root)
       end
 
