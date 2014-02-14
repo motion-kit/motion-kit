@@ -1,4 +1,3 @@
 module MotionKit
-  Version = '0.0.1'
+  VERSION = '0.0.1' unless defined?(MotionKit::VERSION)
 end
-::MK = MotionKit unless defined?(::MK)
