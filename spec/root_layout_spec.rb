@@ -1,7 +1,7 @@
 describe MotionKit::Layout do
   before { @subject = TestRootLayout.new }
 
-  it "should allow setting the root view" do 
+  it "should allow setting the root view" do
     @subject.view.should.be.kind_of UIScrollView
   end
 

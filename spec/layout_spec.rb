@@ -1,5 +1,7 @@
 describe MotionKit::Layout do
-  before { @subject = TestLayout.new }
+  before do
+    @subject = TestLayout.new
+  end
 
   it "should be an instance of MotionKit::Layout" do
     @subject.should.be.kind_of(MotionKit::Layout)
@@ -26,5 +28,19 @@ describe MotionKit::Layout do
     @subject.get(:basic_view).should.be.kind_of UIView
     @subject.get(:basic_button).should.be.kind_of UIButton
     @subject.get(:basic_label).should.be.kind_of UILabel
+  end
+
+  it "should allow getting the subviews by first, last and nth child" do
+    @subject.first(:repeated_label_3).should.be.kind_of UIView
+    @subject.nth(:repeated_label_3, 1).should.be.kind_of UIButton
+    @subject.last(:repeated_label_3).should.be.kind_of UILabel
+  end
+
+  it "should allow getting all the subviews by name" do
+    views = @subject.all(:repeated_label_3)
+    views.length.should == 3
+    views[0].should.be.kind_of UIView
+    views[1].should.be.kind_of UIButton
+    views[2].should.be.kind_of UILabel
   end
 end
