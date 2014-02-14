@@ -3,8 +3,12 @@ module MotionKit
 
     # The parent view.
     def view
-      layout
-      @view
+      @view ||= begin
+        layout
+        # Since we can't rely on the app developers to not return something
+        # screwy from their layout method, we'll return @view here.
+        @view
+      end
     end
 
     def root(element, element_id, &block)
