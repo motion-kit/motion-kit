@@ -1,5 +1,5 @@
 describe MotionKit::Layout do
-  before { @subject = TestLayout.new; @subject.layout }
+  before { @subject = TestLayout.new }
 
   it "should be an instance of MotionKit::Layout" do
     @subject.should.be.kind_of(MotionKit::Layout)
@@ -21,7 +21,8 @@ describe MotionKit::Layout do
     @subject.view.subviews.first.subviews[1].should.be.kind_of UILabel
   end
 
-  it "should allow getting the subviews by their id" do 
+  it "should allow getting the subviews by their id" do
+    @subject.view
     @subject.get(:basic_view).should.be.kind_of UIView
     @subject.get(:basic_button).should.be.kind_of UIButton
     @subject.get(:basic_label).should.be.kind_of UILabel
