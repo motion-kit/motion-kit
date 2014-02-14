@@ -1,14 +1,15 @@
 module MotionKit
   class Layout
 
-    def initialize
-      @view_hierarchy ||= [ self.view ]
-      layout
-    end
-
     # The parent view.
     def view
-      @view ||= UIView.alloc.initWithFrame(UIScreen.mainScreen.applicationFrame)
+      layout
+      @view
+    end
+
+    def root(element, element_id, &block)
+      @view = :root
+      @view = add(element, element_id, &block)
     end
 
     # Adds a view and allows for subviews or styling within the optional block.
@@ -19,8 +20,15 @@ module MotionKit
       # Set the name of the element
       self.element_ids[element_id] = WeakRef.new(element)
 
-      # Add it to the current context
-      self.current_view.addSubview(element)
+      # Add it to the current context or set as root view if calling with root
+      if @view == :root
+        @view = element
+        @view_hierarchy ||= [ @view ]
+      else
+        @view ||= UIView.alloc.initWithFrame(UIScreen.mainScreen.applicationFrame)
+        @view_hierarchy ||= [ @view ]
+        self.current_view.addSubview(element)
+      end
 
       # Make the element the new context
       if block_given?
