@@ -6,8 +6,8 @@ Gem::Specification.new do |gem|
   gem.version       = MotionKit::Version
   gem.licenses      = ['BSD']
 
-  gem.authors = ['Colin T.A. Gray']
-  gem.email   = ['colinta@gmail.com']
+  gem.authors = ['Colin T.A. Gray', 'Jamon Holmgren']
+  gem.email   = ['colinta@gmail.com', 'jamon@clearsightstudio.com']
   gem.summary     = %{Dibs.}
   gem.description = <<-DESC
 Don't worry, this'll be neat.
