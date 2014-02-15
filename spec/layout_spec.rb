@@ -7,6 +7,10 @@ describe MotionKit::Layout do
     @subject.should.be.kind_of(MotionKit::Layout)
   end
 
+  it "should be an instance of MK::Layout" do
+    @subject.should.be.kind_of(MK::Layout)
+  end
+
   it "should add a UIView subview with the name :basic_view" do
     @subject.view.subviews.first.should.be.kind_of UIView
   end
