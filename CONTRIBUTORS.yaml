@@ -1,0 +1,28 @@
+- name:     Colin T.A. Gray
+  email:    colin@hipbyte.com
+  social:
+            github:   colinta
+            twitter:  @colinta
+            url:      colinta.com
+  location: Denver, CO
+  about:
+    After working on Teacup for almost two years, I decided that we needed an
+    overhaul. Teacup has embraced too much complexity, and it has very few
+    commiters, even though it was always meant to be a community project.
+
+    MotionKit is a collaboration between Jamon and myself, and I hope that makes
+    it more accessible to the community in general. Plus it has a much lighter
+    footprint - it is as much an opinion on code organization as it is a layout
+    and styling DSL!
+  role:     owner
+
+- name:     Jamon Holmgren
+  email:    jamon@clearsightstudio.com
+  social:
+            github:
+              - jamonholmgren
+              - clearsightstudio
+            twitter:  @jamonholmgren
+            url:      www.clearsightstudio.com
+  location: Vancouver, WA
+  role:     owner
