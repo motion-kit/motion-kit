@@ -114,8 +114,14 @@ module MotionKit
     #       background_color UIColor.clearColor
     #     end
     def method_missing(method_name, *args, &block)
-      unless self.apply(method_name, *args, &block)
-        raise NoMethodError.new("No setter or method called #{method_name.inspect}")
+      # only allow 'method_missing' if we've setup a context, otherwise we
+      # should just raise NoMethodError (via super)
+      if @styleable_context
+        unless self.apply(method_name, *args, &block)
+          raise NoMethodError.new("No setter or method called #{method_name.inspect}")
+        end
+      else
+        super
       end
     end
 

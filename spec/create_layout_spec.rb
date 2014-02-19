@@ -28,4 +28,5 @@ describe MotionKit::Layout do
   it 'should not add an image view' do
     @subject.foo.subviews.find { |view| view.is_a?(UIImageView) }.should == nil
   end
+
 end

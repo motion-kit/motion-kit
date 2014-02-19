@@ -9,7 +9,13 @@ module MotionKit
     # The parent view.  This method builds the layout and returns the root view.
     def view
       @view ||= begin
+        # only in the 'layout' method, we will create a default container and
+        # add views to it.
+        @create_default_root = true
         layout
+        @create_default_root = false
+        @view_stack = []
+
         # Since we can't rely on the app developers to not return something
         # screwy from their layout method, we'll return @view here.
         @view
@@ -21,14 +27,19 @@ module MotionKit
     # first time (otherwise `add` will create a default root view).
     def root(element, element_id=nil, &block)
       if @view
-        raise "Already created the root view"
+        raise ContextConflictError.new("Already created the root view")
+      end
+      if ! @create_default_root
+        raise InvalidRootError.new("You should only create a 'root' view from inside the 'layout' method (use 'create' elsewhere)")
       end
 
       # before we run the block, the root @view must be assigned, and added to
       # the view_stack
       @view = initialize_view(element)
       @view_stack << @view
+      @create_default_root = false
       create(@view, element_id, &block)
+      @view_stack.pop
 
       return @view
     end
@@ -72,7 +83,11 @@ module MotionKit
     # the stack, a default root view is created.
     def add(element, element_id=nil, &block)
       if @view_stack.empty?
-        root(default_root)
+        if @create_default_root
+          @view_stack << root(default_root)
+        else
+          raise NoContextError.new("No top level view specified (missing outer 'create' method?)")
+        end
       end
 
       element = create(element, element_id, &block)
