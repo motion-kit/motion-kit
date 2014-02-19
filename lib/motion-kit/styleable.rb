@@ -77,8 +77,8 @@ module MotionKit
         setter = 'set' + method_name[0].capitalize + method_name[1..-1] + ':'
       end
 
-      # the order of checking methods is important; Ruby classes will sometimes
-      # return 'true' for `foo=` even though `send('foo=')` will raise a
+      # the order of checking methods is important; Ruby classes can return
+      # 'true' for `respond_to?('foo=')` even though `send('foo=')` will raise a
       # NoMethodError.
 
       # objc classes are the opposite
