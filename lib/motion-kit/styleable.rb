@@ -114,8 +114,6 @@ module MotionKit
     #       background_color UIColor.clearColor
     #     end
     def method_missing(method_name, *args, &block)
-      super
-    rescue Exception => e
       unless self.apply(method_name, *args, &block)
         raise NoMethodError.new("No setter or method called #{method_name.inspect}")
       end
