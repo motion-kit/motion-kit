@@ -154,14 +154,15 @@ end
 
 So simple, they're not even their own class!  This is just a "best practice"
 recommendation.  In MotionKit, when you define a method that has the same name
-as a view stylename, that method is called and is expected to style that view.
-So why not put those methods in a module, and include them in your layout!
-Sounds clean and organized to me!  You can include multiple stylesheets this
-way, but be careful around name collisions.
+as a view stylename with the suffix "_style", that method is called and is
+expected to style that view. So why not put those methods in a module, and
+include them in your layout! Sounds clean and organized to me! You can include
+multiple stylesheets this way, just be careful around name collisions.
 
 ```ruby
 module LoginStyles
-  def login_button
+
+  def login_button_style
     background_color "51A8E7"
     title "Log In"
     layer do
@@ -172,6 +173,7 @@ module LoginStyles
       shadow_offset [0, 0]
     end
   end
+
 end
 ```
 
@@ -196,7 +198,7 @@ class LoginLayout < MotionKit::Layout
     add button, :login_button
   end
 
-  def login_button
+  def login_button_style
     self.rounded_button
     title 'Login'
   end

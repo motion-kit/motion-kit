@@ -47,9 +47,10 @@ module MotionKit
       if element_id
         self.element_ids[element_id] << element
 
-        if self.respond_to?(element_id)
+        style_method = "#{element_id}_style"
+        if self.respond_to?(style_method)
           self.context(element) do
-            self.send(element_id)
+            self.send(style_method)
           end
         end
       end
