@@ -1,5 +1,6 @@
 module MotionKit
   class Layout
+    include Styleable
 
     def initialize
       @view_stack = []
@@ -45,6 +46,12 @@ module MotionKit
       # Set the name of the element
       if element_id
         self.element_ids[element_id] << element
+
+        if self.respond_to?(element_id)
+          self.context(element) do
+            self.send(element_id)
+          end
+        end
       end
 
       # Make the element the new context
@@ -124,6 +131,16 @@ module MotionKit
     def initialize_view(elem)
       elem = elem.new if elem.is_a?(Class)
       elem
+    end
+
+  public
+
+    # this last little "catch-all" method is helpful to warn against methods
+    # that are defined already
+    def self.method_added(method_name)
+      if Layout.method_defined?(method_name)
+        NSLog("Warning! The method #{self.name}##{method_name} has already been defined on MotionKit::Layout or one of its ancestors.")
+      end
     end
 
   end
