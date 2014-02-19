@@ -55,10 +55,10 @@ module MotionKit
       end
 
       # Make the element the new context
-      if block_given?
+      if block
         @parent = @view_stack.last
         @view_stack << element
-        yield
+        context(element, &block)
         @view_stack.pop
         @parent = @view_stack.last
       end
