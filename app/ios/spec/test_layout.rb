@@ -1,4 +1,5 @@
 class TestLayout < MotionKit::Layout
+
   def layout
     add UIView, :basic_view do
       add UIButton, :basic_button do
@@ -12,4 +13,5 @@ class TestLayout < MotionKit::Layout
       add UILabel, :repeated_label_3
     end
   end
+
 end

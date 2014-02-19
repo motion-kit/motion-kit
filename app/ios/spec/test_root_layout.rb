@@ -1,4 +1,5 @@
 class TestRootLayout < MotionKit::Layout
+
   def layout
     root UIScrollView, :scroll_view do
       add UIButton, :basic_button do
@@ -6,4 +7,5 @@ class TestRootLayout < MotionKit::Layout
       end
     end
   end
+
 end
