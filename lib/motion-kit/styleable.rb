@@ -1,6 +1,8 @@
 module MotionKit
   # This module is responsible for the "method magic" of MotionKit.  Very few
-  # methods are defined on Layout, and any unknown methods are
+  # methods are defined on Layout, and any unknown methods are delegated to the
+  # 'apply' method of Styleable, which accepts a method name, arguments, and an
+  # optional block to set the new context.
   module Styleable
     # this ivar name is not set in stone - 'v' as an alias, is.
     attr :styleable_context
@@ -15,7 +17,7 @@ module MotionKit
     # it become the 'context'.
     #
     # Example:
-    #     def table_view
+    #     def table_view_style
     #       # if you need to check the return value
     #       content = contentView
     #       if content
@@ -25,7 +27,8 @@ module MotionKit
     #       end
     #
     #       # usually you use 'context' automatically via method_missing, by
-    #       # passing a block to a # a method that returns an object
+    #       # passing a block to a method that returns an object. That object becomes
+    #       # the new context.
     #       layer do
     #         corner_radius 5
     #       end

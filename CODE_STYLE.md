@@ -10,7 +10,7 @@ We're not TOO picky here, but a few guidelines:
   ```ruby
   foo(a, b, c)
   [[1, 2], [3, 4]]
-  method(arg1, with: arg2)
+  do_something(arg1, with: arg2)
   ```
 
 - One blank line between `class, module, def, end` keywords, with the exception
