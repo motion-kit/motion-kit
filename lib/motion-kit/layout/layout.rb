@@ -2,19 +2,15 @@ module MotionKit
   class Layout
     include Styleable
 
-    def initialize
-      @view_stack = []
-    end
-
     # The parent view.  This method builds the layout and returns the root view.
     def view
       @view ||= begin
         # only in the 'layout' method, we will create a default container and
         # add views to it.
-        @create_default_root = true
+        @assign_root = true
         layout
-        @create_default_root = false
-        @view_stack = []
+        @assign_root = false
+        @styleable_context = nil
 
         # Since we can't rely on the app developers to not return something
         # screwy from their layout method, we'll return @view here.
@@ -29,17 +25,17 @@ module MotionKit
       if @view
         raise ContextConflictError.new("Already created the root view")
       end
-      if ! @create_default_root
+      unless @assign_root
         raise InvalidRootError.new("You should only create a 'root' view from inside the 'layout' method (use 'create' elsewhere)")
       end
+      @assign_root = false
 
       # before we run the block, the root @view must be assigned, and added to
       # the view_stack
       @view = initialize_view(element)
-      @view_stack << @view
-      @create_default_root = false
-      create(@view, element_id, &block)
-      @view_stack.pop
+      context(@view) do
+        create(@view, element_id, &block)
+      end
 
       return @view
     end
@@ -68,11 +64,7 @@ module MotionKit
 
       # Make the element the new context
       if block
-        @parent = @view_stack.last
-        @view_stack << element
         context(element, &block)
-        @view_stack.pop
-        @parent = @view_stack.last
       end
 
       element
@@ -82,16 +74,16 @@ module MotionKit
     # adds the view to the current view on the view stack.  If no view exists on
     # the stack, a default root view is created.
     def add(element, element_id=nil, &block)
-      if @view_stack.empty?
-        if @create_default_root
-          @view_stack << root(default_root)
+      unless @styleable_context
+        if @assign_root
+          @styleable_context = root(default_root)
         else
           raise NoContextError.new("No top level view specified (missing outer 'create' method?)")
         end
       end
 
       element = create(element, element_id, &block)
-      self.current_view.addSubview(element)
+      @styleable_context.addSubview(element)
 
       element
     end
@@ -135,10 +127,6 @@ module MotionKit
 
     def element_ids
       @element_ids ||= Hash.new &lambda { |hash, key| hash[key] = [] }.weak!
-    end
-
-    def current_view
-      @view_stack.last
     end
 
     # Initializes an instance of a view. This will need

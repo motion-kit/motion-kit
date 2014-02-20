@@ -2,6 +2,7 @@ module MotionKit
   # This module is responsible for the "method magic" of MotionKit.  Very few
   # methods are defined on Layout, and any unknown methods are
   module Styleable
+    # this ivar name is not set in stone - 'v' as an alias, is.
     attr :styleable_context
     alias v styleable_context
 
@@ -30,15 +31,11 @@ module MotionKit
     #       end
     #     end
     def context(context, &block)
-      if block
-        context_was = @styleable_context
-        @styleable_context = context
-        self.instance_exec(&block) if block
-        @styleable_context = context_was
-      else
-        @styleable_context = context
-      end
-      return true
+      context_was = @styleable_context
+      @styleable_context = context
+      self.instance_exec(&block) if block
+      @styleable_context = context_was
+      return context
     end
 
     # Tries to call the setter (`foo 'value'` => `view.setFoo('value')`), or
