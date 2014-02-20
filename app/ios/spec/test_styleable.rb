@@ -1,41 +1,57 @@
 class TestStyleable
   include MotionKit::Styleable
 
+  attr :target
+
   def initialize(obj)
-    context obj
+    @target = obj
   end
 
   def run_foo
-    foo 'foo'
+    self.context(@target) do
+      foo 'foo'
+    end
   end
 
   def run_bar
-    bar 'bar'
+    self.context(@target) do
+      bar 'bar'
+    end
   end
 
   def run_baz
-    baz do
-      quux 'quux'
+    self.context(@target) do
+      baz do
+        quux 'quux'
+      end
     end
   end
 
   def run_baz_baz
-    baz_baz do
-      quux 'quux'
+    self.context(@target) do
+      baz_baz do
+        quux 'quux'
+      end
     end
   end
 
   def run_text
-    text 'text'
+    self.context(@target) do
+      text 'text'
+    end
   end
 
   def run_background_color
-    background_color UIColor.whiteColor
+    self.context(@target) do
+      background_color UIColor.whiteColor
+    end
   end
 
   def run_layer(radius)
-    layer do
-      corner_radius radius
+    self.context(@target) do
+      layer do
+        corner_radius radius
+      end
     end
   end
 
