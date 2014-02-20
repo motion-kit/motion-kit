@@ -33,12 +33,12 @@ module MotionKit
     #         corner_radius 5
     #       end
     #     end
-    def context(context, &block)
-      context_was = @styleable_context
-      @styleable_context = context
+    def context(target, &block)
+      target_was = @styleable_context
+      @styleable_context = target
       self.instance_exec(&block) if block
-      @styleable_context = context_was
-      return context
+      @styleable_context = target_was
+      return target
     end
 
     # Tries to call the setter (`foo 'value'` => `view.setFoo('value')`), or
