@@ -1,0 +1,15 @@
+PATH
+  remote: ../../..
+  specs:
+    motion-kit (0.0.1)
+
+GEM
+  specs:
+    motion-require (0.0.7)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  motion-kit!
+  motion-require

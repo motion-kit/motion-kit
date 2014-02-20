@@ -1,0 +1,12 @@
+$:.unshift("/Library/RubyMotion/lib")
+require 'motion/project/template/ios'
+require 'bundler'
+Bundler.require
+
+
+Motion::Project::App.setup do |app|
+  app.name = 'HelloWorld'
+  app.identifier = 'com.motionkit.HelloWorld'
+
+  app.device_family = :iphone
+end
