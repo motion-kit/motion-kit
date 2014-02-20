@@ -14,4 +14,11 @@ class TestLayout < MotionKit::Layout
     end
   end
 
+  def other_view
+    @other_view ||= create(UIView, :other_view) do
+      # is this allowed?  I can't think of an easy way of *preventing* it...
+      self.layout
+    end
+  end
+
 end
