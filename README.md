@@ -65,7 +65,7 @@ class SimpleLayout < MotionKit::Layout
   end
 
   def simple_label
-    center parent.center
+    center superview.center
     text 'Hi there! Welcome to MotionKit'
     text_alignment UITextAlignmentCenter
     font UIFont.fontWithName('Comis Sans', size: 24)
@@ -77,7 +77,7 @@ end
 ```
 
 Nice, that should be pretty easy to follow, right?  Actually, according to
-MotionKit's preferred code style, the layout code (`center parent.center`)
+MotionKit's preferred code style, the layout code (`center superview.center`)
 should be moved into the layout.  The reason is we want to be able to visualize
 the view hierarchy AND placement in the layout.  You don't have to do things
 this way, it's just a recommendation.
@@ -87,7 +87,7 @@ class SimpleLayout < MotionKit::Layout
 
   def layout
     add UILabel, :simple_label do
-      center parent.center
+      center superview.center
     end
   end
 ```
@@ -123,10 +123,11 @@ class LoginLayout < MotionKit::Layout
       frame from_bottom(50)
 
       # like in Teacup, views added inside a block are added to that container.
-      # you can reference the container with 'parent'; it won't be an instance
-      # of a view, it's a special object that acts like a placeholder for
-      # various values, but for the most part you don't have to worry about that
-      # implementation detail.
+      # you can reference the container with 'superview' or 'parent'. 'parent'
+      # won't be an instance of a view, it's a special object that acts like a
+      # placeholder for various values; if you want to assign any superview
+      # property, use 'superview' instead.  'parent' is mostly useful for
+      # setting the frame
       add UIButton, :login_button do
         frame [[ 10, 5 ], [ 50, parent.height - 10 ]]
         title 'Login'
@@ -153,14 +154,15 @@ end
 
 So simple, they're not even their own class!  This is just a "best practice"
 recommendation.  In MotionKit, when you define a method that has the same name
-as a view stylename, that method is called and is expected to style that view.
-So why not put those methods in a module, and include them in your layout!
-Sounds clean and organized to me!  You can include multiple stylesheets this
-way, but be careful around name collisions.
+as a view stylename with the suffix "_style", that method is called and is
+expected to style that view. So why not put those methods in a module, and
+include them in your layout! Sounds clean and organized to me! You can include
+multiple stylesheets this way, just be careful around name collisions.
 
 ```ruby
 module LoginStyles
-  def login_button
+
+  def login_button_style
     background_color "51A8E7"
     title "Log In"
     layer do
@@ -171,6 +173,7 @@ module LoginStyles
       shadow_offset [0, 0]
     end
   end
+
 end
 ```
 
@@ -195,7 +198,7 @@ class LoginLayout < MotionKit::Layout
     add button, :login_button
   end
 
-  def login_button
+  def login_button_style
     self.rounded_button
     title 'Login'
   end

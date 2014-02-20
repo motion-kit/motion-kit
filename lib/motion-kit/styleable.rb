@@ -2,6 +2,7 @@ module MotionKit
   # This module is responsible for the "method magic" of MotionKit.  Very few
   # methods are defined on Layout, and any unknown methods are
   module Styleable
+    # this ivar name is not set in stone - 'v' as an alias, is.
     attr :styleable_context
     alias v styleable_context
 
@@ -30,15 +31,11 @@ module MotionKit
     #       end
     #     end
     def context(context, &block)
-      if block
-        context_was = @styleable_context
-        @styleable_context = context
-        self.instance_exec(&block) if block
-        @styleable_context = context_was
-      else
-        @styleable_context = context
-      end
-      return true
+      context_was = @styleable_context
+      @styleable_context = context
+      self.instance_exec(&block) if block
+      @styleable_context = context_was
+      return context
     end
 
     # Tries to call the setter (`foo 'value'` => `view.setFoo('value')`), or
@@ -77,8 +74,8 @@ module MotionKit
         setter = 'set' + method_name[0].capitalize + method_name[1..-1] + ':'
       end
 
-      # the order of checking methods is important; Ruby classes will sometimes
-      # return 'true' for `foo=` even though `send('foo=')` will raise a
+      # the order of checking methods is important; Ruby classes can return
+      # 'true' for `respond_to?('foo=')` even though `send('foo=')` will raise a
       # NoMethodError.
 
       # objc classes are the opposite
@@ -114,8 +111,14 @@ module MotionKit
     #       background_color UIColor.clearColor
     #     end
     def method_missing(method_name, *args, &block)
-      unless self.apply(method_name, *args, &block)
-        raise NoMethodError.new("No setter or method called #{method_name.inspect}")
+      # only allow 'method_missing' if we've setup a context, otherwise we
+      # should just raise NoMethodError (via super)
+      if @styleable_context
+        unless self.apply(method_name, *args, &block)
+          raise NoMethodError.new("No setter or method called #{method_name.inspect}")
+        end
+      else
+        super
       end
     end
 
