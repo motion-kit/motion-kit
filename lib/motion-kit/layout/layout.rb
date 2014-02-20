@@ -100,11 +100,11 @@ module MotionKit
       self.element_ids[element_id][n]
     end
 
-    # Removes a view from its hierarchy and forgets it entirely.
-    # NEEDS specs
+    # Removes a view (or several with the same name) from its hierarchy
+    # and forgets it entirely.
     def remove(element_id)
       self.element_ids[element_id].each &:removeFromSuperview
-      self.element_ids[element_id] = nil
+      self.element_ids[element_id] = []
       nil
     end
 
