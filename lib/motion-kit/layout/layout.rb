@@ -21,6 +21,9 @@ module MotionKit
     # Assign a view to act as the 'root' view for this layout.  This method can
     # only be called once, and must be called before `add` is called for the
     # first time (otherwise `add` will create a default root view).
+    #
+    # You can also call this method with just an element_id, and the default
+    # root view will be created.
     def root(element, element_id=nil, &block)
       if @view
         raise ContextConflictError.new("Already created the root view")
@@ -29,6 +32,12 @@ module MotionKit
         raise InvalidRootError.new("You should only create a 'root' view from inside the 'layout' method (use 'create' elsewhere)")
       end
       @assign_root = false
+
+      # this method can be called with just a symbol, to assign the root element_id
+      if element.is_a?(Symbol)
+        element_id = element
+        element = default_root
+      end
 
       # before we run the block, the root @view must be assigned, and added to
       # the view_stack

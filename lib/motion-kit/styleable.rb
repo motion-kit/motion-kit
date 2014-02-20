@@ -46,11 +46,11 @@ module MotionKit
     # You can call this method directly, but usually it is called via
     # method_missing.
     def apply(method_name, *args, &block)
-      raise("No context defined in Styleable#apply(#{method_name.inspect})") unless @styleable_context
+      raise ApplyError.new("No context defined in Styleable#apply(#{method_name.inspect})") unless @styleable_context
 
       target = @styleable_context
       method_name = method_name.to_s
-      return false if method_name.length == 0
+      raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name}") if method_name.length == 0
 
       if block
         if target.respondsToSelector(method_name)
@@ -60,7 +60,7 @@ module MotionKit
           objc_name = MotionKit.objective_c_method_name(method_name)
           return self.apply(objc_name, *args, &block)
         else
-          return false
+          raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name}")
         end
       end
 
@@ -80,23 +80,20 @@ module MotionKit
 
       # objc classes are the opposite
       if target.respondsToSelector(setter)
-        target.send(setter, *args)
-        return true
+        return target.send(setter, *args)
       # ruby classes will probably define the attr_accessor, not a 'setFoo' method
       elsif assign && target.respond_to?(assign)
-        target.send(assign, *args)
-        return true
+        return target.send(assign, *args)
       # and appearance classes are a whole OTHER thing
       elsif target.is_a?(MotionKit.appearance_class)
-        target.send(setter, *args)
-        return true
+        return target.send(setter, *args)
       # try again with camel case if there's an underscore
       elsif method_name.include?('_')
         objc_name = MotionKit.objective_c_method_name(method_name)
         return self.apply(objc_name, *args)
       # failure
       else
-        return false
+        raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name}")
       end
     end
 
@@ -114,7 +111,9 @@ module MotionKit
       # only allow 'method_missing' if we've setup a context, otherwise we
       # should just raise NoMethodError (via super)
       if @styleable_context
-        unless self.apply(method_name, *args, &block)
+        begin
+          return self.apply(method_name, *args, &block)
+        rescue ApplyError
           raise NoMethodError.new("No setter or method called #{method_name.inspect}")
         end
       else
