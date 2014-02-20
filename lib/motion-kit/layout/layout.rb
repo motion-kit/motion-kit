@@ -162,7 +162,7 @@ module MotionKit
     # this last little "catch-all" method is helpful to warn against methods
     # that are defined already
     def self.method_added(method_name)
-      if Layout.method_defined?(method_name)
+      if self < Layout && Layout.method_defined?(method_name)
         NSLog("Warning! The method #{self.name}##{method_name} has already been defined on MotionKit::Layout or one of its ancestors.")
       end
     end
