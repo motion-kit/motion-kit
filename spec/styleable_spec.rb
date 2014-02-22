@@ -16,6 +16,11 @@ describe "Layout setters" do
       @subject.target.bar.should == 'bar'
     end
 
+    it 'should set setter (setter(val))' do
+      @subject.run_setter
+      @subject.target.setter.should == 'setter'
+    end
+
     it 'should assign quux (baz.quux, attr_accessor) with baz as context' do
       @subject.run_baz
       @subject.target.baz.quux.should == 'quux'
