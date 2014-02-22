@@ -19,9 +19,18 @@ module MotionKit
         @target_klasses ||= {}
       end
 
-      def targets(klass)
-        BaseLayout.target_klasses[klass] = self
-        nil
+      def targets(klass=nil)
+        if klass.nil?
+          if self == BaseLayout
+            nil
+          else
+            @targets || superclass.targets
+          end
+        else
+          @targets = klass
+          BaseLayout.target_klasses[klass] = self
+          nil
+        end
       end
 
       # Instantiates a new Layout instance, and assigns the appropriate owner
@@ -60,9 +69,14 @@ module MotionKit
     attr :parent
 
     def initialize(owner=nil, target=nil, parent=nil)
+      # if you're tempted to set @layout_delegate here - don't. In a ViewLayout,
+      # we could instantiate a 'root' view that does *not* use the same Layout
+      # as the current class. Leave the delegate as 'nil' so it can be lazily
+      # created in 'apply'.
       @owner = owner || self
       @context = target
       @parent = parent
+      @layout_delegate = nil
     end
 
     # Runs a block of code with a new object as the 'context'. Methods from the
@@ -110,7 +124,12 @@ module MotionKit
     # applied to the @context using one of the setter methods that `apply`
     # supports.
     def method_missing(method_name, *args, &block)
-      self.apply(@context, method_name, *args, &block)
+      # Odd, I tried having this in ViewLayout#method_missing, and calling super
+      # from there, but it had very strange errors.
+      unless @context
+        create_default_root_context
+      end
+      self.apply(method_name, *args, &block)
     end
 
     # Tries to call the setter (`foo 'value'` => `view.setFoo('value')`), or
@@ -120,10 +139,11 @@ module MotionKit
     #
     # You can call this method directly, but usually it is called via
     # method_missing.
-    def apply(target, method_name, *args, &block)
+    def apply(method_name, *args, &block)
       method_name = method_name.to_s
       raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name}") if method_name.length == 0
 
+      target = @context
       @layout_delegate ||= Layout.layout_for(@owner, target, self)
       if @layout_delegate && @layout_delegate.respond_to?(method_name)
         return @layout_delegate.send(method_name, *args, &block)
@@ -135,7 +155,7 @@ module MotionKit
           return self.context(new_context, &block)
         elsif method_name.include?('_')
           objc_name = MotionKit.objective_c_method_name(method_name)
-          return self.apply(target, objc_name, *args, &block)
+          return self.apply(objc_name, *args, &block)
         else
           raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name}")
         end
@@ -172,10 +192,21 @@ module MotionKit
       # Finally, try again with camel case if there's an underscore.
       elsif method_name.include?('_')
         objc_name = MotionKit.objective_c_method_name(method_name)
-        return self.apply(target, objc_name, *args)
+        return self.apply(objc_name, *args)
       # failure
       else
         raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name}")
+      end
+    end
+
+  public
+
+    # this last little "catch-all" method is helpful to warn against methods
+    # that are defined already. Since magic methods are so important, this
+    # warning can come in handy.
+    def self.method_added(method_name)
+      if self < BaseLayout && BaseLayout.method_defined?(method_name)
+        NSLog("Warning! The method #{self.name}##{method_name} has already been defined on MotionKit::BaseLayout or one of its ancestors.")
       end
     end
 
@@ -233,10 +264,12 @@ module MotionKit
       end
 
       @view = initialize_view(element)
-      context(@view) do
-        # We're just using the `create` method for its side effects: calling the
-        # style method and calling the block.
-        create(@view, element_id, &block)
+      if block
+        context(@view) do
+          # We're just using the `create` method for its side effects: calling the
+          # style method and calling the block.
+          create(@view, element_id, &block)
+        end
       end
 
       return @view
@@ -275,15 +308,12 @@ module MotionKit
     # the stack, a default root view can be created if that has been enabled.
     def add(element, element_id=nil, &block)
       unless @context
-        if @assign_root
-          @context = root(default_root)
-        else
-          raise NoContextError.new("No top level view specified (missing outer 'create' method?)")
-        end
+        create_default_root_context
       end
 
-      element = create(element, element_id, &block)
-      self.add_child(@context, element)
+      element = initialize_view(element)
+      self.apply(:add_child, element)
+      create(element, element_id, &block)
 
       element
     end
@@ -342,8 +372,22 @@ module MotionKit
 
     # Same as `remove`, but with the root view specified.
     def remove(element_id, from: root)
-      all(element_id).each do |subview|
-        self.remove_child(subview)
+      context(root) do
+        all(element_id).each do |subview|
+          self.apply(:remove_child, subview)
+        end
+      end
+    end
+
+    def create_default_root_context
+      if @assign_root
+        # Originally I thought default_root should be `apply`ied like other
+        # view-related methods, but actually this method *only* gets called
+        # from within the `layout` method, and so should already inside the
+        # correct Layout subclass.
+        @context = root(default_root)
+      else
+        raise NoContextError.new("No top level view specified (missing outer 'create' method?)")
       end
     end
 
@@ -362,17 +406,6 @@ module MotionKit
       end
 
       return elem
-    end
-
-  public
-
-    # this last little "catch-all" method is helpful to warn against methods
-    # that are defined already. Since magic methods are so important, this
-    # warning can come in handy.
-    def self.method_added(method_name)
-      if self < BaseLayout && BaseLayout.method_defined?(method_name)
-        NSLog("Warning! The method #{self.name}##{method_name} has already been defined on MotionKit::BaseLayout or one of its ancestors.")
-      end
     end
 
   end

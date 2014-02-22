@@ -6,11 +6,12 @@ module MotionKit
 
     # platform specific default root view
     def default_root
-      UIView.alloc.initWithFrame(UIScreen.mainScreen.applicationFrame)
+      # child Layout classes will return *their* UIView subclass from self.targets
+      self.class.targets.alloc.initWithFrame(UIScreen.mainScreen.applicationFrame)
     end
 
-    def add_child(view, subview)
-      view.addSubview(subview)
+    def add_child(subview)
+      v.addSubview(subview)
     end
 
     def remove_child(subview)

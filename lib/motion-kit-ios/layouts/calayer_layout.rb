@@ -7,8 +7,8 @@ module MotionKit
       CALayer.layer
     end
 
-    def add_child(view, subview)
-      view.addLayer(subview)
+    def add_child(subview)
+      v.addSublayer(subview)
     end
 
     def remove_child(subview)
@@ -16,4 +16,5 @@ module MotionKit
     end
 
   end
+
 end
