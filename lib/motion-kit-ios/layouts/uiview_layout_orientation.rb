@@ -1,5 +1,7 @@
+motion_require 'uiview_layout'
+
 module MotionKit
-  class Layout
+  class UIViewLayout
 
     # This method is used to check the orientation.  On an ipad, this method
     # returns true for :portrait if the device is "upside down", but it returns
@@ -30,18 +32,6 @@ module MotionKit
           yield
         end
       end
-    end
-
-    def iphone?
-      UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone
-    end
-
-    def ipad?
-      UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad
-    end
-
-    def retina?
-      UIScreen.mainScreen.respond_to?(:scale) && UIScreen.mainScreen.scale == 2
     end
 
   end

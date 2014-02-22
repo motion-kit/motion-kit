@@ -107,7 +107,7 @@ class LoginLayout < MotionKit::Layout
     # but even better, pass the 'frame' in, too:
     add UIImageView, :logo, [[0, 0], [320, 568]]  # hardcoded dimensions!? no way
 
-    # This frame argument will be handed to the 'MotionKit::UIViewStyle#frame'
+    # This frame argument will be handed to the 'MotionKit::Layout#frame'
     # method, which can accept lots of shorthands.  Let's use one to scale the
     # imageview so that it fills the width, but keeps its aspect ratio.
     add UIImageView, :logo, [[0, 0], ['100%', :scale]]
@@ -226,7 +226,7 @@ indirectly.  But other than that, the design is very similar.
 
 ```ruby
   def login_button_style
-    title 'Press me'  # this gets delegated to UIButtonStyle#title(view, title)
+    title 'Press me'  # this gets delegated to UIButtonLayout#title(view, title)
   end
 ```
 
@@ -241,12 +241,12 @@ and takes care of discrepencies like `setFoo(value)` vs `foo=(value)`.
   end
 ```
 
-You can easily add new helpers to MotionKit's existing Style classes. They are
-all named consistenly, e.g. `UIViewStyle`, e.g. `UILabelStyle`.  Just open up these
-classes and hack away.
+You can easily add new helpers to MotionKit's existing Layout classes. They are
+all named consistenly, e.g. `Layout`, e.g. `UILabelLayout`.  Just open up
+these classes and hack away.
 
 ```ruby
-class UILabelStyle
+class UILabelLayout
 
   # style methods accept a 'target' and any number of values, and possibly a
   # block.
@@ -265,13 +265,13 @@ class UILabelStyle
 end
 ```
 
-For your own custom classes, you can provide a Style class by calling the
+For your own custom classes, you can provide a Layout class by calling the
 `targets` method in your class body.
 
 ```ruby
-# make sure to extend an existing Style class, otherwise you'll lose a lot of
+# make sure to extend an existing Layout class, otherwise you'll lose a lot of
 # helper methods
-class CustomStyle < UIViewStyle
+class CustomLayout < MK::Layout
   targets CustomView
 
   def fore_color(target, value)
@@ -279,42 +279,6 @@ class CustomStyle < UIViewStyle
   end
 
 end
-```
-
-### Value conversions
-
-There are a lot of great tools out there that can convert one type of value into
-another; RMQ's `Color` and `Font` classes, SugarCube's `uiimage, uicolor,
-uifont` methods, and so on.  We don't want to reinvent the wheel, and so instead
-we've made it easy to register methods that convert from one type to another.
-And MotionKit comes bundled with classes that will register those libraries for
-you, if you opt-in to that.
-
-To see how this works, let's say you want to convert numbers to UIColor, where
-the number represents the amount of "white".  You would define your 'color'
-method like so:
-
-```ruby
-def MotionKit.to_color(value)
-  case value
-  when Numeric
-    UIColor.colorWithWhite(value, alpha: 1)
-  else
-    value
-  end
-end
-```
-
-In your Style or Layout classes, use `MotionKit.to_color(value)` to convert
-values.
-
-If you want to use the built-in converters, require one of the following from
-your Rakefile:
-
-```ruby
-require 'motionkit-rmq'
-require 'motionkit-sugarcube'
-require 'motionkit-promotion'
 ```
 
 

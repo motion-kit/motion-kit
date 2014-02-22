@@ -1,7 +1,7 @@
 describe "Layout extensions - iOS" do
 
   before do
-    @subject = MK::Layout.new
+    @subject = MK::UIViewLayout.new
   end
 
   it 'should have `orientation?` method' do
