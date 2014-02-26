@@ -1,3 +1,9 @@
+GIT
+  remote: git@github.com:colinta/motion-require
+  revision: d6289a706a0c49fff3c0706c2e9e97640b554378
+  specs:
+    motion-require (0.1.1)
+
 PATH
   remote: .
   specs:
@@ -7,7 +13,6 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    motion-require (0.0.7)
     rake (10.0.4)
 
 PLATFORMS
@@ -15,5 +20,5 @@ PLATFORMS
 
 DEPENDENCIES
   motion-kit!
-  motion-require
+  motion-require!
   rake
