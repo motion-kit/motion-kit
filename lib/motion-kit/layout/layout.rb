@@ -52,14 +52,8 @@ module MotionKit
 
       # Set the name of the element
       if element_id
-        self.element_ids[element_id] << element
-
-        style_method = "#{element_id}_style"
-        if self.respond_to?(style_method)
-          self.context(element) do
-            self.send(style_method)
-          end
-        end
+        element.motion_kit_id = element_id
+        self.apply_style(element, element_id)
       end
 
       # Make the element the new context
@@ -68,6 +62,16 @@ module MotionKit
       end
 
       element
+    end
+
+    def apply_style(element, element_id)
+      style_method = "#{element_id}_style"
+      if self.respond_to?(style_method)
+        self.context(element) do
+          self.send(style_method)
+        end
+      end
+      return element
     end
 
     # Delegates to `create` to instantiate a view and run a layout block, and
@@ -88,46 +92,53 @@ module MotionKit
       element
     end
 
-    # Retrieves a view by its element id.  This will return the *last* view
-    # created with this element_id.
-    def get(element_id)
-      self.view
-      self.element_ids[element_id].last
-    end
-    alias last get
-
-    # Returns all the elements with a given element_id
-    def all(element_id)
-      self.view
-      self.element_ids[element_id]
-    end
-
     # Retrieves a view by its element id.  This will return the *first* view
     # created with this element_id.
     def first(element_id)
-      self.view
-      self.element_ids[element_id].first
+      self.first(element_id, in: self.view)
     end
 
-    # Retrieves a view by its element id and index in the stack.
-    def nth(element_id, n)
-      self.view
-      self.element_ids[element_id][n]
+    def first(element_id, in: root)
+      MotionKit::find_first_view(root) { |view| view.motion_kit_id == element_id }
+    end
+
+    # Retrieves a view by its element id.  This will return the *last* view
+    # created with this element_id.
+    def get(element_id)
+      self.get(element_id, in: self.view)
+    end
+    def last(element_id) ; get(element_id) ; end
+
+    def get(element_id, in: root)
+      MotionKit::find_last_view(root) { |view| view.motion_kit_id == element_id }
+    end
+    def last(element_id, in: root) ; get(element_id, in: root) ; end
+
+    # Returns all the elements with a given element_id
+    def all(element_id)
+      self.all(element_id, in: self.view)
+    end
+
+    def all(element_id, in: root)
+      MotionKit::find_all_views(root) { |view| view.motion_kit_id == element_id }
+    end
+
+    # Returns all the elements with a given element_id
+    def nth(element_id, index)
+      self.all(element_id, in: self.view)[index]
+    end
+
+    def nth(element_id, at: index, in: root)
+      self.all(element_id, in: root)[index]
     end
 
     # Removes a view (or several with the same name) from its hierarchy
-    # and forgets it entirely.
+    # and forgets it entirely.  Returns the views that were removed.
     def remove(element_id)
-      self.element_ids[element_id].each &:removeFromSuperview
-      self.element_ids[element_id] = []
-      nil
+      all(element_id).each &:removeFromSuperview
     end
 
   protected
-
-    def element_ids
-      @element_ids ||= Hash.new &lambda { |hash, key| hash[key] = [] }.weak!
-    end
 
     # Initializes an instance of a view. This will need
     # to be smarter going forward as `new` isn't always

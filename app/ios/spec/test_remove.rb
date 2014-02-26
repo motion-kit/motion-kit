@@ -1,9 +1,11 @@
 class TestRemoveLayout < MotionKit::Layout
 
   def layout
-    root UIView, :view do
-      add UILabel, :label
-      add UIImageView, :image
+    root UIView do
+      add UIView, :view do
+        add UILabel, :label
+        add UIImageView, :image
+      end
     end
   end
 
