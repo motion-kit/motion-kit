@@ -220,7 +220,7 @@ end
 ### How do styles get applied?
 
 If you've used RMQ's Stylers, you'll recognize a very similar pattern here. In
-RMQ the 'style' methods are handed a 'Stlyer' instance, which wraps access to
+RMQ the 'style' methods are handed a 'Styler' instance, which wraps access to
 the view.  In MotionKit we make use of `method_missing` to call these methods
 indirectly.  But other than that, the design is very similar.
 

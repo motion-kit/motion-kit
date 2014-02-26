@@ -399,7 +399,9 @@ module MotionKit
     # Accepts a view instance, a class (which is instantiated with 'new') or a
     # `ViewLayout`, which returns the root view.
     def initialize_view(elem)
-      if elem.is_a?(Class)
+      if elem < ViewLayout
+        elem = elem.new.view
+      elsif elem.is_a?(Class)
         elem = elem.new
       elsif elem.is_a?(ViewLayout)
         elem = elem.view
