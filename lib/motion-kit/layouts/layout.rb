@@ -324,6 +324,37 @@ module MotionKit
       return element
     end
 
+    # Calls the style method of all objects in the view hierarchy
+    def reapply!(root=nil)
+      root ||= self.view
+      @layout_state = :reapply
+      MotionKit.find_all_views(root) do |view|
+        call_style_method(view, view.motion_kit_id) if view.motion_kit_id
+      end
+      @layout_state = :initial
+
+      return self
+    end
+
+    # Calls the style method of all objects in the view hierarchy
+    def reapply(&block)
+      raise ArgumentError.new('Block required') unless block
+
+      if @layout_state == :reapply
+        yield
+      end
+      return self
+    end
+
+    def initial(&block)
+      raise ArgumentError.new('Block required') unless block
+
+      if @layout_state == :initial
+        yield
+      end
+      return self
+    end
+
     # Delegates to `create` to instantiate a view and run a layout block, and
     # adds the view to the current view on the view stack.  If no view exists on
     # the stack, a default root view can be created if that has been enabled.
