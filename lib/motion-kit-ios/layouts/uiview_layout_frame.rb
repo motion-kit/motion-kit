@@ -3,106 +3,106 @@ motion_require 'uiview_layout'
 module MotionKit
   class UIViewLayout
 
-    def x(target, value)
+    def x(value)
       f = target.frame
-      f.origin.x = MotionKit.calculate(target, :width, x)
+      f.origin.x = MotionKit.calculate(target, :width, value)
       target.frame = f
     end
     alias left x
 
-    def right
+    def right(value)
       f = target.frame
-      f.origin.x = MotionKit.calculate(target, :width, r) - f.size.width
+      f.origin.x = MotionKit.calculate(target, :width, value) - f.size.width
       target.frame = f
     end
 
-    def center_x(target, value)
+    def center_x(value)
       c = target.center
-      c.x = MotionKit.calculate(target, :width, x)
+      c.x = MotionKit.calculate(target, :width, value)
       target.center = c
     end
     alias middle_x center_x
 
-    def y(target, value)
+    def y(value)
       f = target.frame
-      f.origin.y = MotionKit.calculate(target, :height, y)
+      f.origin.y = MotionKit.calculate(target, :height, value)
       target.frame = f
     end
     alias top y
 
-    def bottom(target, value)
+    def bottom(value)
       f = target.frame
-      f.origin.y = MotionKit.calculate(target, :height, b) - f.size.height
+      f.origin.y = MotionKit.calculate(target, :height, value) - f.size.height
       target.frame = f
     end
 
-    def center_y(target, value)
+    def center_y(value)
       c = target.center
-      c.y = MotionKit.calculate(target, :height, y)
+      c.y = MotionKit.calculate(target, :height, value)
       target.center = c
     end
     alias middle_y center_y
 
-    def width(target, value)
+    def width(value)
       f = target.frame
-      f.size.width = MotionKit.calculate(target, :width, w)
+      f.size.width = MotionKit.calculate(target, :width, value)
       target.frame = f
     end
 
-    def height(target, value)
+    def height(value)
       f = target.frame
-      f.size.height = MotionKit.calculate(target, :height, h)
+      f.size.height = MotionKit.calculate(target, :height, value)
       target.frame = f
     end
 
-    def origin(target, value)
+    def origin(value)
       f = target.frame
-      origin_x = MotionKit.calculate(target, :width, origin[0])
-      origin_y = MotionKit.calculate(target, :height, origin[1])
+      origin_x = MotionKit.calculate(target, :width, value[0])
+      origin_y = MotionKit.calculate(target, :height, value[1])
       f.origin = [origin_x, origin_y]
       target.frame = f
     end
 
-    def center(target, value)
-      center_x = MotionKit.calculate(target, :width, center[0])
-      center_y = MotionKit.calculate(target, :height, center[1])
+    def center(value)
+      center_x = MotionKit.calculate(target, :width, value[0])
+      center_y = MotionKit.calculate(target, :height, value[1])
       target.center = [center_x, center_y]
     end
 
-    def size(target, value)
-      if size == :full
+    def size(value)
+      if value == :full
         if target.superview
-          size = target.superview.bounds.size
+          value = target.superview.bounds.size
         else
-          size = target.frame.size
+          value = target.frame.size
         end
       else
-        size = [MotionKit.calculate(target, :width, size[0]), MotionKit.calculate(target, :height, size[1])]
+        value = [MotionKit.calculate(target, :width, value[0]), MotionKit.calculate(target, :height, value[1])]
       end
       f = target.frame
-      f.size = size
+      f.size = value
       target.frame = f
     end
 
-    def frame(target, frame)
-      if Symbol === frame && frame == :full
+    def frame(value)
+      if Symbol === value && value == :full
         if target.superview
-          frame = target.superview.bounds
+          value = target.superview.bounds
         else
-          frame = target.frame
+          value = target.frame
         end
-      elsif Array === frame && frame.length == 4
-        frame = [
-            [MotionKit.calculate(target, :width, frame[0]), MotionKit.calculate(target, :height, frame[1])],
-            [MotionKit.calculate(target, :width, frame[2]), MotionKit.calculate(target, :height, frame[3])]
+      elsif Array === value && value.length == 4
+        value = [
+            [MotionKit.calculate(target, :width, value[0]), MotionKit.calculate(target, :height, value[1])],
+            [MotionKit.calculate(target, :width, value[2]), MotionKit.calculate(target, :height, value[3])]
           ]
       else
-        frame = [
-            [MotionKit.calculate(target, :width, frame[0][0]), MotionKit.calculate(target, :height, frame[0][1])],
-            [MotionKit.calculate(target, :width, frame[1][0]), MotionKit.calculate(target, :height, frame[1][1])]
+        value = [
+            [MotionKit.calculate(target, :width, value[0][0]), MotionKit.calculate(target, :height, value[0][1])],
+            [MotionKit.calculate(target, :width, value[1][0]), MotionKit.calculate(target, :height, value[1][1])]
           ]
       end
-      target.frame = frame
+      target.frame = value
     end
 
   end
