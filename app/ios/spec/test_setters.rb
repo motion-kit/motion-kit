@@ -1,9 +1,8 @@
 class TestSetters < MK::Layout
-  attr :target
 
   def initialize(obj)
-    @target = obj
-    super(nil, obj)
+    super(nil)
+    @context = obj
   end
 
   def run_foo

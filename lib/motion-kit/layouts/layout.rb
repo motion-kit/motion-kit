@@ -35,7 +35,7 @@ module MotionKit
 
       # Instantiates a new Layout instance, and assigns the appropriate owner
       # layout, target object, and parent layout.
-      def layout_for(owner, target, parent)
+      def layout_for(owner, layout, target, parent)
         target_klasses = BaseLayout.target_klasses
         klass = target.class
 
@@ -57,27 +57,46 @@ module MotionKit
           @memoize[klass] = registered_class
         end
 
-        return @memoize[klass].new(owner, target, parent)
+        return @memoize[klass].new_child(owner, layout, target, parent)
+      end
+
+      def new_child(owner=nil, layout=nil, target=nil, parent=nil)
+        child = new(owner)
+        child.set_parent(layout, target, parent)
+        return child
       end
 
     end
 
-    attr :context
-    alias v context
-
     attr_accessor :owner
     attr :parent
 
-    def initialize(owner=nil, target=nil, parent=nil)
+    def initialize(owner=nil)
       # if you're tempted to set @layout_delegate here - don't. In a ViewLayout,
       # we could instantiate a 'root' view that does *not* use the same Layout
       # as the current class. Leave the delegate as 'nil' so it can be lazily
       # created in 'apply'.
-      @owner = owner || self
-      @context = target
-      @parent = parent
+      @owner = owner
+      # the object to look in for style methods
+      @layout = self
+      # the object to apply styles to
+      @context = nil
+      # the parent layout - this isn't used anywhere
+      @parent = nil
+      # the Layout object that implements custom style methods
       @layout_delegate = nil
     end
+
+    def set_parent(layout, target, parent)
+      @layout = layout
+      @context = target
+      @parent = parent
+    end
+
+    def target
+      @context
+    end
+    alias v target
 
     # Runs a block of code with a new object as the 'context'. Methods from the
     # Layout classes are applied to this target object, and missing methods are
@@ -113,7 +132,7 @@ module MotionKit
       layout_was = @layout_delegate
       @context = target
       @layout_delegate = nil
-      block.call
+      yield
       @layout_delegate = layout_was
       @context = context_was
 
@@ -144,7 +163,7 @@ module MotionKit
       raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name}") if method_name.length == 0
 
       target = @context
-      @layout_delegate ||= Layout.layout_for(@owner, target, self)
+      @layout_delegate ||= Layout.layout_for(@owner, @layout, target, self)
       if @layout_delegate && @layout_delegate.respond_to?(method_name)
         return @layout_delegate.send(method_name, *args, &block)
       end
@@ -295,9 +314,9 @@ module MotionKit
 
     def call_style_method(element, element_id)
       style_method = "#{element_id}_style"
-      if @owner.respond_to?(style_method)
-        @owner.context(element) do
-          @owner.send(style_method)
+      if @layout.respond_to?(style_method)
+        @layout.context(element) do
+          @layout.send(style_method)
         end
       end
       return element
@@ -400,7 +419,7 @@ module MotionKit
     # `ViewLayout`, which returns the root view.
     def initialize_view(elem)
       if elem.is_a?(Class) && elem < ViewLayout
-        elem = elem.new.view
+        elem = elem.new_child(@owner, @layout, nil, self).view
       elsif elem.is_a?(Class)
         elem = elem.new
       elsif elem.is_a?(ViewLayout)
