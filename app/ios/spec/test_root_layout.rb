@@ -1,4 +1,5 @@
 class TestRootLayout < MotionKit::Layout
+  attr :scroll_view_styled
 
   def layout
     root UIScrollView, :scroll_view do
@@ -6,6 +7,24 @@ class TestRootLayout < MotionKit::Layout
         add UILabel, :basic_label
       end
     end
+  end
+
+  def scroll_view_style
+    @scroll_view_styled = true
+  end
+
+end
+
+
+class TestSimpleRootLayout < MotionKit::Layout
+  attr :label_styled
+
+  def layout
+    root UILabel, :label
+  end
+
+  def label_style
+    @label_styled = true
   end
 
 end

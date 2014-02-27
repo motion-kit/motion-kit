@@ -85,6 +85,11 @@ module MotionKit
       @parent = nil
       # the Layout object that implements custom style methods
       @layout_delegate = nil
+      # this variable is almost always 'initial'. It is only set to :reapply
+      # from the reapply! method. Makes sense when you consider the fact that
+      # you can have arbitrary view-creation methods (other than 'layout'), and
+      # they would be expected to support `initial/reapply` blocks as well.
+      @layout_state = :initial
     end
 
     def set_parent(layout, target, parent)
@@ -289,6 +294,8 @@ module MotionKit
           # style method and calling the block.
           create(@view, element_id, &block)
         end
+      elsif element_id
+        create(@view, element_id)
       end
 
       return @view

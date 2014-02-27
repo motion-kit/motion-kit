@@ -10,6 +10,18 @@ describe 'Assigning explicit root view' do
     @subject.view.subviews.first.subviews.first.should.be.kind_of UILabel
   end
 
+  it "should call style method" do
+    @subject.view
+    @subject.scroll_view_styled.should == true
+  end
+
+  it "should call style method on simple root layout" do
+    subject = TestSimpleRootLayout.new
+
+    subject.view
+    subject.label_styled.should == true
+  end
+
   it "should raise exception if you try to specify two roots" do
     subject = TestDuplicateRootLayout.new
 
