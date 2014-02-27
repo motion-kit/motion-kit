@@ -20,6 +20,5 @@ DESC
 
   gem.require_paths = ['lib']
 
-  gem.add_dependency "motion-require", ">= 0.0.6"
-  gem.add_development_dependency("rake")
+  # gem.add_dependency "motion-require", ">= 0.0.6"
 end
