@@ -33,9 +33,9 @@ module MotionKit
         end
       end
 
-      # Instantiates a new Layout instance, and assigns the appropriate owner
-      # layout, target object, and parent layout.
-      def layout_for(owner, layout, target, parent)
+      # Instantiates a new Layout instance, and assigns the appropriate layout,
+      # target object, and parent layout.
+      def layout_for(layout, target, parent)
         target_klasses = BaseLayout.target_klasses
         klass = target.class
 
@@ -57,26 +57,25 @@ module MotionKit
           @memoize[klass] = registered_class
         end
 
-        return @memoize[klass].new_child(owner, layout, target, parent)
+        return @memoize[klass].new_child(layout, target, parent)
       end
 
-      def new_child(owner=nil, layout=nil, target=nil, parent=nil)
-        child = new(owner)
+      def new_child(layout=nil, target=nil, parent=nil)
+        child = self.new
         child.set_parent(layout, target, parent)
         return child
       end
 
     end
 
-    attr_accessor :owner
     attr :parent
 
-    def initialize(owner=nil)
+    def initialize
       # if you're tempted to set @layout_delegate here - don't. In a ViewLayout,
       # we could instantiate a 'root' view that does *not* use the same Layout
       # as the current class. Leave the delegate as 'nil' so it can be lazily
       # created in 'apply'.
-      @owner = owner
+
       # the object to look in for style methods
       @layout = self
       # the object to apply styles to
@@ -106,10 +105,6 @@ module MotionKit
     # Runs a block of code with a new object as the 'context'. Methods from the
     # Layout classes are applied to this target object, and missing methods are
     # delegated to a new Layout instance that is created based on the new
-    # context.
-    #
-    # The owner and parent are set here; owner is assigned at the "top level"
-    # layout instance, and parent refers to the layout that created the current
     # context.
     #
     # This method is part of the public API, you can pass in any object to have
@@ -168,7 +163,7 @@ module MotionKit
       raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name}") if method_name.length == 0
 
       target = @context
-      @layout_delegate ||= Layout.layout_for(@owner, @layout, target, self)
+      @layout_delegate ||= Layout.layout_for(@layout, target, self)
       if @layout_delegate && @layout_delegate.respond_to?(method_name)
         return @layout_delegate.send(method_name, *args, &block)
       end
@@ -426,7 +421,7 @@ module MotionKit
     # `ViewLayout`, which returns the root view.
     def initialize_view(elem)
       if elem.is_a?(Class) && elem < ViewLayout
-        elem = elem.new_child(@owner, @layout, nil, self).view
+        elem = elem.new_child(@layout, nil, self).view
       elsif elem.is_a?(Class)
         elem = elem.new
       elsif elem.is_a?(ViewLayout)
