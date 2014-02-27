@@ -6,8 +6,9 @@
 2. Simple, easy to remember syntax
 3. ProMotion/RMQ/Sugarcube-compatible
 4. Styles and layouts are compiled
-5. Crossplatform compatibility (iOS, OSX)
-6. Written by [the authors][authors] of [ProMotion][] and [Teacup][]
+5. Crossplatform compatibility: iOS, OSX
+6. Crossframework compatibility: UIKit, Joybox, ApplicationKit, SpriteKit, CoreAnimation
+7. Written by [the authors][authors] of [ProMotion][] and [Teacup][]
 
 [authors]: CONTRIBUTORS.md
 [Colin]: https://github.com/colinta
@@ -375,6 +376,18 @@ class MyLayout < MotionKit::Layout
   end
 
 end
+```
+
+# Contributing
+
+We welcome your contributions! Please be sure to run the specs before you do,
+and consider adding support for both iOS and OS X.
+
+To run the specs for both platforms, you will need to run `rake spec` twice:
+
+```
+> rake spec  # runs iOS specs
+> rake spec platform=osx  # OS X specs
 ```
 
 
