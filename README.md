@@ -68,9 +68,10 @@ class SimpleLayout < MotionKit::Layout
     center superview.center
     text 'Hi there! Welcome to MotionKit'
     text_alignment UITextAlignmentCenter
-    font UIFont.fontWithName('Comis Sans', size: 24)
+    text_alignment :center  # sweettea has been ported to MotionKit!
+    font UIFont.fontWithName('Comic Sans', size: 24)
     text_color UIColor.whiteColor
-    background_color UIColor.clearColor
+    background_color rmq.color.white
   end
 
 end
@@ -78,9 +79,9 @@ end
 
 Nice, that should be pretty easy to follow, right?  Actually, according to
 MotionKit's preferred code style, the layout code (`center superview.center`)
-should be moved into the layout.  The reason is we want to be able to visualize
-the view hierarchy AND placement in the layout.  You don't have to do things
-this way, it's just a recommendation.
+should be moved into the layout.  You don't have to do things this way, it's
+just our recommendation.  The reason we recommend this style is we think it
+assists in visualizing placement of views in the view hierarchy.
 
 ```ruby
 class SimpleLayout < MotionKit::Layout
@@ -92,7 +93,7 @@ class SimpleLayout < MotionKit::Layout
   end
 ```
 
-Mkay, in this next, more complicated layout we'll create a login page, with a
+M'kay, in this next, more complicated layout we'll create a login page, with a
 'Login' button and inputs for username and password.
 
 ```ruby
@@ -108,7 +109,7 @@ class LoginLayout < MotionKit::Layout
 
     # This frame argument will be handed to the 'MotionKit::Layout#frame'
     # method, which can accept lots of shorthands.  Let's use one to scale the
-    # imageview so that it fills the width, and keeps its aspect ratio.
+    # imageview so that it fills the width, but keeps its aspect ratio.
     add UIImageView, :logo, [[0, 0], ['100%', :scale]]
     # 'scale' uses sizeToFit and the other width/height property to keep the
     # aspect ratio the same. Neat, huh?
@@ -116,34 +117,41 @@ class LoginLayout < MotionKit::Layout
     add UIView, :button_container do
       # Like I said, the frame method is very powerful, there are lots of
       # ways it can help with laying out your rects, and it will even try to
-      # apply the correct autoresizingMask for you
+      # apply the correct autoresizingMask for you; the from_bottom method will
+      # set the UIAutoresizingMask to "FlexibleTop", and using '100%' in the
+      # width will ensure the frame stays the width of its parent.
       frame from_bottom(height: 50, width: '100%')
 
       # same as above; assumes full width
-      frame from_bottom(50)
+      frame from_bottom(height: 50)
 
-      # like in Teacup, views added inside a block are added to that container.
-      # you can reference the container with 'superview' or 'parent'. 'parent'
-      # won't be an instance of a view, it's a special object that acts like a
-      # placeholder for various values; if you want to assign any superview
-      # property, use 'superview' instead.  'parent' is mostly useful for
-      # setting the frame
+      # similar to Teacup, views added inside a block are added to that
+      # container.  You can reference the container with 'superview' or
+      # 'parent'.
       add UIButton, :login_button do
+        background_color superview.background_color
+
+        # 'parent' is not instance of a view, it's a special object that
+        # acts like a placeholder for various values; if you want to assign
+        # *any* superview property, use 'superview' instead.  'parent' is mostly
+        # useful for setting the frame.
         frame [[ 10, 5 ], [ 50, parent.height - 10 ]]
-        title 'Login'
       end
     end
 
     # 'container' is a generic view method, and will return 'UIView' on iOS and
-    # 'NSView' on OS X.  Totally optional.
+    # 'NSView' on OS X.  Totally optional, but it helps keep your layout files
+    # consistent across multiple platforms.
     add container, :inputs do
-      frame [[0, 0], ['100%', '100% - 50']]
-      # setting autoresizing_mask should handle rotation events
+      frame x: 0, y: 0, width: '100%', height: '100% - 50'
+
+      # setting autoresizing_mask should handle rotation events; this overrides
+      # any automatic mask settings that occurred in 'frame'
       autoresizing_mask :pin_to_top, :flexible_height, :flexible_width
 
       # we'll use 'sizeToFit' to calculate the height
       add text_field, :username_input, [[10, 10], ['100% - 10', :auto]]
-      add text_field, :password_input, below(:username_input)
+      add text_field, :password_input, below(:username_input, margin: 8)
     end
   end
 end
@@ -152,12 +160,34 @@ end
 
 ### Styles are compiled, simple, and clean
 
-So simple, they're not even their own class!  This is just a "best practice"
-recommendation.  In MotionKit, when you define a method that has the same name
-as a view stylename with the suffix "_style", that method is called and is
-expected to style that view. So why not put those methods in a module, and
-include them in your layout! Sounds clean and organized to me! You can include
-multiple stylesheets this way, just be careful around name collisions.
+In MotionKit, when you define a method that has the same name as a view
+stylename with the suffix "_style", that method is called and is expected to
+style that view.
+
+```ruby
+class LoginLayout < MK::Layout
+
+  def layout
+    add UIImageView, :logo, [[0, 0], ['100%', :scale]]
+    add UIView, :button_container do
+      # ...
+    end
+  end
+
+  def logo_style
+    image UIImage.imageNamed('logo')
+  end
+
+  def button_container_style
+    background_color UIColor.clearColor
+  end
+
+end
+```
+
+So as an additional code-cleanup step, why not put those methods in a module,
+and include them in your layout! Sounds clean and organized to me! You can
+include multiple stylesheets this way, just be careful around name collisions.
 
 ```ruby
 module LoginStyles
@@ -175,17 +205,133 @@ module LoginStyles
   end
 
 end
+
+# back in our LoginLayout class
+class LoginLayout
+  include LoginStyles
+
+  def layout
+    # ...
+  end
+
+end
 ```
 
+### How do styles get applied?
+
+If you've used RMQ's Stylers, you'll recognize a very similar pattern here. In
+RMQ the 'style' methods are handed a 'Styler' instance, which wraps access to
+the view.  In MotionKit we make use of `method_missing` to call these methods
+indirectly.  But other than that, the design is very similar.
+
+```ruby
+  def login_button_style
+    title 'Press me'  # this gets delegated to UIButtonLayout#title(view, title)
+  end
+```
+
+There's an additional step where any un-handled methods are called sent to the
+view directly, using the appropriate setter method. This step also takes care
+of converting methods from `snake_case` to the Objective-C style `camelCase`,
+and takes care of discrepencies like `setFoo(value)` vs `foo=(value)`.
+
+```ruby
+  def login_button_style
+    background_color UIColor.clearColor  # this gets converted to `self.v.backgroundColor = ...`
+  end
+```
+
+You can easily add new helpers to MotionKit's existing Layout classes. They are
+all named consistenly, e.g. `Layout`, e.g. `UILabelLayout`.  Just open up
+these classes and hack away.
+
+```ruby
+class UILabelLayout
+
+  # style methods accept a 'target' and any number of values, and possibly a
+  # block.
+  def color(target, color)
+    target.textColor = color
+  end
+
+  # If a block is passed it is your responsibility to call `context(val,
+  # &block)`, if that is appropriate.  Other handlers can use the block to
+  # conditionally call code; the orientation helpers offer `portrait` and other
+  # methods to apply styles based on the current orientation.
+  def layer(&block)
+    context(v.layer, &block)
+  end
+
+end
+```
+
+For your own custom classes, you can provide a Layout class by calling the
+`targets` method in your class body.
+
+```ruby
+# make sure to extend an existing Layout class, otherwise you'll lose a lot of
+# helper methods
+class CustomLayout < MK::Layout
+  targets CustomView
+
+  def fore_color(target, value)
+    target.foregroundColor = value
+  end
+
+end
+```
+
+
 ### Some handy tricks
+
+#### Orientation specific styles
+
+```ruby
+add UIView, :container
+  portrait do
+    frame from_top(width: '100%', height: 100)
+  end
+  landscape do
+    frame from_top_left(width: 300, height: 100)
+  end
+end
+```
+
+#### Customize 'initial' vs 'reapply'
+
+If you call 'layout.reapply_all', your style methods will be called again (but
+NOT the `layout` method). You very well might want to control what methods get
+called on later invocations, or only on the *initial* invocation.
+
+This is more for being able to initialize values, or to handle orientation, than
+anything else.  There is not much performance increase/decrease if you just
+reapply styles every time, but you might not want to have your frame or colors
+reset, if you've done some animation.
+
+```ruby
+def login_button_style
+  # only once, when the `layout` is created
+  initial do
+  end
+
+  # on later invocations
+  reapply do
+  end
+
+  # style every time
+  title 'Press Me'
+end
+```
+
+#### Apply styles via module
 
 ```ruby
 module AppStyles
 
   def rounded_button
     layer do
-      cornerRadius 7
-      masksToBounds true
+      corner_radius 7
+      masks_to_bounds true
     end
   end
 
@@ -205,6 +351,8 @@ class LoginLayout < MotionKit::Layout
 
 end
 ```
+
+#### Use 'container' classes
 
 You saw the `container` method above, right?  Well those are easy to create.  So
 if you've got a 'button' subclass that you just love, you can assign it to a

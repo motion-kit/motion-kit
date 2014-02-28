@@ -1,9 +1,9 @@
-describe "Styleable module" do
+describe "Layout setters" do
 
   describe "Pure ruby object" do
 
     before do
-      @subject = TestStyleable.new(TestStyleableFixture.new)
+      @subject = TestSetters.new(TestSettersFixture.new)
     end
 
     it 'should set foo (setFoo)' do
@@ -14,6 +14,11 @@ describe "Styleable module" do
     it 'should set bar (bar=)' do
       @subject.run_bar
       @subject.target.bar.should == 'bar'
+    end
+
+    it 'should set setter (setter(val))' do
+      @subject.run_setter
+      @subject.target.setter.should == 'setter'
     end
 
     it 'should assign quux (baz.quux, attr_accessor) with baz as context' do
@@ -31,7 +36,7 @@ describe "Styleable module" do
   describe "Objective-C object" do
 
     before do
-      @subject = TestStyleable.new(TestStyleableLabel.new)
+      @subject = TestSetters.new(TestSettersLabel.new)
     end
 
     it 'should set text (setText)' do

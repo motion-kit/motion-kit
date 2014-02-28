@@ -5,5 +5,7 @@ module MotionKit
   end
   class InvalidRootError < Exception
   end
+  class ApplyError < Exception
+  end
 end
 ::MK = MotionKit unless defined?(::MK)
