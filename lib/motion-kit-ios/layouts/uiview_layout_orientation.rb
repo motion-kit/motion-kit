@@ -7,19 +7,29 @@ module MotionKit
     # returns true for :portrait if the device is "upside down", but it returns
     # false in the same situation on an iphone.
     def orientation?(value)
-      if ipad? && value == :portrait
-        return true if orientation?(:upside_down)
+      if target && target.controller
+        interface_orientation = target.controller.interfaceOrientation
+      else
+        interface_orientation = UIApplication.sharedApplication.statusBarOrientation
       end
 
-      case value
-      when :portrait, :upright, UIInterfaceOrientationPortrait
-        UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationPortrait
-      when :landscape, :landscape_left, UIInterfaceOrientationLandscapeLeft
-        UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeLeft
-      when :landscape, :landscape_right, UIInterfaceOrientationLandscapeRight
-        UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationLandscapeRight
+      return case value
+      when :portrait
+        if ipad?
+          interface_orientation == UIInterfaceOrientationPortrait || interface_orientation == UIInterfaceOrientationPortraitUpsideDown
+        else
+          interface_orientation == UIInterfaceOrientationPortrait
+        end
+      when :upright, UIInterfaceOrientationPortrait
+        interface_orientation == UIInterfaceOrientationPortrait
+      when :landscape
+        interface_orientation == UIInterfaceOrientationLandscapeLeft || interface_orientation == UIInterfaceOrientationLandscapeRight
+      when :landscape_left, UIInterfaceOrientationLandscapeLeft
+        interface_orientation == UIInterfaceOrientationLandscapeLeft
+      when :landscape_right, UIInterfaceOrientationLandscapeRight
+        interface_orientation == UIInterfaceOrientationLandscapeRight
       when :upside_down, UIInterfaceOrientationPortraitUpsideDown
-        UIApplication.sharedApplication.statusBarOrientation == UIInterfaceOrientationPortraitUpsideDown
+        interface_orientation == UIInterfaceOrientationPortraitUpsideDown
       end
     end
 

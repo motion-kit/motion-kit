@@ -33,9 +33,9 @@ module MotionKit
         end
       end
 
-      # Instantiates a new Layout instance, and assigns the appropriate owner
-      # layout, target object, and parent layout.
-      def layout_for(owner, target, parent)
+      # Instantiates a new Layout instance, and assigns the appropriate layout,
+      # target object, and parent layout.
+      def layout_for(layout, target, parent)
         target_klasses = BaseLayout.target_klasses
         klass = target.class
 
@@ -57,35 +57,54 @@ module MotionKit
           @memoize[klass] = registered_class
         end
 
-        return @memoize[klass].new(owner, target, parent)
+        return @memoize[klass].new_child(layout, target, parent)
+      end
+
+      def new_child(layout=nil, target=nil, parent=nil)
+        child = self.new
+        child.set_parent(layout, target, parent)
+        return child
       end
 
     end
 
-    attr :context
-    alias v context
-
-    attr_accessor :owner
     attr :parent
 
-    def initialize(owner=nil, target=nil, parent=nil)
+    def initialize
       # if you're tempted to set @layout_delegate here - don't. In a ViewLayout,
       # we could instantiate a 'root' view that does *not* use the same Layout
       # as the current class. Leave the delegate as 'nil' so it can be lazily
       # created in 'apply'.
-      @owner = owner || self
+
+      # the object to look in for style methods
+      @layout = self
+      # the object to apply styles to
+      @context = nil
+      # the parent layout - this isn't used anywhere
+      @parent = nil
+      # the Layout object that implements custom style methods
+      @layout_delegate = nil
+      # this variable is almost always 'initial'. It is only set to :reapply
+      # from the reapply! method. Makes sense when you consider the fact that
+      # you can have arbitrary view-creation methods (other than 'layout'), and
+      # they would be expected to support `initial/reapply` blocks as well.
+      @layout_state = :initial
+    end
+
+    def set_parent(layout, target, parent)
+      @layout = layout
       @context = target
       @parent = parent
-      @layout_delegate = nil
     end
+
+    def target
+      @context
+    end
+    alias v target
 
     # Runs a block of code with a new object as the 'context'. Methods from the
     # Layout classes are applied to this target object, and missing methods are
     # delegated to a new Layout instance that is created based on the new
-    # context.
-    #
-    # The owner and parent are set here; owner is assigned at the "top level"
-    # layout instance, and parent refers to the layout that created the current
     # context.
     #
     # This method is part of the public API, you can pass in any object to have
@@ -113,7 +132,7 @@ module MotionKit
       layout_was = @layout_delegate
       @context = target
       @layout_delegate = nil
-      block.call
+      yield
       @layout_delegate = layout_was
       @context = context_was
 
@@ -144,7 +163,7 @@ module MotionKit
       raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name}") if method_name.length == 0
 
       target = @context
-      @layout_delegate ||= Layout.layout_for(@owner, target, self)
+      @layout_delegate ||= Layout.layout_for(@layout, target, self)
       if @layout_delegate && @layout_delegate.respond_to?(method_name)
         return @layout_delegate.send(method_name, *args, &block)
       end
@@ -270,6 +289,8 @@ module MotionKit
           # style method and calling the block.
           create(@view, element_id, &block)
         end
+      elsif element_id
+        create(@view, element_id)
       end
 
       return @view
@@ -295,12 +316,43 @@ module MotionKit
 
     def call_style_method(element, element_id)
       style_method = "#{element_id}_style"
-      if @owner.respond_to?(style_method)
-        @owner.context(element) do
-          @owner.send(style_method)
+      if @layout.respond_to?(style_method)
+        @layout.context(element) do
+          @layout.send(style_method)
         end
       end
       return element
+    end
+
+    # Calls the style method of all objects in the view hierarchy
+    def reapply!(root=nil)
+      root ||= self.view
+      @layout_state = :reapply
+      MotionKit.find_all_views(root) do |view|
+        call_style_method(view, view.motion_kit_id) if view.motion_kit_id
+      end
+      @layout_state = :initial
+
+      return self
+    end
+
+    # Calls the style method of all objects in the view hierarchy
+    def reapply(&block)
+      raise ArgumentError.new('Block required') unless block
+
+      if @layout_state == :reapply
+        yield
+      end
+      return self
+    end
+
+    def initial(&block)
+      raise ArgumentError.new('Block required') unless block
+
+      if @layout_state == :initial
+        yield
+      end
+      return self
     end
 
     # Delegates to `create` to instantiate a view and run a layout block, and
@@ -400,7 +452,7 @@ module MotionKit
     # `ViewLayout`, which returns the root view.
     def initialize_view(elem)
       if elem.is_a?(Class) && elem < ViewLayout
-        elem = elem.new.view
+        elem = elem.new_child(@layout, nil, self).view
       elsif elem.is_a?(Class)
         elem = elem.new
       elsif elem.is_a?(ViewLayout)
