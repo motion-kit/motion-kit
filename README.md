@@ -36,7 +36,7 @@ class LoginController < UIViewController
     @layout = LoginLayout.new
     self.view = @layout.view
 
-    @button = @layout.get(:button)
+    @button = @layout.get(:button)  # This will be created in our layout (below)
   end
 
   def viewDidLoad
@@ -61,17 +61,22 @@ Here's a layout that just puts a label in the middle of the screen:
 class SimpleLayout < MotionKit::Layout
 
   def layout
-    add UILabel, :simple_label
+    add UILabel, :label
+    add UIButton, :button
   end
 
-  def simple_label
+  def label_style
     center superview.center
     text 'Hi there! Welcome to MotionKit'
     text_alignment UITextAlignmentCenter
-    text_alignment :center  # sweettea has been ported to MotionKit!
     font UIFont.fontWithName('Comic Sans', size: 24)
     text_color UIColor.whiteColor
     background_color rmq.color.white
+  end
+
+  def button_style
+    title 'Press it!'  # this will call 'setTitle(forState:)' via a styling method
+    center [superview.center.x, superview.center.y + 50]
   end
 
 end
