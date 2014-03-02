@@ -73,8 +73,8 @@ module MotionKit
     def initialize
       # if you're tempted to set @layout_delegate here - don't. In a ViewLayout,
       # we could instantiate a 'root' view that does *not* use the same Layout
-      # as the current class. Leave the delegate as 'nil' so it can be lazily
-      # created in 'apply'.
+      # as the current class. Leave the delegate as 'nil' so it can be created
+      # in 'context'.
 
       # the object to look in for style methods
       @layout = self
@@ -129,12 +129,20 @@ module MotionKit
     #     end
     def context(target, &block)
       context_was = @context
-      layout_was = @layout_delegate
+      parent_was = @parent
+      delegate_was = @layout_delegate
+
       @context = target
-      @layout_delegate = nil
+      initial do
+        @context.motion_kit_meta[:parent] = delegate_was
+        @context.motion_kit_meta[:delegate] = Layout.layout_for(@layout, @context, @parent)
+      end
+      @parent = @context.motion_kit_meta[:parent]
+      @layout_delegate = @context.motion_kit_meta[:delegate]
       yield
-      @layout_delegate = layout_was
+      @layout_delegate = delegate_was
       @context = context_was
+      @parent = parent_was
 
       return target
     end
@@ -163,8 +171,8 @@ module MotionKit
       raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name}") if method_name.length == 0
 
       target = @context
-      @layout_delegate ||= Layout.layout_for(@layout, target, self)
-      if @layout_delegate && @layout_delegate.respond_to?(method_name)
+      @layout_delegate ||= Layout.layout_for(@layout, target, @parent)
+      if @layout_delegate.respond_to?(method_name)
         return @layout_delegate.send(method_name, *args, &block)
       end
 
@@ -271,6 +279,9 @@ module MotionKit
       if @view
         raise ContextConflictError.new("Already created the root view")
       end
+      if @context
+        raise ContextConflictError.new("Already in a context")
+      end
       unless @assign_root
         raise InvalidRootError.new("You should only create a 'root' view from inside the 'layout' method (use 'create' elsewhere)")
       end
@@ -279,6 +290,7 @@ module MotionKit
       # this method can be called with just a symbol, to assign the root element_id
       if element.is_a?(Symbol)
         element_id = element
+        # See note below about why we don't need to `apply(:default_root)`
         element = default_root
       end
 
@@ -292,6 +304,7 @@ module MotionKit
       elsif element_id
         create(@view, element_id)
       end
+      @context = @view
 
       return @view
     end

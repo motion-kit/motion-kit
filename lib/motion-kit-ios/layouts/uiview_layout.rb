@@ -1,27 +1,45 @@
 motion_require '../../motion-kit/layouts/layout'
 
 module MotionKit
-  class UIViewLayout < ViewLayout
-    targets UIView
+  class Layout < ViewLayout
 
     # platform specific default root view
     def default_root
       # child Layout classes will return *their* UIView subclass from self.targets
+      view_class = self.class.targets || UIView
       self.class.targets.alloc.initWithFrame(UIScreen.mainScreen.applicationFrame)
     end
 
     def add_child(subview)
-      v.addSubview(subview)
+      target.addSubview(subview)
     end
 
     def remove_child(subview)
       subview.removeFromSuperview
     end
 
+    # UIViews AND CALayers are updated
+    def reapply!(root=nil)
+      if root.is_a?(CALayer)
+        @layout_state = :reapply
+        MotionKit.find_all_layers(root) do |layer|
+          call_style_method(layer, layer.motion_kit_id) if layer.motion_kit_id
+        end
+        @layout_state = :initial
+      else
+        root ||= self.view
+        reapply!(root.layer)
+        super(root)
+      end
+
+      return self
+    end
+
   end
 
   # this is the default container layout, which is different for each platform.
-  class Layout < UIViewLayout
+  class UIViewLayout < Layout
+    targets UIView
   end
 
 end

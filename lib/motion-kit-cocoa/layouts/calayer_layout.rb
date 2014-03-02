@@ -4,11 +4,11 @@ module MotionKit
 
     # platform specific default root view
     def default_root
-      CALayer.layer
+      self.targets.layer
     end
 
     def add_child(subview)
-      v.addSublayer(subview)
+      target.addSublayer(subview)
     end
 
     def remove_child(subview)
