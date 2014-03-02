@@ -304,7 +304,6 @@ module MotionKit
       elsif element_id
         create(@view, element_id)
       end
-      @context = @view
 
       return @view
     end
