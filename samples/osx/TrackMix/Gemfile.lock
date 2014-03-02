@@ -1,0 +1,18 @@
+PATH
+  remote: ../../..
+  specs:
+    motion-kit (0.0.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    motion-require (0.0.7)
+    motion-wiretap (1.0.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  motion-kit!
+  motion-require
+  motion-wiretap

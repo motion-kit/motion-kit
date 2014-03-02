@@ -1,0 +1,4 @@
+source 'https://rubygems.org'
+
+gem 'motion-kit', :path => '../../..'
+gem 'motion-require'
