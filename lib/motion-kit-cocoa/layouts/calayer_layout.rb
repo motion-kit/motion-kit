@@ -4,7 +4,7 @@ module MotionKit
 
     # platform specific default root view
     def default_root
-      self.targets.layer
+      self.class.targets.layer
     end
 
     def add_child(subview)
