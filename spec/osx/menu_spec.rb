@@ -39,6 +39,30 @@ describe TestMenu do
     open_menu.keyEquivalent.should == 'o'
   end
 
+  it 'should have a "File" menu with an "Close" item' do
+    file_item = @subject.menu.itemArray[0]
+    file_menu = file_item.submenu
+    close_menu = file_menu.itemArray[1]
+    close_menu.title.should == 'Close'
+    close_menu.keyEquivalent.should == 'w'
+  end
+
+  it 'should have a "File" menu with an "Foo" item' do
+    file_item = @subject.menu.itemArray[0]
+    file_menu = file_item.submenu
+    foo_menu = file_menu.itemArray[2]
+    foo_menu.title.should == 'Foo'
+    @subject.foo.should == foo_menu
+  end
+
+  it 'should have a "File" menu with an "Bar" item' do
+    file_item = @subject.menu.itemArray[0]
+    file_menu = file_item.submenu
+    bar_menu = file_menu.itemArray[3]
+    bar_menu.title.should == 'Bar'
+    @subject.bar.should == bar_menu.submenu
+  end
+
   it 'should have a "Views" item' do
     views_item = @subject.menu.itemArray[1]
     views_item.should.not == nil

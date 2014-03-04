@@ -32,9 +32,14 @@ module MotionKit
     end
 
     # override 'add'; menus are just a horse of a different color.
-    def add(title_or_item, options={}, &block)
+    def add(title_or_item, element_id=nil, options={}, &block)
       unless @context
         create_default_root_context
+      end
+
+      if element_id.is_a?(NSDictionary)
+        options = element_id
+        element_id = nil
       end
 
       if title_or_item.is_a?(NSMenuItem)
@@ -51,7 +56,7 @@ module MotionKit
         item = self.item(title, options)
 
         if block
-          menu = self.create(title)
+          menu = create(title)
           item.submenu = menu
           retval = menu
         else
@@ -64,15 +69,19 @@ module MotionKit
       if menu && block
         menuitem_was = @menu_item
         @menu_item = item
-        create(menu, &block)
+        context(menu, &block)
         @menu_item = menuitem_was
+      end
+
+      if element_id
+        create(retval, element_id)
       end
 
       return retval
     end
 
     def create(title_or_item, element_id=nil, &block)
-      if title_or_item.is_a?(NSMenu)
+      if title_or_item.is_a?(NSMenu) || title_or_item.is_a?(NSMenuItem)
         item = title_or_item
       else
         item = NSMenu.alloc.initWithTitle(title_or_item)

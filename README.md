@@ -7,7 +7,13 @@
 3. ProMotion/RMQ/SugarCube-compatible
 4. Styles and layouts are compiled
 5. Crossplatform compatibility: iOS, OSX
-6. Crossframework compatibility: UIKit, Joybox, ApplicationKit, SpriteKit, CoreAnimation
+6. Crossframework compatibility:
+   - [UIKit][readmore-uikit]
+   - [ApplicationKit][readmore-applicationkit]
+   - [Joybox][readmore-joybox]
+   - [SpriteKit][readmore-spritekit]
+   - [CoreAnimation][readmore-coreanimation]
+   - [NSMenu/NSMenuItem][readmore-nsmenu]
 7. Written by [the authors][authors] of [ProMotion][] and [Teacup][]
 
 [authors]: CONTRIBUTORS.md
@@ -17,6 +23,12 @@
 [RMQ]: https://github.com/infinitered/rmq
 [Teacup]: https://github.com/rubymotion/teacup
 
+[readmore-uikit]:          https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#uikit
+[readmore-applicationkit]: https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#applicationkit
+[readmore-joybox]:         https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#joybox
+[readmore-spritekit]:      https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#spritekit
+[readmore-coreanimation]:  https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#coreanimation
+[readmore-nsmenu]:         https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#nsmenu
 
 ## What happened to Teacup??
 

@@ -1,9 +1,15 @@
 class TestMenu < MK::MenuLayout
+  attr :foo
+  attr :bar
 
   def layout
     add 'File' do
       add 'Open', action: 'open:', keyEquivalent: 'o'
       add 'Close', key: 'w', action: 'close:'
+      add 'Foo', :foo_menu
+      add 'Bar', :bar_menu do
+        add 'Baz'
+      end
     end
 
     add 'Views' do
@@ -22,6 +28,14 @@ class TestMenu < MK::MenuLayout
         add 'Submenu'
       end
     end
+  end
+
+  def foo_menu_style
+    @foo = target
+  end
+
+  def bar_menu_style
+    @bar = target
   end
 
 end
