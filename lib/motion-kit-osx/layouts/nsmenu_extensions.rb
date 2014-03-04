@@ -8,7 +8,7 @@ module MotionKit
       NSBundle.mainBundle.infoDictionary['CFBundleName']
     end
 
-    def app_menu(title=nil)
+    def app_menu(title=nil, options={})
       title ||= app_name
       exclude = options.fetch(:exclude, [])
       create(title) do
@@ -20,8 +20,10 @@ module MotionKit
           add services_item
           add separator_item
         end
-        add hide_item unless exclude.include?(:hide)
-        add hide_others_item unless exclude.include?(:hide)
+        unless exclude.include?(:hide)
+          add hide_item
+          add hide_others_item
+        end
         add show_all_item unless exclude.include?(:show)
         add quit_item unless exclude.include?(:quit)
       end
