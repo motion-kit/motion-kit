@@ -92,8 +92,8 @@ module MotionKit
           value = target.frame
         end
       elsif value.is_a?(Hash)
-        x = value.fetch(:x, value.fetch(:left, 0)
-        y = value.fetch(:y, value.fetch(:top, 0)
+        x = value.fetch(:x, value.fetch(:left, 0))
+        y = value.fetch(:y, value.fetch(:top, 0))
         width = value.fetch(:width, value.fetch(:w, 0))
         height = value.fetch(:height, value.fetch(:h, 0))
         value = [
