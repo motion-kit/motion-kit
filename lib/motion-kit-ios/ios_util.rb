@@ -5,4 +5,8 @@ module MotionKit
     @appearance_klass ||= UIView.appearance.class
   end
 
+  def default_view_class
+    UIView
+  end
+
 end
