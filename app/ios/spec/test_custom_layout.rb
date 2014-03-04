@@ -9,9 +9,9 @@ class CustomLabelLayout < MK::UIViewLayout
   def text(value)
     if @attributes
       text = NSAttributedString.alloc.initWithString(value.to_s, attributes: @attributes)
-      v.attributedText = text
+      target.attributedText = text
     else
-      v.text = value.to_s
+      target.text = value.to_s
     end
   end
 

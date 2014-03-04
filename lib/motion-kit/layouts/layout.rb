@@ -112,7 +112,7 @@ module MotionKit
     #
     # Example:
     #     def table_view_style
-    #       content = v.contentView
+    #       content = target.contentView
     #       if content
     #         context(content) do
     #           background_color UIColor.clearColor

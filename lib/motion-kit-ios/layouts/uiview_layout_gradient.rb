@@ -3,7 +3,7 @@ motion_require 'uiview_layout'
 module MotionKit
   class UIViewLayout
 
-    def gradient(target, gradient)
+    def gradient(gradient)
       gradient_layer = target.instance_variable_get(:@teacup_gradient_layer) || begin
         gradient_layer = CAGradientLayer.layer
         gradient_layer.frame = target.bounds
