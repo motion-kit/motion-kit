@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-gem "motion-require", git: 'git@github.com:colinta/motion-require'
+gem 'motion-require'
 gemspec

@@ -6,7 +6,10 @@ end
 require 'motion-require'
 
 Motion::Require.all(Dir.glob(File.expand_path('../motion-kit/**/*.rb', __FILE__)))
-Motion::Require.all(Dir.glob(File.expand_path('../motion-kit-ios/**/*.rb', __FILE__)), platform: :ios)
-Motion::Require.all(Dir.glob(File.expand_path('../motion-kit-osx/**/*.rb', __FILE__)), platform: :osx)
-Motion::Require.all(Dir.glob(File.expand_path('../motion-kit-cocoa/**/*.rb', __FILE__)), platform: :ios)
-Motion::Require.all(Dir.glob(File.expand_path('../motion-kit-cocoa/**/*.rb', __FILE__)), platform: :osx)
+if App.template == :ios
+  Motion::Require.all(Dir.glob(File.expand_path('../motion-kit-ios/**/*.rb', __FILE__)))
+  Motion::Require.all(Dir.glob(File.expand_path('../motion-kit-cocoa/**/*.rb', __FILE__)))
+else
+  Motion::Require.all(Dir.glob(File.expand_path('../motion-kit-osx/**/*.rb', __FILE__)))
+  Motion::Require.all(Dir.glob(File.expand_path('../motion-kit-cocoa/**/*.rb', __FILE__)))
+end
