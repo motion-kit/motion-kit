@@ -4,9 +4,9 @@ class AppDelegate
     @controller = TrackWindowController.alloc.init
     @controller.showWindow(self)
     @window = @controller.window
-    @window.title = NSBundle.mainBundle.infoDictionary['CFBundleName']
     @window.orderFrontRegardless
-    buildMenu
+
+    NSApp.mainMenu = MainMenu.new.menu
   end
 
 end

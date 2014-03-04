@@ -2,8 +2,6 @@ class TrackWindowController < NSWindowController
   attr_accessor :track
 
   def init
-    # unless window
-    # end
     super.tap do
       @track = Track.new
 
@@ -13,7 +11,9 @@ class TrackWindowController < NSWindowController
     end
   end
 
+  # I *cannot* figure out with this method never gets called!
   def loadWindow
+    raise 'This should work!'
     @layout = TrackWindowLayout.new
     self.window = @layout.window
 
@@ -65,6 +65,7 @@ class TrackWindowLayout < MotionKit::WindowLayout
 
   def window_style
     initial do
+      title = NSBundle.mainBundle.infoDictionary['CFBundleName']
       frame [[240, 180], [280, 380]]
     end
   end
