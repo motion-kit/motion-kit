@@ -1,18 +1,9 @@
 class MainMenu < MK::MenuLayout
 
   def layout
-    # add app_menu
-    add app_name do
-      add about_item
-      add separator_item
-      add services_item
-      add separator_item
-      add hide_item
-      add hide_others_item
-      add show_all_item
-      add quit_item
-    end
+    add app_menu
 
+    # add file_menu
     add 'File' do
       add new_item
       add open_item
@@ -70,16 +61,8 @@ class MainMenu < MK::MenuLayout
       add item('Customize Toolbar…', action: 'runToolbarCustomizationPalette:', keyEquivalent: '')
     end
 
-    NSApp.windowsMenu = add 'Window' do
-      add item('Minimize', action: 'performMiniaturize:', keyEquivalent: 'm')
-      add item('Zoom', action: 'performZoom:', keyEquivalent: '')
-      add NSMenuItem.separatorItem
-      add item('Bring All To Front', action: 'arrangeInFront:', keyEquivalent: '')
-    end
-
-    NSApp.helpMenu = add 'Help' do
-      add item("#{app_name} Help", action: 'showHelp:', keyEquivalent: '?')
-    end
+    NSApp.windowsMenu = add window_menu
+    NSApp.helpMenu = add help_menu
   end
 
   private
