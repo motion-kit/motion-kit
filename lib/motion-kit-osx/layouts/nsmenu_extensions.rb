@@ -16,6 +16,10 @@ module MotionKit
           add about_item
           add separator_item
         end
+        unless exclude.include?(:prefs)
+          add preferences_item
+          add separator_item
+        end
         unless exclude.include?(:services)
           add services_item
           add separator_item
@@ -29,142 +33,141 @@ module MotionKit
       end
     end
 
+    def file_menu(title='File', options={})
+      exclude = options.fetch(:exclude, [])
+      create(title) do
+        add new_item unless exclude.include?(:new)
+        add open_item unless exclude.include?(:open)
+        add separator_item unless [:new, :open].all? { |menu_name| exclude.include?(menu_name) }
+
+        add close_item unless exclude.include?(:close)
+        add save_item unless exclude.include?(:save)
+        add revert_to_save_item unless exclude.include?(:revert)
+        add separator_item unless [:close, :save, :revert].all? { |menu_name| exclude.include?(menu_name) }
+
+        add page_setup_item unless exclude.include?(:page_setup)
+        add print_item unless exclude.include?(:print)
+      end
+    end
+
+    def window_menu(title='Window', options={})
+      exclude = options.fetch(:exclude, [])
+      create(title) do
+        add minimize_item unless exclude.include?(:minimize)
+        add zoom_item unless exclude.include?(:zoom)
+        add separator_item unless [:minimize, :zoom].all? { |menu_name| exclude.include?(menu_name) }
+
+        add bring_all_to_front_item unless exclude.include?(:bring_all_to_front)
+      end
+    end
+
+    def help_menu(title='Help', options={})
+      exclude = options.fetch(:exclude, [])
+      create(title) do
+        add help_item
+      end
+    end
+
     def separator_item
       NSMenuItem.separatorItem
     end
 
-    def about_item(options={})
-      title = options.fetch(:title, "About #{app_name}")
-      key = options.fetch(:keyEquivalent, options.fetch(:key, ''))
-      action = options.fetch(:action, 'orderFrontStandardAboutPanel:')
-      return self.item(title, action: action, keyEquivalent: key)
+    def about_item(title=nil, options={})
+      title ||= "About #{app_name}"
+      options = { action: 'orderFrontStandardAboutPanel:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def services_item(options={})
-      title = options.fetch(:title, 'Services')
-      key = options.fetch(:keyEquivalent, options.fetch(:key, ''))
-      action = options.fetch(:action, nil)
-      item = self.item(title, action: nil, keyEquivalent: key)
-      NSApp.servicesMenu = services_item.submenu = NSMenu.new
-      return item
+    def preferences_item(title='Preferences', options={})
+      options = { key: ',', action: 'openPreferences:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def hide_item(options={})
-      title = options.fetch(:title, "Hide #{app_name}")
-      key = options.fetch(:keyEquivalent, options.fetch(:key, 'h'))
-      action = options.fetch(:action, 'hide:')
-      return self.item(title, action: action, keyEquivalent: key)
+    def services_item(title='Services', options={})
+      return self.item(title, options)
     end
 
-    def hide_others_item(options={})
-      title = options.fetch(:title, 'Hide Others')
-      key = options.fetch(:keyEquivalent, options.fetch(:key, 'h'))
-      action = options.fetch(:action, 'hideOtherApplications:')
-      item = self.item(title, action: action, keyEquivalent: key)
-      item.keyEquivalentModifierMask NSCommandKeyMask | NSAlternateKeyMask
-      return item
+    def hide_item(title=nil, options={})
+      title ||= "Hide #{app_name}"
+      options = { key: 'h', action: 'hide:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def show_all_item(options={})
-      title = options.fetch(:title, 'Show All')
-      key = options.fetch(:keyEquivalent, options.fetch(:key, ''))
-      action = options.fetch(:action, 'unhideAllApplications:')
-      return self.item(title, action: action, keyEquivalent: key)
+    def hide_others_item(title='Hide Others', options={})
+      options = { key: 'h', action: 'hideOtherApplications:', mask: NSCommandKeyMask | NSAlternateKeyMask }.merge(options)
+      return self.item(title, options)
     end
 
-    def quit_item(options={})
-      title = options.fetch(:title, "Quit #{app_name}")
-      key = options.fetch(:keyEquivalent, options.fetch(:key, 'q'))
-      action = options.fetch(:action, 'terminate:')
-      return self.item(title, action: action, keyEquivalent: key)
+    def show_all_item(title='Show All', options={})
+      options = { action: 'unhideAllApplications:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def new_item(options={})
-      title = 'New'
-      key = options.fetch(:keyEquivalent, options.fetch(:key, 'n'))
-      action = options.fetch(:action, 'newDocument:')
-      return item(title, action: action, keyEquivalent: key)
+    def quit_item(title=nil, options={})
+      title ||= "Quit #{app_name}"
+      options = { key: 'q', action: 'terminate:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def open_item(options={})
-      title = 'Open…'
-      key = options.fetch(:keyEquivalent, options.fetch(:key, 'o'))
-      action = options.fetch(:action, 'openDocument:')
-      return item(title, action: action, keyEquivalent: key)
+    def new_item(title='New', options={})
+      options = { key: 'n', action: 'newDocument:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def close_item(options={})
-      title = 'Close'
-      key = options.fetch(:keyEquivalent, options.fetch(:key, 'w'))
-      action = options.fetch(:action, 'performClose:')
-      return item(title, action: action, keyEquivalent: key)
+    def open_item(title='Open…', options={})
+      options = { key: 'o', action: 'openDocument:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def save_item(options={})
-      title = 'Save…'
-      key = options.fetch(:keyEquivalent, options.fetch(:key, 's'))
-      action = options.fetch(:action, 'saveDocument:')
-      return item(title, action: action, keyEquivalent: key)
+    def close_item(title='Close', options={})
+      options = { key: 'w', action: 'performClose:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def revert_to_save_item(options={})
-      title = 'Revert to Saved'
-      key = options.fetch(:keyEquivalent, options.fetch(:key, ''))
-      action = options.fetch(:action, 'revertDocumentToSaved:')
-      return item(title, action: action, keyEquivalent: key)
+    def save_item(title='Save…', options={})
+      options = { key: 's', action: 'saveDocument:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def page_setup_item(options={})
-      title = 'Page Setup…'
-      key = options.fetch(:keyEquivalent, options.fetch(:key, 'P'))
-      action = options.fetch(:action, 'runPageLayout:')
-      return item(title, action: action, keyEquivalent: key)
+    def save_as_item(title='Save as…', options={})
+      options = { key: 'S', action: 'saveDocumentAs:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def print_item(options={})
-      title = 'Print…'
-      key = options.fetch(:keyEquivalent, options.fetch(:key, 'p'))
-      action = options.fetch(:action, 'printDocument:')
-      return item(title, action: action, keyEquivalent: key)
+    def revert_to_save_item(title='Revert to Saved', options={})
+      options = { action: 'revertDocumentToSaved:' }.merge(options)
+      return self.item(title, options)
     end
 
-    ##|
-    ##|  These methods are meant to be called on the parent menu item, but
-    ##|  there's no way to reference an NSMenu's parent *item* (only its parent
-    ##|  *menu*).  So the @menu_item is stored in an ivar before the menu block
-    ##|  is created, and these methods access that menu item.
-    ##|
-
-    # sets the title of the current NSMenu AND it's parent NSMenuItem
-    def title(value)
-      target.title = value
-      @menu_item.title = value
+    def page_setup_item(title='Page Setup…', options={})
+      options = { key: 'P', action: 'runPageLayout:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def attributedTitle(value)
-      target.title = value.to_s
-      @menu_item.attributedTitle = value
+    def print_item(title='Print…', options={})
+      options = { key: 'p', action: 'printDocument:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def attributed_title(value)
-      target.title = value.to_s
-      @menu_item.attributedTitle = value
+    def minimize_item(title='Minimize', options={})
+      options = { key: 'm', action: 'performMiniaturize:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def state(value)
-      @menu_item.state = value
+    def zoom_item(title='Zoom', options={})
+      options = { action: 'performMiniaturize:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def tag(value)
-      @menu_item.tag = value
+    def bring_all_to_front_item(title='Bring All To Front', options={})
+      options = { action: 'arrangeInFront:' }.merge(options)
+      return self.item(title, options)
     end
 
-    def keyEquivalentModifierMask(value)
-      @menu_item.keyEquivalentModifierMask = value
-    end
-
-    def key_equivalent_modifier_mask(value)
-      @menu_item.keyEquivalentModifierMask = value
+    def help_item(title=nil, options={})
+      title ||= "#{app_name} Help"
+      options = { key: '?', action: 'showHelp:' }.merge(options)
+      return self.item("#{app_name} Help", options)
     end
 
   end

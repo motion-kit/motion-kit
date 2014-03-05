@@ -93,7 +93,12 @@ module MotionKit
     def item(title, options={})
       action = options.fetch(:action, nil)
       key = options.fetch(:keyEquivalent, options.fetch(:key, ''))
-      return NSMenuItem.alloc.initWithTitle(title, action: action, keyEquivalent: key)
+      mask = options.fetch(:keyEquivalentModifierMask, options.fetch(:mask, nil))
+      item = NSMenuItem.alloc.initWithTitle(title, action: action, keyEquivalent: key)
+      unless mask.nil?
+        item.keyEquivalentModifierMask = mask
+      end
+      return item
     end
 
   end
