@@ -81,17 +81,22 @@ class MainMenu < MK::MenuLayout
   def layout
     add app_menu  # oh yeah, there's a helper for that!
 
+    # create a menu w/ submenus by passing a block
     add 'File' do
+      # you'll need a title, and probably an action, and optionally a shortcut key
       add 'New', key: 'n', action: 'new:'
       add 'Open', key: 'o', action: 'open:'
+      # if you need to add a custom key mask you can do that, too
+      add 'Export', key: 'e', mask: NSCommandKeyMask | NSAlternateKeyMask, action: 'export:'
 
-      # lots of helpers, actually:
+      # there are lots of helpers, actually:
       add new_item
       add open_item
       add separator_item
       # you can pass in options like title, key, action
       add close_item(title: 'Close', key: 'w', action: 'performClose:')
       add save_item
+      add save_as_item
       add revert_to_save_item
       add separator_item
       add page_setup_item
