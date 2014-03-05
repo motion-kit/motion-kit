@@ -1,16 +1,26 @@
 motion_require 'nsmenu_layout'
 
 module MotionKit
-  class NSMenuLayout < MenuLayout
+  class NSMenuLayout
 
     # useful when writing menus
     def app_name
       NSBundle.mainBundle.infoDictionary['CFBundleName']
     end
 
+    def _menu_title_and_options(title, options, default_title=nil, default_options={})
+      if title.is_a?(NSDictionary)
+        options = title
+        title = options[:title]
+      end
+      title ||= default_title
+      return title, default_options.merge(options)
+    end
+
     def app_menu(title=nil, options={})
-      title ||= app_name
-      exclude = options.fetch(:exclude, [])
+      title, options = _menu_title_and_options(title, options, app_name)
+
+      exclude = Array(options.fetch(:exclude, []))
       create(title) do
         unless exclude.include?(:about)
           add about_item
@@ -33,8 +43,10 @@ module MotionKit
       end
     end
 
-    def file_menu(title='File', options={})
-      exclude = options.fetch(:exclude, [])
+    def file_menu(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'File')
+
+      exclude = Array(options.fetch(:exclude, []))
       create(title) do
         add new_item unless exclude.include?(:new)
         add open_item unless exclude.include?(:open)
@@ -50,8 +62,10 @@ module MotionKit
       end
     end
 
-    def window_menu(title='Window', options={})
-      exclude = options.fetch(:exclude, [])
+    def window_menu(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Window')
+
+      exclude = Array(options.fetch(:exclude, []))
       create(title) do
         add minimize_item unless exclude.include?(:minimize)
         add zoom_item unless exclude.include?(:zoom)
@@ -61,8 +75,10 @@ module MotionKit
       end
     end
 
-    def help_menu(title='Help', options={})
-      exclude = options.fetch(:exclude, [])
+    def help_menu(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Help')
+
+      exclude = Array(options.fetch(:exclude, []))
       create(title) do
         add help_item
       end
@@ -73,100 +89,97 @@ module MotionKit
     end
 
     def about_item(title=nil, options={})
-      title ||= "About #{app_name}"
-      options = { action: 'orderFrontStandardAboutPanel:' }.merge(options)
+      title, options = _menu_title_and_options(title, options, "About #{app_name}", { action: 'orderFrontStandardAboutPanel:' })
       return self.item(title, options)
     end
 
-    def preferences_item(title='Preferences', options={})
-      options = { key: ',', action: 'openPreferences:' }.merge(options)
+    def preferences_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Preferences', { key: ',', action: 'openPreferences:' })
       return self.item(title, options)
     end
 
-    def services_item(title='Services', options={})
+    def services_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Services')
       return self.item(title, options)
     end
 
     def hide_item(title=nil, options={})
-      title ||= "Hide #{app_name}"
-      options = { key: 'h', action: 'hide:' }.merge(options)
+      title, options = _menu_title_and_options(title, options, "Hide #{app_name}", { key: 'h', action: 'hide:' })
       return self.item(title, options)
     end
 
-    def hide_others_item(title='Hide Others', options={})
-      options = { key: 'h', action: 'hideOtherApplications:', mask: NSCommandKeyMask | NSAlternateKeyMask }.merge(options)
+    def hide_others_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Hide Others', { key: 'h', action: 'hideOtherApplications:', mask: NSCommandKeyMask | NSAlternateKeyMask })
       return self.item(title, options)
     end
 
-    def show_all_item(title='Show All', options={})
-      options = { action: 'unhideAllApplications:' }.merge(options)
+    def show_all_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Show All', { action: 'unhideAllApplications:' })
       return self.item(title, options)
     end
 
     def quit_item(title=nil, options={})
-      title ||= "Quit #{app_name}"
-      options = { key: 'q', action: 'terminate:' }.merge(options)
+      title, options = _menu_title_and_options(title, options, "Quit #{app_name}", { key: 'q', action: 'terminate:' })
       return self.item(title, options)
     end
 
-    def new_item(title='New', options={})
-      options = { key: 'n', action: 'newDocument:' }.merge(options)
+    def new_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'New', { key: 'n', action: 'newDocument:' })
       return self.item(title, options)
     end
 
-    def open_item(title='Open…', options={})
-      options = { key: 'o', action: 'openDocument:' }.merge(options)
+    def open_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Open…', { key: 'o', action: 'openDocument:' })
       return self.item(title, options)
     end
 
-    def close_item(title='Close', options={})
-      options = { key: 'w', action: 'performClose:' }.merge(options)
+    def close_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Close', { key: 'w', action: 'performClose:' })
       return self.item(title, options)
     end
 
-    def save_item(title='Save…', options={})
-      options = { key: 's', action: 'saveDocument:' }.merge(options)
+    def save_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Save…', { key: 's', action: 'saveDocument:' })
       return self.item(title, options)
     end
 
-    def save_as_item(title='Save as…', options={})
-      options = { key: 'S', action: 'saveDocumentAs:' }.merge(options)
+    def save_as_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Save as…', { key: 'S', action: 'saveDocumentAs:' })
       return self.item(title, options)
     end
 
-    def revert_to_save_item(title='Revert to Saved', options={})
-      options = { action: 'revertDocumentToSaved:' }.merge(options)
+    def revert_to_save_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Revert to Saved', { action: 'revertDocumentToSaved:' })
       return self.item(title, options)
     end
 
-    def page_setup_item(title='Page Setup…', options={})
-      options = { key: 'P', action: 'runPageLayout:' }.merge(options)
+    def page_setup_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Page Setup…', { key: 'P', action: 'runPageLayout:' })
       return self.item(title, options)
     end
 
-    def print_item(title='Print…', options={})
-      options = { key: 'p', action: 'printDocument:' }.merge(options)
+    def print_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Print…', { key: 'p', action: 'printDocument:' })
       return self.item(title, options)
     end
 
-    def minimize_item(title='Minimize', options={})
-      options = { key: 'm', action: 'performMiniaturize:' }.merge(options)
+    def minimize_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Minimize', { key: 'm', action: 'performMiniaturize:' })
       return self.item(title, options)
     end
 
-    def zoom_item(title='Zoom', options={})
-      options = { action: 'performMiniaturize:' }.merge(options)
+    def zoom_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Zoom', { action: 'performMiniaturize:' })
       return self.item(title, options)
     end
 
-    def bring_all_to_front_item(title='Bring All To Front', options={})
-      options = { action: 'arrangeInFront:' }.merge(options)
+    def bring_all_to_front_item(title=nil, options={})
+      title, options = _menu_title_and_options(title, options, 'Bring All To Front', { action: 'arrangeInFront:' })
       return self.item(title, options)
     end
 
     def help_item(title=nil, options={})
-      title ||= "#{app_name} Help"
-      options = { key: '?', action: 'showHelp:' }.merge(options)
+      title, options = _menu_title_and_options(title, options, "#{app_name} Help", { key: '?', action: 'showHelp:' })
       return self.item("#{app_name} Help", options)
     end
 

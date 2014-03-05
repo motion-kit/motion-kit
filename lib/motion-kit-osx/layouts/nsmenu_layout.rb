@@ -81,10 +81,10 @@ module MotionKit
     end
 
     def create(title_or_item, element_id=nil, &block)
-      if title_or_item.is_a?(NSMenu) || title_or_item.is_a?(NSMenuItem)
-        item = title_or_item
-      else
+      if title_or_item.is_a?(NSString)
         item = NSMenu.alloc.initWithTitle(title_or_item)
+      else
+        item = title_or_item
       end
 
       return super(item, element_id, &block)
@@ -93,11 +93,14 @@ module MotionKit
     def item(title, options={})
       action = options.fetch(:action, nil)
       key = options.fetch(:keyEquivalent, options.fetch(:key, ''))
-      mask = options.fetch(:keyEquivalentModifierMask, options.fetch(:mask, nil))
+      key ||= ''  # key must never be nil
       item = NSMenuItem.alloc.initWithTitle(title, action: action, keyEquivalent: key)
+
+      mask = options.fetch(:keyEquivalentModifierMask, options.fetch(:mask, nil))
       unless mask.nil?
         item.keyEquivalentModifierMask = mask
       end
+
       return item
     end
 
