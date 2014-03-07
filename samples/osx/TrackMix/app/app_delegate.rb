@@ -5,8 +5,7 @@ class AppDelegate
 
     @controller = TrackWindowController.alloc.init
     @controller.showWindow(self)
-    @window = @controller.window
-    @window.orderFrontRegardless
+    @controller.window.orderFrontRegardless
   end
 
 end
