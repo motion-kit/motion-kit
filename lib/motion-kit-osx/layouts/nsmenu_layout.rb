@@ -33,10 +33,6 @@ module MotionKit
 
     # override 'add'; menus are just a horse of a different color.
     def add(title_or_item, element_id=nil, options={}, &block)
-      unless @context
-        create_default_root_context
-      end
-
       if element_id.is_a?(NSDictionary)
         options = element_id
         element_id = nil
