@@ -44,6 +44,7 @@ private
     setScrollEnabled(nil)
     setHasVerticalScroller(nil)
     setHasHorizontalScroller(nil)
+    setDocumentView(nil)
   end
 end
 
@@ -52,6 +53,9 @@ private
   def dummy
     setAdjustsFontSizeToFitWidth(nil)
     setFormatter(nil)
+    setBezeled(nil)
+    setBezelStyle(nil)
+    setDrawsBackground(nil)
   end
 end
 
@@ -63,6 +67,7 @@ private
     setAutocapitalizationType(nil)
     setAutocorrectionType(nil)
     setSpellCheckingType(nil)
+    setDrawsBackground(nil)
   end
 end
 
