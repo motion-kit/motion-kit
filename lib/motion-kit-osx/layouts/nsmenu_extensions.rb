@@ -21,7 +21,7 @@ module MotionKit
       title, options = _menu_title_and_options(title, options, app_name)
 
       exclude = Array(options.fetch(:exclude, []))
-      create(title) do
+      return create(title) do
         unless exclude.include?(:about)
           add about_item
           add separator_item
@@ -47,7 +47,7 @@ module MotionKit
       title, options = _menu_title_and_options(title, options, 'File')
 
       exclude = Array(options.fetch(:exclude, []))
-      create(title) do
+      return create(title) do
         add new_item unless exclude.include?(:new)
         add open_item unless exclude.include?(:open)
         add separator_item unless [:new, :open].all? { |menu_name| exclude.include?(menu_name) }
@@ -66,7 +66,7 @@ module MotionKit
       title, options = _menu_title_and_options(title, options, 'Window')
 
       exclude = Array(options.fetch(:exclude, []))
-      create(title) do
+      return create(title) do
         add minimize_item unless exclude.include?(:minimize)
         add zoom_item unless exclude.include?(:zoom)
         add separator_item unless [:minimize, :zoom].all? { |menu_name| exclude.include?(menu_name) }
@@ -79,7 +79,7 @@ module MotionKit
       title, options = _menu_title_and_options(title, options, 'Help')
 
       exclude = Array(options.fetch(:exclude, []))
-      create(title) do
+      return create(title) do
         add help_item
       end
     end
