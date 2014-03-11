@@ -16,8 +16,8 @@ end
 
 
 Motion::Project::App.setup do |app|
-  # Use `rake config' to see complete project settings.
   app.name = 'MotionKit'
+  app.identifier = 'com.motionkit.MotionKit'
 
   if app.template == :ios
     app.specs_dir = 'spec/ios/'
