@@ -1,4 +1,4 @@
-describe TestMenuExtensions do
+describe 'NSMenuLayout extensions' do
 
   before do
     @subject = MK::NSMenuLayout.new
@@ -143,7 +143,7 @@ describe TestMenuExtensions do
     item = @subject.preferences_item
     item.should.be.kind_of(NSMenuItem)
     item.keyEquivalent.should == ','
-    item.action.should == 'openPreferences'.to_sym
+    item.action.should == 'openPreferences:'.to_sym
   end
 
   it 'should have a `preferences_item` method with options' do
@@ -181,7 +181,7 @@ describe TestMenuExtensions do
     item = @subject.hide_others_item
     item.should.be.kind_of(NSMenuItem)
     item.keyEquivalent.should == 'h'
-    item.action.should == 'hideOtherApplications'.to_sym
+    item.action.should == 'hideOtherApplications:'.to_sym
     item.keyEquivalentModifierMask.should == NSCommandKeyMask | NSAlternateKeyMask
   end
 
@@ -195,7 +195,7 @@ describe TestMenuExtensions do
     item = @subject.show_all_item
     item.should.be.kind_of(NSMenuItem)
     item.keyEquivalent.should == ''
-    item.action.should == 'unhideAllApplications'.to_sym
+    item.action.should == 'unhideAllApplications:'.to_sym
   end
 
   it 'should have a `show_all_item` method with options' do
