@@ -63,3 +63,15 @@ class TestCreateMenu < MK::MenuLayout
   end
 
 end
+
+
+class TestCreateViaExtensionsMenu < MK::MenuLayout
+
+  def layout
+    add app_menu
+    add file_menu
+    add window_menu
+    add help_menu
+  end
+
+end
