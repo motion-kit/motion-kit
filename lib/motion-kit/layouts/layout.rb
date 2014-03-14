@@ -316,9 +316,9 @@ module MotionKit
 
     def call_style_method(element, element_id)
       style_method = "#{element_id}_style"
-      if @layout.respond_to?(style_method)
-        @layout.context(element) do
-          @layout.send(style_method)
+      if self.respond_to?(style_method)
+        self.context(element) do
+          self.send(style_method)
         end
       end
       return element
