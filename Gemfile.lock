@@ -6,7 +6,8 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    motion-require (0.0.7)
+    motion-require (0.2.0)
+    rake (10.1.1)
 
 PLATFORMS
   ruby
@@ -14,3 +15,4 @@ PLATFORMS
 DEPENDENCIES
   motion-kit!
   motion-require
+  rake
