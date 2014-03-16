@@ -48,7 +48,7 @@ module MotionKit
       method_chain.each do |m|
         # We'll break out and return nil if any part of the chain
         # doesn't respond properly.
-        obj = nil && break unless obj.respond_to?(m)
+        (obj = nil) && break unless obj.respond_to?(m)
         obj = obj.send(m)
       end
       obj
