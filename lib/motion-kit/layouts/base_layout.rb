@@ -33,11 +33,9 @@ module MotionKit
         end
       end
 
-      # Instantiates a new Layout instance, and assigns the appropriate layout,
-      # target object, and parent layout.
-      def layout_for(layout, target, parent)
+      # Instantiates a new Layout instance using `layout` as the root-level layout
+      def layout_for(layout, klass)
         target_klasses = BaseLayout.target_klasses
-        klass = target.class
 
         # shave a little bit of time by caching the result of this klass/layout
         # lookup.
@@ -57,31 +55,25 @@ module MotionKit
           @memoize[klass] = registered_class
         end
 
-        return @memoize[klass].new_child(layout, target, parent)
+        return @memoize[klass].new_child(layout)
       end
 
-      def new_child(layout=nil, target=nil, parent=nil)
+      def new_child(layout=nil)
         child = self.new
-        child.set_parent(layout, target, parent)
+        child.set_layout(layout)
         return child
       end
 
     end
 
-    attr_reader :parent
-
     def initialize
       # if you're tempted to set @layout_delegate here - don't. In a ViewLayout,
       # we could instantiate a 'root' view that does *not* use the same Layout
-      # as the current class. Leave the delegate as 'nil' so it can be lazily
-      # created in 'apply'.
+      # as the current class. Leave the delegate as 'nil' so it can be created
+      # in 'context'.
 
       # the object to look in for style methods
       @layout = self
-      # the object to apply styles to
-      @context = nil
-      # the parent layout - this isn't used anywhere
-      @parent = nil
       # the Layout object that implements custom style methods
       @layout_delegate = nil
       # this variable is almost always 'initial'. It is only set to :reapply
@@ -91,16 +83,22 @@ module MotionKit
       @layout_state = :initial
     end
 
-    def set_parent(layout, target, parent)
-      @layout = layout
-      @context = target
-      @parent = parent
+    def set_layout(layout)
+      @layout = layout && WeakRef.new(layout)
     end
 
     def target
-      @context
+      if @layout.nil? || @layout == self
+        # only the "root layout" instance is allowed to change the context.
+        # if there isn't a context set, try and create a root instance; this
+        # will fail if we're not in a state that allows the root to be created
+        @context ||= create_default_root_context
+      else
+        # child layouts get the context from the root layout
+        @layout.target
+      end
     end
-    alias v target
+    def v ; target ; end
 
     # Runs a block of code with a new object as the 'context'. Methods from the
     # Layout classes are applied to this target object, and missing methods are
@@ -112,7 +110,7 @@ module MotionKit
     #
     # Example:
     #     def table_view_style
-    #       content = v.contentView
+    #       content = target.contentView
     #       if content
     #         context(content) do
     #           background_color UIColor.clearColor
@@ -128,29 +126,28 @@ module MotionKit
     #       end
     #     end
     def context(target, &block)
-      parent_was = @parent
+      return target unless block
+      # this little line is incredibly important; the context is only set on
+      # the top-level Layout object.
+      return @layout.context(target, &block) if @layout && @layout != self
+
       context_was = @context
-      layout_was = @layout_delegate
-      @parent = MotionKit::Parent.new(@context)
+      delegate_was = @layout_delegate
+
       @context = target
-      @layout_delegate = nil
+      @context.motion_kit_meta[:delegate] ||= Layout.layout_for(@layout, @context.class)
+      @layout_delegate = @context.motion_kit_meta[:delegate]
       yield
-      @parent = parent_was
-      @layout_delegate = layout_was
+      @layout_delegate = delegate_was
       @context = context_was
 
       return target
     end
 
     # All missing methods get delegated to either the @layout_delegate or
-    # applied to the @context using one of the setter methods that `apply`
+    # applied to the context using one of the setter methods that `apply`
     # supports.
     def method_missing(method_name, *args, &block)
-      # Odd, I tried having this in ViewLayout#method_missing, and calling super
-      # from there, but it had very strange errors.
-      unless @context
-        create_default_root_context
-      end
       self.apply(method_name, *args, &block)
     end
 
@@ -165,9 +162,9 @@ module MotionKit
       method_name = method_name.to_s
       raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name}") if method_name.length == 0
 
-      target = @context
-      @layout_delegate ||= Layout.layout_for(@layout, target, WeakRef.new(self))
-      if @layout_delegate && @layout_delegate.respond_to?(method_name)
+      target = self.target
+      @layout_delegate ||= Layout.layout_for(@layout, target.class)
+      if @layout_delegate.respond_to?(method_name)
         return @layout_delegate.send(method_name, *args, &block)
       end
 

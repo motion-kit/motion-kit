@@ -7,8 +7,8 @@ module MotionKit
     # returns true for :portrait if the device is "upside down", but it returns
     # false in the same situation on an iphone.
     def orientation?(value)
-      if target && target.controller
-        interface_orientation = target.controller.interfaceOrientation
+      if target.is_a?(UIView) && target.nextResponder && target.nextResponder.is_a?(UIViewController)
+        interface_orientation = target.nextResponder.interfaceOrientation
       else
         interface_orientation = UIApplication.sharedApplication.statusBarOrientation
       end

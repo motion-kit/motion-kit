@@ -1,11 +1,14 @@
 module MotionKit
-  # A sensible parent class for any View-like or tree-like layout class.
-  # Platform agnostic.
+  # A sensible parent class for any View-like layout class. Platform agnostic.
   # Any platform-specific tasks are offloaded to child views (add_child,
-  # remove_child) or elements.
+  # remove_child).
+  # Actually, "view like" is misleading, since technically it only assumes "tree
+  # like". You could use a ViewLayout subclass to construct a hierarchy
+  # representing a family tree, for instance. But that would be a silly use of
+  # MotionKit.
   class ViewLayout < BaseLayout
 
-    # The main view. Builds the view if not already built.
+    # The parent view.  This method builds the layout and returns the root view.
     def view
       @view ||= build_view
     end
@@ -22,6 +25,9 @@ module MotionKit
       if @view
         raise ContextConflictError.new("Already created the root view")
       end
+      if @context
+        raise ContextConflictError.new("Already in a context")
+      end
       unless @assign_root
         raise InvalidRootError.new("You should only create a 'root' view from inside the 'layout' method (use 'create' elsewhere)")
       end
@@ -30,6 +36,7 @@ module MotionKit
       # this method can be called with just a symbol, to assign the root element_id
       if element.is_a?(Symbol)
         element_id = element
+        # See note below about why we don't need to `apply(:default_root)`
         element = default_root
       end
 
@@ -67,9 +74,9 @@ module MotionKit
 
     def call_style_method(element, element_id)
       style_method = "#{element_id}_style"
-      if self.respond_to?(style_method)
-        self.context(element) do
-          self.send(style_method)
+      if @layout.respond_to?(style_method)
+        @layout.context(element) do
+          @layout.send(style_method)
         end
       end
       return element
@@ -110,10 +117,6 @@ module MotionKit
     # adds the view to the current view on the view stack.  If no view exists on
     # the stack, a default root view can be created if that has been enabled.
     def add(element, element_id=nil, &block)
-      unless @context
-        create_default_root_context
-      end
-
       element = initialize_view(element)
       self.apply(:add_child, element)
       create(element, element_id, &block)
@@ -206,7 +209,9 @@ module MotionKit
         NSLog('Warning! No root view was set in ViewLayout#layout. Did you mean to call `root`?')
       end
       @assign_root = false
-      # The context starts out blank
+      # context can be set via the 'create_default_root_context' method, which
+      # may be outside a 'context' block, so make sure to restore context to
+      # it's previous value
       @context = nil
 
       @view
