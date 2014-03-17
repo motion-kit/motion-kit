@@ -9,6 +9,14 @@ module MotionKit
       @element = element
     end
 
+    def origin
+      try(:frame, :origin)
+    end
+
+    def size
+      try(:bounds, :size)
+    end
+
     def x
       try(:frame, :origin, :x)
     end
@@ -34,7 +42,7 @@ module MotionKit
     end
 
     def center
-      [ center_x, center_y ] if width && height
+      CGPointMake(center_x, center_y) if width && height
     end
 
   protected

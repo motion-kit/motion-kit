@@ -31,7 +31,15 @@ describe MotionKit::Parent do
   end
 
   it "should return the center point" do
-    @subject.center.should == [15, 20]
+    @subject.center.should == CGPointMake(15, 20)
+  end
+
+  it "should return the origin point" do
+    @subject.origin.should == CGPointMake(10, 20)
+  end
+
+  it "should return the size rect" do
+    @subject.size.should == CGSizeMake(30, 40)
   end
 
 end
