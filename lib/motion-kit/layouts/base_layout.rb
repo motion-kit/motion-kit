@@ -66,6 +66,8 @@ module MotionKit
 
     end
 
+    attr :parent
+
     def initialize
       # if you're tempted to set @layout_delegate here - don't. In a ViewLayout,
       # we could instantiate a 'root' view that does *not* use the same Layout
@@ -132,14 +134,17 @@ module MotionKit
       return @layout.context(target, &block) if @layout && @layout != self
 
       context_was = @context
+      parent_was = @parent
       delegate_was = @layout_delegate
 
+      @parent = MK::Parent.new(context_was)
       @context = target
       @context.motion_kit_meta[:delegate] ||= Layout.layout_for(@layout, @context.class)
       @layout_delegate = @context.motion_kit_meta[:delegate]
       yield
       @layout_delegate = delegate_was
       @context = context_was
+      @parent = parent_was
 
       return target
     end
