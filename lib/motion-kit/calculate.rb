@@ -12,9 +12,9 @@ module MotionKit
 
       case dimension
       when :width
-        view.superview.frame.size.width * factor + constant
+        (view.superview.frame.size.width * factor + constant).round
       when :height
-        view.superview.frame.size.height * factor + constant
+        (view.superview.frame.size.height * factor + constant).round
       else
         raise "Unknown dimension #{dimension}"
       end
