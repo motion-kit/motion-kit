@@ -116,13 +116,17 @@ class LoginLayout < MotionKit::Layout
     add UIImageView, :logo
 
     # but even better, pass the 'frame' in, too:
-    add UIImageView, :logo, [[0, 0], [320, 568]]
+    add UIImageView, :logo do
+      frame [[0, 0], [320, 568]]
+    end
     # hardcoded dimensions!? there's got to be a better way...
 
     # This frame argument will be handed to the 'MotionKit::Layout#frame'
     # method, which can accept lots of shorthands.  Let's use one to scale the
     # imageview so that it fills the width, but keeps its aspect ratio.
-    add UIImageView, :logo, [[0, 0], ['100%', :scale]]
+    add UIImageView, :logo do
+      frame [[0, 0], ['100%', :scale]]
+    end
     # 'scale' uses sizeToFit and the other width/height property to keep the
     # aspect ratio the same. Neat, huh?
 
@@ -162,8 +166,12 @@ class LoginLayout < MotionKit::Layout
       autoresizing_mask :pin_to_top, :flexible_height, :flexible_width
 
       # we'll use 'sizeToFit' to calculate the height
-      add text_field, :username_input, [[10, 10], ['100% - 10', :auto]]
-      add text_field, :password_input, below(:username_input, margin: 8)
+      add text_field, :username_input do
+        frame [[10, 10], ['100% - 10', :auto]]
+      end
+      add text_field, :password_input do
+        frame below(:username_input, margin: 8)
+      end
     end
   end
 end
@@ -180,7 +188,9 @@ style that view.
 class LoginLayout < MK::Layout
 
   def layout
-    add UIImageView, :logo, [[0, 0], ['100%', :scale]]
+    add UIImageView, :logo do
+      frame [[0, 0], ['100%', :scale]]
+    end
     add UIView, :button_container do
       # ...
     end
