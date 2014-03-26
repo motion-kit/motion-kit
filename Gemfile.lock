@@ -7,6 +7,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    motion-redgreen (0.1.0)
     motion-require (0.2.0)
     rake (10.1.1)
 
@@ -15,5 +16,6 @@ PLATFORMS
 
 DEPENDENCIES
   motion-kit!
+  motion-redgreen
   motion-require (~> 0.2.0)
   rake
