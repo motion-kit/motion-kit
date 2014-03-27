@@ -4,10 +4,17 @@
 
 1. Non-polluting
 2. Simple, easy to remember syntax
-3. ProMotion/RMQ/Sugarcube-compatible
+3. ProMotion/RMQ/SugarCube-compatible
 4. Styles and layouts are compiled
-5. Crossplatform compatibility (iOS, OSX)
-6. Written by [the authors][authors] of [ProMotion][] and [Teacup][]
+5. Crossplatform compatibility: iOS, OSX
+6. Crossframework compatibility:
+   - [UIKit][readmore-uikit]
+   - [ApplicationKit][readmore-applicationkit]
+   - [Joybox][readmore-joybox]
+   - [SpriteKit][readmore-spritekit]
+   - [CoreAnimation][readmore-coreanimation]
+   - [NSMenu/NSMenuItem][readmore-nsmenu]
+7. Written by [the authors][authors] of [ProMotion][] and [Teacup][]
 
 [authors]: CONTRIBUTORS.md
 [Colin]: https://github.com/colinta
@@ -16,6 +23,12 @@
 [RMQ]: https://github.com/infinitered/rmq
 [Teacup]: https://github.com/rubymotion/teacup
 
+[readmore-uikit]:          https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#uikit
+[readmore-applicationkit]: https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#applicationkit
+[readmore-joybox]:         https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#joybox
+[readmore-spritekit]:      https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#spritekit
+[readmore-coreanimation]:  https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#coreanimation
+[readmore-nsmenu]:         https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#nsmenu
 
 ## What happened to Teacup??
 
@@ -28,7 +41,7 @@ be replaced with a new project, rather than upgraded or refactored.
 From your controller you will instantiate a `MotionKit::Layout` instance, and
 request views from it.  `layout.view` is the root view, and it's common to
 assign this to `self.view` in your `loadView` method.  You'll also want to hook
-up your instance variables.
+up your instance variables, using `layout.get(:id)`.
 
 ```ruby
 class LoginController < UIViewController
@@ -40,7 +53,7 @@ class LoginController < UIViewController
   end
 
   def viewDidLoad
-    @button.on(:touch) { my_code } # Mix with some Sugarcube for sweetness!
+    @button.on(:touch) { my_code } # Mix with some SugarCube for sweetness!
     rmq(@button).on(:touch) { my_code } # and of course RMQ works just as well
   end
 end
@@ -49,13 +62,13 @@ end
 
 ### Lay out your subviews with a clean DSL
 
-In a layout file, the `layout` method is expected to create the view hierarchy,
-and it should also take care of frames and layout.  You can also apply styles
-here, and it's handy to do so when you are creating a quick mock-up, or a very
-small app.  But in a real application, you'll want to include a Stylesheet
-module, so your layout isn't cluttered with all your styling code.
+In a layout class, the `layout` method is expected to create the view hierarchy,
+and it should also take care of frames and styling.  You can apply styles here,
+and it's handy to do so when you are creating a quick mock-up, or a very small
+app.  But in a real application, you'll want to include a Stylesheet module, so
+your layout isn't cluttered with all your styling code.
 
-Here's a layout that just puts a label in the middle of the screen:
+Here's a layout that just puts a label and a button in the middle of the screen:
 
 ```ruby
 class SimpleLayout < MotionKit::Layout
@@ -66,43 +79,36 @@ class SimpleLayout < MotionKit::Layout
   end
 
   def label_style
-    center superview.center
     text 'Hi there! Welcome to MotionKit'
-    text_alignment UITextAlignmentCenter
     font UIFont.fontWithName('Comic Sans', size: 24)
+    sizeToFit
+    center [CGRectGetMidX(superview.bounds), CGRectGetMidY(superview.bounds)]
+    text_alignment UITextAlignmentCenter
     text_color UIColor.whiteColor
-    background_color rmq.color.white
+    # if you prefer to use shorthands from another gem, you certainly can!
+    background_color rmq.color.white  # from RMQ
+    background_color :white.uicolor   # from SugarCube
   end
 
   def button_style
-    title 'Press it!'  # this will call 'setTitle(forState:)' via a styling method
-    center [superview.center.x, superview.center.y + 50]
+    # this will call 'setTitle(forState:)' via a styling method
+    title 'Press it!'
+    center [CGRectGetMidX(superview.bounds), CGRectGetMidY(superview.bounds) + 50]
   end
 
 end
 ```
 
-Nice, that should be pretty easy to follow, right?  Actually, according to
-MotionKit's preferred code style, the layout code (`center superview.center`)
-should be moved into the layout.  You don't have to do things this way, it's
-just our recommendation.  The reason we recommend this style is we think it
-assists in visualizing placement of views in the view hierarchy.
-
-```ruby
-class SimpleLayout < MotionKit::Layout
-
-  def layout
-    add UILabel, :simple_label do
-      center superview.center
-    end
-  end
-```
-
-M'kay, in this next, more complicated layout we'll create a login page, with a
-'Login' button and inputs for username and password.
+Nice, that should be pretty easy to follow, right?  M'kay, in this next, more
+complicated layout we'll create a login page, with a 'Login' button and inputs
+for username and password.  In this example, I will assign the frame in the
+`layout` method, instead of in the `_style` methods.  This is purely an
+aesthetic choice, but we think it makes it easier to see how the views are
+organized if the frame code is in the layout.
 
 ```ruby
 class LoginLayout < MotionKit::Layout
+  # we write our `_style` methods in a module
   include LoginStyles
 
   def layout
@@ -110,12 +116,17 @@ class LoginLayout < MotionKit::Layout
     add UIImageView, :logo
 
     # but even better, pass the 'frame' in, too:
-    add UIImageView, :logo, [[0, 0], [320, 568]]  # hardcoded dimensions!? no way
+    add UIImageView, :logo do
+      frame [[0, 0], [320, 568]]
+    end
+    # hardcoded dimensions!? there's got to be a better way...
 
     # This frame argument will be handed to the 'MotionKit::Layout#frame'
     # method, which can accept lots of shorthands.  Let's use one to scale the
     # imageview so that it fills the width, but keeps its aspect ratio.
-    add UIImageView, :logo, [[0, 0], ['100%', :scale]]
+    add UIImageView, :logo do
+      frame [[0, 0], ['100%', :scale]]
+    end
     # 'scale' uses sizeToFit and the other width/height property to keep the
     # aspect ratio the same. Neat, huh?
 
@@ -155,8 +166,12 @@ class LoginLayout < MotionKit::Layout
       autoresizing_mask :pin_to_top, :flexible_height, :flexible_width
 
       # we'll use 'sizeToFit' to calculate the height
-      add text_field, :username_input, [[10, 10], ['100% - 10', :auto]]
-      add text_field, :password_input, below(:username_input, margin: 8)
+      add text_field, :username_input do
+        frame [[10, 10], ['100% - 10', :auto]]
+      end
+      add text_field, :password_input do
+        frame below(:username_input, margin: 8)
+      end
     end
   end
 end
@@ -173,7 +188,9 @@ style that view.
 class LoginLayout < MK::Layout
 
   def layout
-    add UIImageView, :logo, [[0, 0], ['100%', :scale]]
+    add UIImageView, :logo do
+      frame [[0, 0], ['100%', :scale]]
+    end
     add UIView, :button_container do
       # ...
     end
@@ -222,6 +239,7 @@ class LoginLayout
 end
 ```
 
+
 ### How do styles get applied?
 
 If you've used RMQ's Stylers, you'll recognize a very similar pattern here. In
@@ -235,36 +253,45 @@ indirectly.  But other than that, the design is very similar.
   end
 ```
 
-There's an additional step where any un-handled methods are called sent to the
-view directly, using the appropriate setter method. This step also takes care
-of converting methods from `snake_case` to the Objective-C style `camelCase`,
-and takes care of discrepencies like `setFoo(value)` vs `foo=(value)`.
+There's an additional step where any un-handled methods are sent to the view
+directly, using the appropriate setter method. This step also takes care of
+converting methods from `snake_case` to the Objective-C style `camelCase`, and
+takes care of discrepencies like `setFoo(value)` vs `foo=(value)`.
 
 ```ruby
   def login_button_style
-    background_color UIColor.clearColor  # this gets converted to `self.v.backgroundColor = ...`
+    background_color UIColor.clearColor  # this gets converted to `self.target.backgroundColor = ...`
   end
 ```
 
 You can easily add new helpers to MotionKit's existing Layout classes. They are
-all named consistenly, e.g. `Layout`, e.g. `UILabelLayout`.  Just open up
+all named consistenly, e.g. `UIViewLayout`, e.g. `UILabelLayout`.  Just open up
 these classes and hack away.
 
 ```ruby
+# these helpers will only be applied to instances of UILabel and UILabel
+# subclasses
 class UILabelLayout
 
-  # style methods accept a 'target' and any number of values, and possibly a
-  # block.
-  def color(target, color)
+  # style methods can accept any number of arguments, and a block. The current
+  # view should be referred to via the method `target`
+  def color(color)
     target.textColor = color
   end
 
   # If a block is passed it is your responsibility to call `context(val,
   # &block)`, if that is appropriate.  Other handlers can use the block to
-  # conditionally call code; the orientation helpers offer `portrait` and other
-  # methods to apply styles based on the current orientation.
+  # conditionally call code; on iOS there are orientation helpers `portrait`,
+  # `landscape`, etc that apply styles based on the current orientation.
   def layer(&block)
-    context(v.layer, &block)
+    context(target.layer, &block)
+  end
+
+  # Sure, you can add flow-control mechanisms if that's your thing!
+  def sometimes(&block)
+    if rand > 0.5
+      yield
+    end
   end
 
 end
@@ -274,12 +301,13 @@ For your own custom classes, you can provide a Layout class by calling the
 `targets` method in your class body.
 
 ```ruby
-# make sure to extend an existing Layout class, otherwise you'll lose a lot of
-# helper methods
-class CustomLayout < MK::Layout
+# Be sure to extend an existing Layout class, otherwise you'll lose a lot of
+# functionality.  Often this will be `MK::UIViewLayout` on iOS and
+# `MK::NSViewLayout` on OS X.
+class CustomLayout < MK::UIViewLayout
   targets CustomView
 
-  def fore_color(target, value)
+  def fore_color(value)
     target.foregroundColor = value
   end
 
@@ -290,6 +318,8 @@ end
 ### Some handy tricks
 
 #### Orientation specific styles
+
+These are available on iOS.
 
 ```ruby
 add UIView, :container
@@ -302,11 +332,11 @@ add UIView, :container
 end
 ```
 
-#### Customize 'initial' vs 'reapply'
+#### Update views via 'initial', 'reapply'
 
-If you call 'layout.reapply_all', your style methods will be called again (but
+If you call 'layout.reapply!', your style methods will be called again (but
 NOT the `layout` method). You very well might want to control what methods get
-called on later invocations, or only on the *initial* invocation.
+called on later invocations, or only on the *initial* layout.
 
 This is more for being able to initialize values, or to handle orientation, than
 anything else.  There is not much performance increase/decrease if you just
@@ -383,7 +413,20 @@ end
 ```
 
 
-## Goodbye Teacup
+# Contributing
+
+We welcome your contributions! Please be sure to run the specs before you do,
+and consider adding support for both iOS and OS X.
+
+To run the specs for both platforms, you will need to run `rake spec` twice:
+
+```
+> rake spec  # runs iOS specs
+> rake spec platform=osx  # OS X specs
+```
+
+
+# Goodbye Teacup
 ###### by [colinta][Colin]
 
 If you've worked with XIB/NIB files, you might know that while they can be

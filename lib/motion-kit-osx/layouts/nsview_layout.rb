@@ -5,9 +5,9 @@ module MotionKit
 
     # platform specific default root view
     def default_root
-      # child Layout classes will return *their* UIView subclass from self.targets
+      # child Layout classes will return *their* NSView subclass from self.targets
       view_class = self.class.targets || MotionKit.default_view_class
-      view_class.alloc.initWithFrame(UIScreen.mainScreen.applicationFrame)
+      view_class.alloc.initWithFrame([[0, 0], [0, 0]])
     end
 
     def add_child(subview)
@@ -18,7 +18,7 @@ module MotionKit
       subview.removeFromSuperview
     end
 
-    # UIViews AND CALayers are updated
+    # NSViews AND CALayers are updated
     def reapply!(root=nil)
       if root.is_a?(CALayer)
         @layout_state = :reapply
@@ -28,7 +28,9 @@ module MotionKit
         @layout_state = :initial
       else
         root ||= self.view
-        reapply!(root.layer)
+        if root.layer
+          reapply!(root.layer)
+        end
         super(root)
       end
 
@@ -38,8 +40,8 @@ module MotionKit
   end
 
   # this is the default container layout, which is different for each platform.
-  class UIViewLayout < Layout
-    targets UIView
+  class NSViewLayout < Layout
+    targets NSView
   end
 
 end

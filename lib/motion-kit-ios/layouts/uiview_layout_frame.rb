@@ -85,13 +85,22 @@ module MotionKit
     end
 
     def frame(value)
-      if Symbol === value && value == :full
+      if value.is_a?(Symbol) && value == :full
         if target.superview
           value = target.superview.bounds
         else
           value = target.frame
         end
-      elsif Array === value && value.length == 4
+      elsif value.is_a?(Hash)
+        x = value.fetch(:x, value.fetch(:left, 0))
+        y = value.fetch(:y, value.fetch(:top, 0))
+        width = value.fetch(:width, value.fetch(:w, 0))
+        height = value.fetch(:height, value.fetch(:h, 0))
+        value = [
+            [MotionKit.calculate(target, :width, x), MotionKit.calculate(target, :height, y)],
+            [MotionKit.calculate(target, :width, width), MotionKit.calculate(target, :height, height)]
+          ]
+      elsif value.is_a?(Array) && value.length == 4
         value = [
             [MotionKit.calculate(target, :width, value[0]), MotionKit.calculate(target, :height, value[1])],
             [MotionKit.calculate(target, :width, value[2]), MotionKit.calculate(target, :height, value[3])]
