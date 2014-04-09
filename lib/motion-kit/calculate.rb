@@ -4,13 +4,22 @@ module MotionKit
   def calculate(view, dimension, amount)
     if amount.is_a? Proc
       view.instance_exec(&amount)
+    elsif amount == :auto
+      size_that_fits = view.sizeThatFits([0, 0])
+
+      return case dimension
+      when :width
+        size_that_fits.width
+      when :height
+        size_that_fits.height
+      end
     elsif amount.is_a?(String) && amount.include?('%')
       calc = Calculator.scan(amount)
 
       factor = calc.factor
       constant = calc.constant
 
-      case dimension
+      return case dimension
       when :width
         (view.superview.frame.size.width * factor + constant).round
       when :height
