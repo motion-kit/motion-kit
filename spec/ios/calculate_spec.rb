@@ -3,10 +3,6 @@ class Viewish
     @superview ||= Viewish.new
   end
 
-  def bounds
-    CGRect.new([0, 0], [100, 44])
-  end
-
   def frame
     CGRect.new([10, 10], [100, 44])
   end

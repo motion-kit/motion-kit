@@ -6,7 +6,7 @@ module MotionKit
     def gradient(gradient)
       gradient_layer = target.instance_variable_get(:@teacup_gradient_layer) || begin
         gradient_layer = CAGradientLayer.layer
-        gradient_layer.frame = target.bounds
+        gradient_layer.frame = CGRect.new([0, 0], target.frame.size)
         target.layer.insertSublayer(gradient_layer, atIndex:0)
         gradient_layer
       end
