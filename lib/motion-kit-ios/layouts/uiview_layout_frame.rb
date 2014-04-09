@@ -74,7 +74,9 @@ module MotionKit
           y = value[1]
         end
 
-        f.origin = [MotionKit.calculate(target, :width, x), MotionKit.calculate(target, :height, y)]
+        self.x x
+        self.y y
+        return target.frame.origin
       else
         f.origin = value
       end
@@ -84,9 +86,8 @@ module MotionKit
     end
 
     def center(value)
-      center_x = MotionKit.calculate(target, :width, value[0])
-      center_y = MotionKit.calculate(target, :height, value[1])
-      target.center = [center_x, center_y]
+      self.center_x value[0]
+      self.center_y value[1]
       return target.center
     end
 
@@ -101,7 +102,7 @@ module MotionKit
         end
       elsif value == :auto
         target.sizeToFit
-        f.size = target.size
+        return target.frame.size
       elsif value.is_a?(Array) || value.is_a?(Hash)
         if value.is_a?(Hash)
           w = value.fetch(:width, value.fetch(:w, target.frame.size.width))
