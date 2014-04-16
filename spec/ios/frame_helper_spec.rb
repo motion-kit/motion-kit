@@ -1,11 +1,23 @@
 describe 'Frame helpers' do
+  tests UIViewController
 
   before do
     @layout = MK::Layout.new
-    @view = UIView.alloc.initWithFrame([[0, 0], [1, 1]])
-    @superview_size = CGSize.new(33, 44)
-    @superview = UIView.alloc.initWithFrame([[11, 22], @superview_size])
+    @view_size = CGSize.new(8, 10)
+    @view = UIView.alloc.initWithFrame([[0, 0], @view_size])
+    @view.backgroundColor = UIColor.whiteColor
+
+    @superview_size = CGSize.new(60, 40)
+    @superview = UIView.alloc.initWithFrame([[0, 0], @superview_size])
     @superview.addSubview(@view)
+    @superview.backgroundColor = UIColor.blueColor
+
+    top_view = @controller.view
+    @another_view = UIView.alloc.initWithFrame([[10, 100], [120, 48]])
+    @another_view.backgroundColor = UIColor.redColor
+
+    top_view.addSubview(@another_view)
+    top_view.addSubview(@superview)
   end
 
   it 'should support `x` method' do
@@ -316,60 +328,548 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == @superview_size.height
   end
 
-  it 'should support from_top_left' do
-    1.should == 1
+  it 'should support setting the frame via `from_top_left`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top_left()
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 0
+    @view.frame.origin.y.should == 0
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
   end
 
-  it 'should support from_top' do
-    1.should == 1
+  it 'should support setting the frame via `from_top_left(width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top_left(width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 0
+    @view.frame.origin.y.should == 0
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
   end
 
-  it 'should support from_top_right' do
-    1.should == 1
+  it 'should support setting the frame via `from_top_left(x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top_left(x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 10
+    @view.frame.origin.y.should == 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
   end
 
-  it 'should support from_left' do
-    1.should == 1
+  it 'should support setting the frame via `from_top`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top()
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - @view_size.width) / 2
+    @view.frame.origin.y.should == 0
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
   end
 
-  it 'should support from_center' do
-    1.should == 1
+  it 'should support setting the frame via `from_top(width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top(width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - 10) / 2
+    @view.frame.origin.y.should == 0
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
   end
 
-  it 'should support from_right' do
-    1.should == 1
+  it 'should support setting the frame via `from_top(x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top(x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - 22) / 2 + 10
+    @view.frame.origin.y.should == 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
   end
 
-  it 'should support from_bottom_left' do
-    1.should == 1
+  it 'should support setting the frame via `from_top_right`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top_right()
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - @view_size.width
+    @view.frame.origin.y.should == 0
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
   end
 
-  it 'should support from_bottom' do
-    1.should == 1
+  it 'should support setting the frame via `from_top_right(width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top_right(width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - 10
+    @view.frame.origin.y.should == 0
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
   end
 
-  it 'should support from_bottom_right' do
-    1.should == 1
+  it 'should support setting the frame via `from_top_right(x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top_right(x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - 22 + 10
+    @view.frame.origin.y.should == 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
   end
 
-  it 'should support above' do
-    1.should == 1
+  it 'should support setting the frame via `from_left`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_left()
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 0
+    @view.frame.origin.y.should == (@superview_size.height - @view_size.height) / 2
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
   end
 
-  it 'should support below' do
-    1.should == 1
+  it 'should support setting the frame via `from_left(width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_left(width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 0
+    @view.frame.origin.y.should == (@superview_size.height - 20) / 2
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
   end
 
-  it 'should support before, left_of' do
-    1.should == 1
+  it 'should support setting the frame via `from_left(x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_left(x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 10
+    @view.frame.origin.y.should == (@superview_size.height - 12) / 2 + 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
   end
 
-  it 'should support after, right_of' do
-    1.should == 1
+  it 'should support setting the frame via `from_center`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_center()
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - @view_size.width) / 2
+    @view.frame.origin.y.should == (@superview_size.height - @view_size.height) / 2
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
   end
 
-  it 'should support relative_to' do
-    1.should == 1
+  it 'should support setting the frame via `from_center(width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_center(width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - 10) / 2
+    @view.frame.origin.y.should == (@superview_size.height - 20) / 2
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
+  end
+
+  it 'should support setting the frame via `from_center(x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_center(x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - 22) / 2 + 10
+    @view.frame.origin.y.should == (@superview_size.height - 12) / 2 + 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_right`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_right()
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - @view_size.width
+    @view.frame.origin.y.should == (@superview_size.height - @view_size.height) / 2
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `from_right(width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_right(width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - 10
+    @view.frame.origin.y.should == (@superview_size.height - 20) / 2
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
+  end
+
+  it 'should support setting the frame via `from_right(x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_right(x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - 22 + 10
+    @view.frame.origin.y.should == (@superview_size.height - 12) / 2 + 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_bottom_left`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom_left()
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 0
+    @view.frame.origin.y.should == @superview_size.height - @view_size.height
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `from_bottom_left(width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom_left(width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 0
+    @view.frame.origin.y.should == @superview_size.height - 20
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
+  end
+
+  it 'should support setting the frame via `from_bottom_left(x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom_left(x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 10
+    @view.frame.origin.y.should == @superview_size.height - 12 + 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_bottom`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom()
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - @view_size.width) / 2
+    @view.frame.origin.y.should == @superview_size.height - @view_size.height
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `from_bottom(width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom(width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - 10) / 2
+    @view.frame.origin.y.should == @superview_size.height - 20
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
+  end
+
+  it 'should support setting the frame via `from_bottom(x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom(x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - 22) / 2 + 10
+    @view.frame.origin.y.should == @superview_size.height - 12 + 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_bottom_right`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom_right()
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - @view_size.width
+    @view.frame.origin.y.should == @superview_size.height - @view_size.height
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `from_bottom_right(width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom_right(width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - 10
+    @view.frame.origin.y.should == @superview_size.height - 20
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
+  end
+
+  it 'should support setting the frame via `from_bottom_right(x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom_right(x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - 22 + 10
+    @view.frame.origin.y.should == @superview_size.height - 12 + 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `above(view)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.above(@another_view)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 10
+    @view.frame.origin.y.should == 90
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `above(view)` and ignore view origin' do
+    f = @view.frame
+    f.origin.x = 10
+    f.origin.y = 10
+    @view.frame = f
+
+    @layout.context(@view) do
+      retval = @layout.frame @layout.above(@another_view)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 10
+    @view.frame.origin.y.should == 90
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `above(view, width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.above(@another_view, width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 10
+    @view.frame.origin.y.should == 80
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
+  end
+
+  it 'should support setting the frame via `above(view, x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.above(@another_view, x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 20
+    @view.frame.origin.y.should == 108
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `below(view)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.below(@another_view)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 10
+    @view.frame.origin.y.should == 148
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `below(view, width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.below(@another_view, width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 10
+    @view.frame.origin.y.should == 148
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
+  end
+
+  it 'should support setting the frame via `below(view, x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.below(@another_view, x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 20
+    @view.frame.origin.y.should == 168
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `before(view)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.before(@another_view)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 2
+    @view.frame.origin.y.should == 100
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `before(view, width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.before(@another_view, width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 0
+    @view.frame.origin.y.should == 100
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
+  end
+
+  it 'should support setting the frame via `before(view, x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.before(@another_view, x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == -2
+    @view.frame.origin.y.should == 120
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `left_of(view)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.left_of(@another_view)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 2
+    @view.frame.origin.y.should == 100
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `left_of(view, width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.left_of(@another_view, width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 0
+    @view.frame.origin.y.should == 100
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
+  end
+
+  it 'should support setting the frame via `left_of(view, x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.left_of(@another_view, x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == -2
+    @view.frame.origin.y.should == 120
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `after(view)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.after(@another_view)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 130
+    @view.frame.origin.y.should == 100
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `after(view, width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.after(@another_view, width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 130
+    @view.frame.origin.y.should == 100
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
+  end
+
+  it 'should support setting the frame via `after(view, x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.after(@another_view, x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 140
+    @view.frame.origin.y.should == 120
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `right_of(view)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.right_of(@another_view)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 130
+    @view.frame.origin.y.should == 100
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `right_of(view, width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.right_of(@another_view, width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 130
+    @view.frame.origin.y.should == 100
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
+  end
+
+  it 'should support setting the frame via `right_of(view, x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.right_of(@another_view, x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 140
+    @view.frame.origin.y.should == 120
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `relative_to(view)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.relative_to(@another_view, {})
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 10
+    @view.frame.origin.y.should == 100
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `relative_to(view, width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.relative_to(@another_view, width: 10, height: 20)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 10
+    @view.frame.origin.y.should == 100
+    @view.frame.size.width.should == 10
+    @view.frame.size.height.should == 20
+  end
+
+  it 'should support setting the frame via `relative_to(view, x:y:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.relative_to(@another_view, x: 10, y: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 20
+    @view.frame.origin.y.should == 120
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
   end
 
 end

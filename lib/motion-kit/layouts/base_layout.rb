@@ -105,7 +105,7 @@ module MotionKit
 
       @layout_delegate ||= Layout.layout_for(@layout, target.class)
       return @layout_delegate.send(method_name, *args, &block) if @layout_delegate.respond_to?(method_name)
-      
+
       if block
         apply_with_context(method_name, *args, &block)
       else
@@ -128,7 +128,7 @@ module MotionKit
     def apply_with_target(method_name, *args, &block)
       setter = "set" + method_name.capitalize + ':'
       assign = method_name + '='
-      
+
       # The order is important here.
       if target.respond_to?(setter)
         target.send(setter, *args)

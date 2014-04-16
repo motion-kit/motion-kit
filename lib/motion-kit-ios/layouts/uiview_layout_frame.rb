@@ -65,113 +65,213 @@ module MotionKit
 
     def origin(value)
       f = target.frame
-      if value.is_a?(Array) || value.is_a?(Hash)
-        if value.is_a?(Hash)
-          x = value.fetch(:x, value.fetch(:left, target.frame.origin.x))
-          y = value.fetch(:y, value.fetch(:top, target.frame.origin.y))
-        else
-          x = value[0]
-          y = value[1]
-        end
-
-        self.x x
-        self.y y
-        return target.frame.origin
-      else
-        f.origin = value
-      end
-
+      f.origin = MotionKit.calculate(target, :origin, value)
       target.frame = f
       return target.frame.origin
     end
 
     def center(value)
-      self.center_x value[0]
-      self.center_y value[1]
+      target.center = MotionKit.calculate(target, :origin, value)
       return target.center
     end
 
     def size(value)
       f = target.frame
-
-      if value == :full
-        if target.superview
-          f.size = target.superview.frame.size
-        else
-          f.size = target.frame.size
-        end
-      elsif value == :auto
-        target.sizeToFit
-        return target.frame.size
-      elsif value.is_a?(Array) || value.is_a?(Hash)
-        if value.is_a?(Hash)
-          w = value.fetch(:width, value.fetch(:w, target.frame.size.width))
-          h = value.fetch(:height, value.fetch(:h, target.frame.size.height))
-        else
-          w = value[0]
-          h = value[1]
-        end
-
-        if w == :scale && h == :scale
-          raise "Either width or height can be :scale, but not both"
-        elsif w == :scale
-          size = target.sizeThatFits([0, 0])
-          h = MotionKit.calculate(target, :height, h)
-          w = h * size.width / size.height
-        elsif h == :scale
-          size = target.sizeThatFits([0, 0])
-          w = MotionKit.calculate(target, :height, w)
-          h = w * size.height / size.width
-        else
-          w = MotionKit.calculate(target, :width, w)
-          h = MotionKit.calculate(target, :height, h)
-        end
-
-        f.size = [w, h]
-      end
-
+      f.size = MotionKit.calculate(target, :size, value)
       target.frame = f
       return target.frame.size
     end
 
     def frame(value)
-      if value.is_a?(Symbol)
-        case value
-        when :full
-          if target.superview
-            value = CGRect.new([0, 0], target.superview.frame.size)
-          else
-            value = CGRect.new([0, 0], [0, 0])
-          end
-        else
-          raise "Unrecognized value #{value.inspect} in UIViewLayout#frame"
-        end
+      target.frame = MotionKit.calculate(target, :frame, value)
+      return target.frame
+    end
 
-        target.frame = value
-      elsif value.is_a?(Array) && value.length == 2
-        self.origin(value[0])
-        self.size(value[1])
-      elsif value.is_a?(Hash) && (value.key?(:origin) || value.key?(:size))
-        self.origin(value[:origin]) if value.key?(:origin)
-        self.size(value[:size]) if value.key?(:size)
-      elsif value.is_a?(Array) || value.is_a?(Hash)
-        if value.is_a?(Hash)
-          x = value.fetch(:x, value.fetch(:left, target.frame.origin.x))
-          y = value.fetch(:y, value.fetch(:top, target.frame.origin.y))
-          w = value.fetch(:width, value.fetch(:w, target.frame.size.width))
-          h = value.fetch(:height, value.fetch(:h, target.frame.size.height))
-        elsif value.length == 4
-          x = value[0]
-          y = value[1]
-          w = value[2]
-          h = value[3]
-        end
+    def _calculate_frame(f, from: from_view, relative_to: point)
+      from_view_size = from_view.frame.size
+      o = from_view.convertPoint([0, 0], toView: target.superview)
 
-        self.origin([x, y])
-        self.size([w, h])
+      calculate_view = target
+
+      if point[:x] == :reset || point[:y] == :reset
+        calculate_view = UIView.alloc.initWithFrame([[0, 0], target.frame.size])
       end
 
-      return target.frame
+      f = MotionKit.calculate(calculate_view, :frame, f, from_view)
+      f.origin.x += o.x
+      f.origin.y += o.y
+
+      case point[:x]
+      when :min, :reset
+        # pass
+      when :mid
+        f.origin.x += (from_view_size.width - f.size.width) / 2.0
+      when :max
+        f.origin.x += from_view_size.width - f.size.width
+      when :before
+        f.origin.x -= f.size.width
+      when :after
+        f.origin.x += from_view_size.width
+      else
+        f.origin.x += point[:x]
+      end
+
+      case point[:y]
+      when :min, :reset
+        # pass
+      when :mid
+        f.origin.y += (from_view_size.height - f.size.height) / 2.0
+      when :max
+        f.origin.y += from_view_size.height - f.size.height
+      when :above
+        f.origin.y -= f.size.height
+      when :below
+        f.origin.y += from_view_size.height
+      else
+        f.origin.y += point[:y]
+      end
+
+      return f
+    end
+
+    # The first arg can be a view or a frame
+    # @example
+    #   frame from_top_left(width: 80, height: 22)
+    #   frame from_top_left(another_view, width: 80, height: 22)
+    def from_top_left(from_view=nil, f=nil)
+      unless from_view.is_a?(UIView)
+        f = from_view || {}
+        from_view = target.superview
+      end
+      _calculate_frame(f, from: from_view, relative_to: { x: :min, y: :min })
+    end
+
+    # The first arg can be a view or a frame
+    # @example
+    #   frame from_top(width: 80, height: 22)
+    #   frame from_top(another_view, width: 80, height: 22)
+    def from_top(from_view=nil, f=nil)
+      unless from_view.is_a?(UIView)
+        f = from_view || {}
+        from_view = target.superview
+      end
+      _calculate_frame(f, from: from_view, relative_to: { x: :mid, y: :min })
+    end
+
+    # The first arg can be a view or a frame
+    # @example
+    #   frame from_top_right(width: 80, height: 22)
+    #   frame from_top_right(another_view, width: 80, height: 22)
+    def from_top_right(from_view=nil, f=nil)
+      unless from_view.is_a?(UIView)
+        f = from_view || {}
+        from_view = target.superview
+      end
+      _calculate_frame(f, from: from_view, relative_to: { x: :max, y: :min })
+    end
+
+    # The first arg can be a view or a frame
+    # @example
+    #   frame from_left(width: 80, height: 22)
+    #   frame from_left(another_view, width: 80, height: 22)
+    def from_left(from_view=nil, f=nil)
+      unless from_view.is_a?(UIView)
+        f = from_view || {}
+        from_view = target.superview
+      end
+      _calculate_frame(f, from: from_view, relative_to: { x: :min, y: :mid })
+    end
+
+    # The first arg can be a view or a frame
+    # @example
+    #   frame from_center(width: 80, height: 22)
+    #   frame from_center(another_view, width: 80, height: 22)
+    def from_center(from_view=nil, f=nil)
+      unless from_view.is_a?(UIView)
+        f = from_view || {}
+        from_view = target.superview
+      end
+      _calculate_frame(f, from: from_view, relative_to: { x: :mid, y: :mid })
+    end
+
+    # The first arg can be a view or a frame
+    # @example
+    #   frame from_right(width: 80, height: 22)
+    #   frame from_right(another_view, width: 80, height: 22)
+    def from_right(from_view=nil, f=nil)
+      unless from_view.is_a?(UIView)
+        f = from_view || {}
+        from_view = target.superview
+      end
+      _calculate_frame(f, from: from_view, relative_to: { x: :max, y: :mid })
+    end
+
+    # The first arg can be a view or a frame
+    # @example
+    #   frame from_bottom_left(width: 80, height: 22)
+    #   frame from_bottom_left(another_view, width: 80, height: 22)
+    def from_bottom_left(from_view=nil, f=nil)
+      unless from_view.is_a?(UIView)
+        f = from_view || {}
+        from_view = target.superview
+      end
+      _calculate_frame(f, from: from_view, relative_to: { x: :min, y: :max })
+    end
+
+    # The first arg can be a view or a frame
+    # @example
+    #   frame from_bottom(width: 80, height: 22)
+    #   frame from_bottom(another_view, width: 80, height: 22)
+    def from_bottom(from_view=nil, f=nil)
+      unless from_view.is_a?(UIView)
+        f = from_view || {}
+        from_view = target.superview
+      end
+      _calculate_frame(f, from: from_view, relative_to: { x: :mid, y: :max })
+    end
+
+    # The first arg can be a view or a frame
+    # @example
+    #   frame from_bottom_right(width: 80, height: 22)
+    #   frame from_bottom_right(another_view, width: 80, height: 22)
+    def from_bottom_right(from_view=nil, f=nil)
+      unless from_view.is_a?(UIView)
+        f = from_view || {}
+        from_view = target.superview
+      end
+      _calculate_frame(f, from: from_view, relative_to: { x: :max, y: :max })
+    end
+
+    # The first arg can be a view or a frame
+    # @example
+    def above(from_view, f={})
+      _calculate_frame(f, from: from_view, relative_to: { x: :reset, y: :above })
+    end
+
+    # The first arg can be a view or a frame
+    # @example
+    def below(from_view, f={})
+      _calculate_frame(f, from: from_view, relative_to: { x: :reset, y: :below })
+    end
+
+    # The first arg can be a view or a frame
+    # @example
+    def before(from_view, f={})
+      _calculate_frame(f, from: from_view, relative_to: { x: :before, y: :reset })
+    end
+    alias left_of before
+
+    # The first arg can be a view or a frame
+    # @example
+    def after(from_view, f={})
+      _calculate_frame(f, from: from_view, relative_to: { x: :after, y: :reset })
+    end
+    alias right_of after
+
+    # The first arg must be a view
+    # @example
+    def relative_to(from_view, f)
+      _calculate_frame(f, from: from_view, relative_to: { x: :reset, y: :reset })
     end
 
   end
