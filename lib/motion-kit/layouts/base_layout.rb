@@ -85,9 +85,15 @@ module MotionKit
       target
     end
 
-    # All missing methods get delegated to either the @layout_delegate or
-    # applied to the context using one of the setter methods that `apply`
-    # supports.
+    # @example
+    #     def login_button_style
+    #       frame [[0, 0], [100, 20]]
+    #       title 'Login'
+    #     end
+    #
+    # Methods that style the view start out as missing methods. This just calls
+    # 'apply', which searches for the method in the delegate
+    # (`@layout_delegate`) or using inspection (`respond_to?(:setFoo)`).
     def method_missing(method_name, *args, &block)
       self.apply(method_name, *args, &block)
     end
