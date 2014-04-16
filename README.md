@@ -103,8 +103,9 @@ Nice, that should be pretty easy to follow, right?  M'kay, in this next, more
 complicated layout we'll create a login page, with a 'Login' button and inputs
 for username and password.  In this example, I will assign the frame in the
 `layout` method, instead of in the `_style` methods.  This is purely an
-aesthetic choice, but we think it makes it easier to see how the views are
-organized if the frame code is in the layout.
+aesthetic choice.  Some people like to have their frame code in the layout
+method, others like to put it in the _style methods.  I point it out only as an
+available feature.
 
 ```ruby
 class LoginLayout < MotionKit::Layout
@@ -137,6 +138,7 @@ class LoginLayout < MotionKit::Layout
       # set the UIAutoresizingMask to "FlexibleTop", and using '100%' in the
       # width will ensure the frame stays the width of its parent.
       frame from_bottom(height: 50, width: '100%')
+      frame from_bottom(h: 50, w: '100%')  # is fine, too
 
       # same as above; assumes full width
       frame from_bottom(height: 50)
