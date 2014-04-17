@@ -9,4 +9,8 @@ module MotionKit
     UIView
   end
 
+  def no_intrinsic_metric
+    UIViewNoIntrinsicMetric
+  end
+
 end

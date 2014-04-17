@@ -71,7 +71,7 @@ module MotionKit
     end
 
     def center(value)
-      target.center = MotionKit.calculate(target, :origin, value)
+      target.center = MotionKit.calculate(target, :center, value)
       return target.center
     end
 
@@ -97,6 +97,9 @@ module MotionKit
         calculate_view = UIView.alloc.initWithFrame([[0, 0], target.frame.size])
       end
 
+      if f.is_a?(Hash)
+        f = f.merge(relative: true)
+      end
       f = MotionKit.calculate(calculate_view, :frame, f, from_view)
       f.origin.x += o.x
       f.origin.y += o.y
