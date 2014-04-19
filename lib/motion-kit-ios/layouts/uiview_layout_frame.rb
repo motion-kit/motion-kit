@@ -74,6 +74,7 @@ module MotionKit
       target.center = MotionKit.calculate(target, :center, value)
       return target.center
     end
+    alias middle center
 
     def size(value)
       f = target.frame
