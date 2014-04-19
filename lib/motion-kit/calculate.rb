@@ -5,7 +5,7 @@ module MotionKit
     if amount.is_a? Proc
       return view.instance_exec(&amount)
     elsif dimension == :origin || dimension == :center
-      return calculate_origin(view, dimension, amount, full_view)
+      return calculate_origin(view, dimension, amount, nil, full_view)
     elsif dimension == :size
       return calculate_size(view, amount, full_view)
     elsif dimension == :frame
@@ -192,8 +192,8 @@ module MotionKit
 
       if amount.key?(:center)
         origin = calculate_origin(view, :center, amount[:center], size, full_view)
-        origin.x -= view.frame.size.width / 2
-        origin.y -= view.frame.size.height / 2
+        origin.x -= size.width / 2
+        origin.y -= size.height / 2
       elsif amount.key?(:origin)
         origin = calculate_origin(view, :origin, amount[:origin], size, full_view)
       else
