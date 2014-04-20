@@ -43,7 +43,7 @@ class WindowLayout < MK::WindowLayout
     end
 
     initial do
-      string_value 'Press Generate'
+      stringValue 'Press Generate'
     end
   end
 
