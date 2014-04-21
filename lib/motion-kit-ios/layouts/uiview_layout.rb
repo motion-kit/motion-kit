@@ -11,6 +11,10 @@ module MotionKit
       view_class.alloc.initWithFrame(UIScreen.mainScreen.applicationFrame)
     end
 
+    def container
+      UIView
+    end
+
     def add_child(subview)
       target.addSubview(subview)
     end

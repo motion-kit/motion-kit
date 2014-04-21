@@ -12,7 +12,13 @@ describe MotionKit::Layout do
   end
 
   it "should add a UIView subview with the name :basic_view" do
-    @subject.view.subviews.first.should.be.kind_of UIView
+    view = @subject.view.subviews.find { |view| view.motion_kit_id == :basic_view }
+    view.should.be.kind_of(UIView)
+  end
+
+  it "should add a UIView subview with the name :container_view" do
+    view = @subject.view.subviews.find { |view| view.motion_kit_id == :container_view }
+    view.should.be.kind_of(UIView)
   end
 
   it "should add two subviews under :basic_view" do
