@@ -366,6 +366,8 @@ be using AutoLayout instead!
 ```ruby
 constraints do
   from_top_left x: 5, y: 5
+  # or
+  from_top_left down: 5, right:5
 end
 ```
 
@@ -375,7 +377,6 @@ But of course with constraints you can setup *relationships* between views.
 foo = self.get(:foo)
 constraints do
   from_top_left x: 5, y:5
-  from_top_left down: 5, right:5
   width.equals(foo).minus(10)
   height.equals(foo).minus(10)
   # that's repetitive, so just set 'size'
