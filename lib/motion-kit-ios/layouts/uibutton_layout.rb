@@ -12,5 +12,9 @@ module MotionKit
       target.setImage(value, forState: UIControlStateNormal)
     end
 
+    def image(value)
+      self.setImage(value, forState: UIControlStateNormal)
+    end
+
   end
 end
