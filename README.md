@@ -316,6 +316,48 @@ class CustomLayout < MK::UIViewLayout
 end
 ```
 
+### Frames
+
+There are lots of frame helpers for NSView and UIView subclasses:
+
+```ruby
+# most direct
+frame [[0, 0], [320, 568]]
+# using relative sizes (relative to superview)
+frame [[5, 5], ['100% - 10', '100% - 10']]
+
+# same, but using separate methods
+origin [5, 5]
+x 5
+y 5
+size ['100% - 10', '100% - 10']
+width '100% - 10'
+height '100% - 10'
+
+size ['90%', '90%']
+center ['50%', '50%']
+
+# you can position the view *relative to other views*, either the superview or
+# *any* other view.
+from_bottom_right size: [100, 100]  # 100x100pt in the BR corner
+from_bottom size: ['100%', 32]  # full width, 32pt height
+from_top_right left: 5
+
+# from_top_left      from_top       from_top_right
+# from_left         from_center         from_right
+# from_bottom_left  from_bottom  from_bottom_right
+
+# these require another view
+foo = self.get(:foo)
+above foo, up: 8
+#      above
+# before   after
+# left_of  right_of
+#      below
+relative_to foo, down: 5, right: 5
+from_bottom_left foo, up: 5, left: 5
+```
+
 
 ### Frames
 
