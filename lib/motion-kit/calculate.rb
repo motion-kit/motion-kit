@@ -57,12 +57,22 @@ module MotionKit
 
       if amount.is_a?(Hash)
         if amount.fetch(:relative, false)
-          if dimension == :center
-            x = amount.fetch(:x, view.center.x)
-            y = amount.fetch(:y, view.center.y)
+          if amount.key?(:x)
+            x = amount[:x]
           else
-            x = amount.fetch(:x, view.frame.origin.x)
-            y = amount.fetch(:y, view.frame.origin.y)
+            x = view.frame.origin.x
+            if dimension == :center
+              x += my_size.width / 2.0
+            end
+          end
+
+          if amount.key?(:y)
+            y = amount[:y]
+          else
+            y = view.frame.origin.y
+            if dimension == :center
+              y += my_size.height / 2.0
+            end
           end
 
           if amount.key?(:right)
@@ -76,6 +86,7 @@ module MotionKit
           elsif amount.key?(:up)
             y_offset = -amount[:up]
           end
+          y_offset = -y_offset if amount[:flipped]
         else
           if amount.key?(:right)
             x_offset = -my_size.width
@@ -83,7 +94,8 @@ module MotionKit
           elsif amount.key?(:x) || amount.key?(:left)
             x = amount[:x] || amount[:left]
           elsif dimension == :center
-            x = view.center.x
+            x = view.frame.origin.x
+            x += my_size.width / 2
           else
             x = view.frame.origin.x
           end
@@ -94,7 +106,8 @@ module MotionKit
           elsif amount.key?(:y) || amount.key?(:top)
             y = amount[:y] || amount[:top]
           elsif dimension == :center
-            y = view.center.y
+            y = view.frame.origin.y
+            y += my_size.height / 2
           else
             y = view.frame.origin.y
           end

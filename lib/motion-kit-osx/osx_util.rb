@@ -6,7 +6,7 @@ module MotionKit
   end
 
   def no_intrinsic_metric
-    NSViewNoIntrinsicMetric
+    NSViewNoInstrinsicMetric
   end
 
 end
