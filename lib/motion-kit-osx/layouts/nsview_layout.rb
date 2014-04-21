@@ -11,6 +11,10 @@ module MotionKit
       view_class.alloc.initWithFrame([[0, 0], [0, 0]])
     end
 
+    def container
+      NSView
+    end
+
     def add_child(subview)
       target.addSubview(subview)
     end
