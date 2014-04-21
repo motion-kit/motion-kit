@@ -17,10 +17,6 @@ class WindowController < NSWindowController
     end
   end
 
-  # def windowDidResize(notification)
-  #   p notification.object.frame
-  # end
-
   def numberOfRowsInTableView(table_view)
     @contributors.length
   end
@@ -49,10 +45,10 @@ class WindowController < NSWindowController
   end
 
   def tableViewColumnDidResize(notification)
-    p notification.object
-    p notification.userInfo['NSTableColumn']
-    p notification.userInfo['NSTableColumn'].width
-    p notification.userInfo['NSOldWidth']
+    # notification.object
+    # notification.userInfo['NSTableColumn']
+    # notification.userInfo['NSTableColumn'].width
+    # notification.userInfo['NSOldWidth']
   end
 
 end
