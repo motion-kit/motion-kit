@@ -7,5 +7,7 @@ module MotionKit
   end
   class ApplyError < Exception
   end
+  class NoSuperviewError < Exception
+  end
 end
 ::MK = MotionKit unless defined?(::MK)

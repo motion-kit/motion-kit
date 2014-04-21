@@ -14,7 +14,7 @@ module MotionKit
     end
 
     def size
-      try(:bounds, :size)
+      try(:frame, :size)
     end
 
     def x
@@ -26,11 +26,11 @@ module MotionKit
     end
 
     def width
-      try(:bounds, :size, :width)
+      try(:frame, :size, :width)
     end
 
     def height
-      try(:bounds, :size, :height)
+      try(:frame, :size, :height)
     end
 
     def center_x
@@ -50,7 +50,7 @@ module MotionKit
     # Convenience method that takes a list of method calls and tries
     # them end-to-end, returning nil if any fail to respond to that
     # method name.
-    # Very similar to ActiveSupport's `.try` method. 
+    # Very similar to ActiveSupport's `.try` method.
     def try(*method_chain)
       obj = self.element
       method_chain.each do |m|
