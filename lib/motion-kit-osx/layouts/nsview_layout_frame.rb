@@ -189,15 +189,15 @@ module MotionKit
         end
       when :above
         if flipped?
-          f.origin.y -= f.size.height
-        else
           f.origin.y += from_view_size.height
+        else
+          f.origin.y -= from_view_size.height + f.size.height
         end
       when :below
         if flipped?
-          f.origin.y += from_view_size.height
-        else
           f.origin.y -= f.size.height
+        else
+          # pass
         end
       else
         f.origin.y += point[:y]

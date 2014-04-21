@@ -18,7 +18,6 @@ describe 'Frame helpers' do
     @superview_size = CGSize.new(60, 40)
     @superview = NSView.alloc.initWithFrame([[0, 0], @superview_size])
     @superview.addSubview(@view)
-    @superview.addSubview(@flipped_superview)
     @superview.backgroundColor = NSColor.blueColor
 
     @flipped_superview = UpsideDownView.alloc.initWithFrame([[0, @superview_size.height], @superview_size])
@@ -125,7 +124,7 @@ describe 'Frame helpers' do
     end
   end
 
-  it 'should support `y` method on an upside down view' do
+  it 'should support `y` method in a flipped view' do
     @layout.context(@flipped_view) do
       retval = @layout.y 1
       retval.should == CGRectGetMinY(@flipped_view.frame)
@@ -149,7 +148,7 @@ describe 'Frame helpers' do
     end
   end
 
-  it 'should support `bottom` method on an upside down view' do
+  it 'should support `bottom` method in a flipped view' do
     @layout.context(@flipped_view) do
       retval = @layout.bottom 1
       retval.should == CGRectGetMaxY(@flipped_view.frame)
@@ -173,7 +172,7 @@ describe 'Frame helpers' do
     end
   end
 
-  it 'should support `top` method on an upside down view' do
+  it 'should support `top` method in a flipped view' do
     @layout.context(@flipped_view) do
       retval = @layout.top 1
       retval.should == CGRectGetMinY(@flipped_view.frame)
@@ -198,7 +197,7 @@ describe 'Frame helpers' do
     end
   end
 
-  it 'should support `center_y` method on an upside down view' do
+  it 'should support `center_y` method in a flipped view' do
     @flipped_view.frame = [[0, 0], [2, 2]]
     @layout.context(@flipped_view) do
       retval = @layout.center_y 1
@@ -262,7 +261,7 @@ describe 'Frame helpers' do
     end
   end
 
-  it 'should support `origin([])` method on an upside down view' do
+  it 'should support `origin([])` method in a flipped view' do
     @layout.context(@flipped_view) do
       retval = @layout.origin [1, 2]
       retval.should == @flipped_view.frame.origin
@@ -301,6 +300,20 @@ describe 'Frame helpers' do
       retval.should == @view.frame.origin
       @view.frame.origin.x.should == @superview_size.width - 1
       @view.frame.origin.y.should == @superview_size.height - 2
+    end
+  end
+
+  it 'should support `origin({relative: true})` method in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.origin x: 0, y: 0, right: 1, down: 2, relative: true
+      retval.should == @flipped_view.frame.origin
+      @flipped_view.frame.origin.x.should == 1
+      @flipped_view.frame.origin.y.should == 2
+
+      retval = @layout.origin x: '100%', y: '100%', left: 1, up: 2, relative: true
+      retval.should == @flipped_view.frame.origin
+      @flipped_view.frame.origin.x.should == @superview_size.width - 1
+      @flipped_view.frame.origin.y.should == @superview_size.height - 2
     end
   end
 
@@ -352,6 +365,23 @@ describe 'Frame helpers' do
       retval.y.should == @view.frame.origin.y + @view.frame.size.height / 2
       @view.frame.origin.x.should == @superview_size.width - 2
       @view.frame.origin.y.should == @superview_size.height - 3
+    end
+  end
+
+  it 'should support `center({relative: true})` method in a flipped view' do
+    @flipped_view.frame = [[0, 0], [2, 2]]
+    @layout.context(@flipped_view) do
+      retval = @layout.center x: 1, y: 1, right: 1, down: 2, relative: true
+      retval.x.should == @flipped_view.frame.origin.x + @flipped_view.frame.size.width / 2
+      retval.y.should == @flipped_view.frame.origin.y + @flipped_view.frame.size.height / 2
+      @flipped_view.frame.origin.x.should == 1
+      @flipped_view.frame.origin.y.should == 2
+
+      retval = @layout.center x: '100%', y: '100%', left: 1, up: 2, relative: true
+      retval.x.should == @flipped_view.frame.origin.x + @flipped_view.frame.size.width / 2
+      retval.y.should == @flipped_view.frame.origin.y + @flipped_view.frame.size.height / 2
+      @flipped_view.frame.origin.x.should == @superview_size.width - 2
+      @flipped_view.frame.origin.y.should == @superview_size.height - 3
     end
   end
 
@@ -493,7 +523,7 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == @view_size.height
   end
 
-  it 'should support setting the frame via `from_bottom_left` on an upside down view' do
+  it 'should support setting the frame via `from_bottom_left` in a flipped view' do
     @layout.context(@flipped_view) do
       retval = @layout.frame @layout.from_bottom_left()
       retval.should == @flipped_view.frame
@@ -526,6 +556,50 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == 12
   end
 
+  it 'should support setting the frame via `from_bottom_left(right:up:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom_left(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 10
+    @view.frame.origin.y.should == 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_bottom_left(left:down:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom_left(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == -10
+    @view.frame.origin.y.should == -20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_bottom_left(right:up:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_bottom_left(right: 10, down: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == 10
+    @flipped_view.frame.origin.y.should == @superview_size.height - 12 + 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_bottom_left(left:down:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_bottom_left(left: 10, up: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == -10
+    @flipped_view.frame.origin.y.should == @superview_size.height - 12 - 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
   it 'should support setting the frame via `from_bottom_left(view)`' do
     @layout.context(@view) do
       retval = @layout.frame @layout.from_bottom_left(@another_view, x: 1, y: 1)
@@ -548,7 +622,7 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == @view_size.height
   end
 
-  it 'should support setting the frame via `from_bottom` on an upside down view' do
+  it 'should support setting the frame via `from_bottom` in a flipped view' do
     @layout.context(@flipped_view) do
       retval = @layout.frame @layout.from_bottom()
       retval.should == @flipped_view.frame
@@ -581,6 +655,50 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == 12
   end
 
+  it 'should support setting the frame via `from_bottom(right:up:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - 22) / 2 + 10
+    @view.frame.origin.y.should == 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_bottom(left:down:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - 22) / 2 - 10
+    @view.frame.origin.y.should == -20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_bottom(right:up:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_bottom(right: 10, down: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == (@superview_size.width - 22) / 2 + 10
+    @flipped_view.frame.origin.y.should == @superview_size.height - 12 + 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_bottom(left:down:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_bottom(left: 10, up: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == (@superview_size.width - 22) / 2 - 10
+    @flipped_view.frame.origin.y.should == @superview_size.height - 12 - 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
   it 'should support setting the frame via `from_bottom(view)`' do
     @layout.context(@view) do
       retval = @layout.frame @layout.from_bottom(@another_view, x: 1, y: 1)
@@ -603,7 +721,7 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == @view_size.height
   end
 
-  it 'should support setting the frame via `from_bottom_right` on an upside down view' do
+  it 'should support setting the frame via `from_bottom_right` in a flipped view' do
     @layout.context(@flipped_view) do
       retval = @layout.frame @layout.from_bottom_right()
       retval.should == @flipped_view.frame
@@ -636,6 +754,50 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == 12
   end
 
+  it 'should support setting the frame via `from_bottom_right(right:up:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom_right(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - 22 + 10
+    @view.frame.origin.y.should == 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_bottom_right(left:down:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom_right(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - 22 - 10
+    @view.frame.origin.y.should == -20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_bottom_right(right:up:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_bottom_right(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == @superview_size.width - 22 + 10
+    @flipped_view.frame.origin.y.should == @superview_size.height - 12 - 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_bottom_right(left:down:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_bottom_right(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == @superview_size.width - 22 - 10
+    @flipped_view.frame.origin.y.should == @superview_size.height - 12 + 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
   it 'should support setting the frame via `from_bottom_right(view)`' do
     @layout.context(@view) do
       retval = @layout.frame @layout.from_bottom_right(@another_view, x: 1, y: 1)
@@ -656,6 +818,17 @@ describe 'Frame helpers' do
     @view.frame.origin.y.should == (@superview_size.height - @view_size.height) / 2
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `from_left` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_left()
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == 0
+    @flipped_view.frame.origin.y.should == (@superview_size.height - @view_size.height) / 2
+    @flipped_view.frame.size.width.should == @view_size.width
+    @flipped_view.frame.size.height.should == @view_size.height
   end
 
   it 'should support setting the frame via `from_left(width:height:)`' do
@@ -680,6 +853,50 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == 12
   end
 
+  it 'should support setting the frame via `from_left(right:up:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_left(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 10
+    @view.frame.origin.y.should == (@superview_size.height - 12) / 2 + 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_left(left:down:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_left(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == -10
+    @view.frame.origin.y.should == (@superview_size.height - 12) / 2 - 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_left(right:up:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_left(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == 10
+    @flipped_view.frame.origin.y.should == (@superview_size.height - 12) / 2 - 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_left(left:down:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_left(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == -10
+    @flipped_view.frame.origin.y.should == (@superview_size.height - 12) / 2 + 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
   it 'should support setting the frame via `from_left(view)`' do
     @layout.context(@view) do
       retval = @layout.frame @layout.from_left(@another_view, x: 1, y: 1)
@@ -700,6 +917,17 @@ describe 'Frame helpers' do
     @view.frame.origin.y.should == (@superview_size.height - @view_size.height) / 2
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `from_center` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_center()
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == (@superview_size.width - @view_size.width) / 2
+    @flipped_view.frame.origin.y.should == (@superview_size.height - @view_size.height) / 2
+    @flipped_view.frame.size.width.should == @view_size.width
+    @flipped_view.frame.size.height.should == @view_size.height
   end
 
   it 'should support setting the frame via `from_center(width:height:)`' do
@@ -724,6 +952,50 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == 12
   end
 
+  it 'should support setting the frame via `from_center(right:up:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_center(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - 22) / 2 + 10
+    @view.frame.origin.y.should == (@superview_size.height - 12) / 2 + 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_center(left:down:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_center(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - 22) / 2 - 10
+    @view.frame.origin.y.should == (@superview_size.height - 12) / 2 - 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_center(right:up:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_center(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == (@superview_size.width - 22) / 2 + 10
+    @flipped_view.frame.origin.y.should == (@superview_size.height - 12) / 2 - 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_center(left:down:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_center(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == (@superview_size.width - 22) / 2 - 10
+    @flipped_view.frame.origin.y.should == (@superview_size.height - 12) / 2 + 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
   it 'should support setting the frame via `from_center(view)`' do
     @layout.context(@view) do
       retval = @layout.frame @layout.from_center(@another_view, x: 1, y: 1)
@@ -744,6 +1016,17 @@ describe 'Frame helpers' do
     @view.frame.origin.y.should == (@superview_size.height - @view_size.height) / 2
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `from_right` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_right()
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == @superview_size.width - @view_size.width
+    @flipped_view.frame.origin.y.should == (@superview_size.height - @view_size.height) / 2
+    @flipped_view.frame.size.width.should == @view_size.width
+    @flipped_view.frame.size.height.should == @view_size.height
   end
 
   it 'should support setting the frame via `from_right(width:height:)`' do
@@ -768,6 +1051,50 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == 12
   end
 
+  it 'should support setting the frame via `from_right(right:up:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_right(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - 22 + 10
+    @view.frame.origin.y.should == (@superview_size.height - 12) / 2 + 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_right(left:down:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_right(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - 22 - 10
+    @view.frame.origin.y.should == (@superview_size.height - 12) / 2 - 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_right(right:up:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_right(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == @superview_size.width - 22 + 10
+    @flipped_view.frame.origin.y.should == (@superview_size.height - 12) / 2 - 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_right(left:down:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_right(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == @superview_size.width - 22 - 10
+    @flipped_view.frame.origin.y.should == (@superview_size.height - 12) / 2 + 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
   it 'should support setting the frame via `from_right(view)`' do
     @layout.context(@view) do
       retval = @layout.frame @layout.from_right(@another_view, x: 1, y: 1)
@@ -790,7 +1117,7 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == @view_size.height
   end
 
-  it 'should support setting the frame via `from_top_left` on an upside down view' do
+  it 'should support setting the frame via `from_top_left` in a flipped view' do
     @layout.context(@flipped_view) do
       retval = @layout.frame @layout.from_top_left()
       retval.should == @flipped_view.frame
@@ -823,6 +1150,50 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == 12
   end
 
+  it 'should support setting the frame via `from_top_left(right:up:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top_left(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 10
+    @view.frame.origin.y.should == @superview_size.height - 12 + 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_top_left(left:down:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top_left(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == -10
+    @view.frame.origin.y.should == @superview_size.height - 12 - 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_top_left(right:up:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_top_left(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == 10
+    @flipped_view.frame.origin.y.should == -20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_top_left(left:down:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_top_left(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == -10
+    @flipped_view.frame.origin.y.should == 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
   it 'should support setting the frame via `from_top_left(view)`' do
     @layout.context(@view) do
       retval = @layout.frame @layout.from_top_left(@another_view, x: 1, y: 1)
@@ -845,7 +1216,7 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == @view_size.height
   end
 
-  it 'should support setting the frame via `from_top` on an upside down view' do
+  it 'should support setting the frame via `from_top` in a flipped view' do
     @layout.context(@flipped_view) do
       retval = @layout.frame @layout.from_top()
       retval.should == @flipped_view.frame
@@ -878,6 +1249,50 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == 12
   end
 
+  it 'should support setting the frame via `from_top(right:up:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - 22) / 2 + 10
+    @view.frame.origin.y.should == @superview_size.height - 12 + 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_top(left:down:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == (@superview_size.width - 22) / 2 - 10
+    @view.frame.origin.y.should == @superview_size.height - 12 - 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_top(right:up:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_top(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == (@superview_size.width - 22) / 2 + 10
+    @flipped_view.frame.origin.y.should == -20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_top(left:down:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_top(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == (@superview_size.width - 22) / 2 - 10
+    @flipped_view.frame.origin.y.should == 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
   it 'should support setting the frame via `from_top(view)`' do
     @layout.context(@view) do
       retval = @layout.frame @layout.from_top(@another_view, x: 1, y: 1)
@@ -900,7 +1315,7 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == @view_size.height
   end
 
-  it 'should support setting the frame via `from_top_right` on an upside down view' do
+  it 'should support setting the frame via `from_top_right` in a flipped view' do
     @layout.context(@flipped_view) do
       retval = @layout.frame @layout.from_top_right()
       retval.should == @flipped_view.frame
@@ -933,6 +1348,50 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == 12
   end
 
+  it 'should support setting the frame via `from_top_right(right:up:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top_right(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - 22 + 10
+    @view.frame.origin.y.should == @superview_size.height - 12 + 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_top_right(left:down:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top_right(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @superview_size.width - 22 - 10
+    @view.frame.origin.y.should == @superview_size.height - 12 - 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_top_right(right:up:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_top_right(right: 10, up: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == @superview_size.width - 22 + 10
+    @flipped_view.frame.origin.y.should == -20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `from_top_right(left:down:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.from_top_right(left: 10, down: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == @superview_size.width - 22 - 10
+    @flipped_view.frame.origin.y.should == 20
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
   it 'should support setting the frame via `from_top_right(view)`' do
     @layout.context(@view) do
       retval = @layout.frame @layout.from_top_right(@another_view, x: 1, y: 1)
@@ -950,9 +1409,20 @@ describe 'Frame helpers' do
       retval.should == @view.frame
     end
     @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 90
+    @view.frame.origin.y.should == 148
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `above(view)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.above(@another_view)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == 10
+    @flipped_view.frame.origin.y.should == -78
+    @flipped_view.frame.size.width.should == @view_size.width
+    @flipped_view.frame.size.height.should == @view_size.height
   end
 
   it 'should support setting the frame via `above(view)` and ignore view origin' do
@@ -966,7 +1436,7 @@ describe 'Frame helpers' do
       retval.should == @view.frame
     end
     @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 90
+    @view.frame.origin.y.should == 148
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -977,7 +1447,7 @@ describe 'Frame helpers' do
       retval.should == @view.frame
     end
     @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 82
+    @view.frame.origin.y.should == 140
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -988,7 +1458,7 @@ describe 'Frame helpers' do
       retval.should == @view.frame
     end
     @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 80
+    @view.frame.origin.y.should == 148
     @view.frame.size.width.should == 10
     @view.frame.size.height.should == 20
   end
@@ -999,9 +1469,53 @@ describe 'Frame helpers' do
       retval.should == @view.frame
     end
     @view.frame.origin.x.should == 20
-    @view.frame.origin.y.should == 108
+    @view.frame.origin.y.should == 168
     @view.frame.size.width.should == 22
     @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `above(view, right:up:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.above(@another_view, right: 10, up: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 20
+    @view.frame.origin.y.should == 168
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `above(view, left:down:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.above(@another_view, left: 10, down: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 0
+    @view.frame.origin.y.should == 128
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `above(view, right:up:width:height:)`' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.above(@another_view, right: 10, up: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == 20
+    @flipped_view.frame.origin.y.should == -100
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `above(view, left:down:width:height:)`' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.above(@another_view, left: 10, down: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == 0
+    @flipped_view.frame.origin.y.should == -60
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
   end
 
   it 'should support setting the frame via `below(view)`' do
@@ -1010,9 +1524,20 @@ describe 'Frame helpers' do
       retval.should == @view.frame
     end
     @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 148
+    @view.frame.origin.y.should == 90
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `below(view)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.below(@another_view)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == 10
+    @flipped_view.frame.origin.y.should == -20
+    @flipped_view.frame.size.width.should == @view_size.width
+    @flipped_view.frame.size.height.should == @view_size.height
   end
 
   it 'should support setting the frame via `below(view)` and ignore view origin' do
@@ -1026,7 +1551,7 @@ describe 'Frame helpers' do
       retval.should == @view.frame
     end
     @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 148
+    @view.frame.origin.y.should == 90
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1037,7 +1562,7 @@ describe 'Frame helpers' do
       retval.should == @view.frame
     end
     @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 156
+    @view.frame.origin.y.should == 98
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1048,7 +1573,7 @@ describe 'Frame helpers' do
       retval.should == @view.frame
     end
     @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 148
+    @view.frame.origin.y.should == 80
     @view.frame.size.width.should == 10
     @view.frame.size.height.should == 20
   end
@@ -1059,9 +1584,53 @@ describe 'Frame helpers' do
       retval.should == @view.frame
     end
     @view.frame.origin.x.should == 20
-    @view.frame.origin.y.should == 168
+    @view.frame.origin.y.should == 108
     @view.frame.size.width.should == 22
     @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `below(view, right:up:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.below(@another_view, right: 10, up: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 20
+    @view.frame.origin.y.should == 108
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `below(view, left:down:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.below(@another_view, left: 10, down: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 0
+    @view.frame.origin.y.should == 68
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `below(view, right:up:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.below(@another_view, right: 10, up: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == 20
+    @flipped_view.frame.origin.y.should == -40
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
+  end
+
+  it 'should support setting the frame via `below(view, left:down:width:height:)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.below(@another_view, left: 10, down: 20, width: 22, height: 12)
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == 0
+    @flipped_view.frame.origin.y.should == 0
+    @flipped_view.frame.size.width.should == 22
+    @flipped_view.frame.size.height.should == 12
   end
 
   it 'should support setting the frame via `before(view)`' do
@@ -1219,6 +1788,17 @@ describe 'Frame helpers' do
     @view.frame.origin.y.should == 100
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `relative_to(view)` in a flipped view' do
+    @layout.context(@flipped_view) do
+      retval = @layout.frame @layout.relative_to(@another_view, {})
+      retval.should == @flipped_view.frame
+    end
+    @flipped_view.frame.origin.x.should == 10
+    @flipped_view.frame.origin.y.should == -20
+    @flipped_view.frame.size.width.should == @view_size.width
+    @flipped_view.frame.size.height.should == @view_size.height
   end
 
   it 'should support setting the frame via `relative_to(view)` and ignore view origin' do

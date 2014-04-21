@@ -419,6 +419,17 @@ describe 'Frame helpers' do
     @view.frame.size.height.should == 12
   end
 
+  it 'should support setting the frame via `from_top_left(right:down:width:height:)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top_left(right: 10, down: 20, width: 22, height: 12)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == 10
+    @view.frame.origin.y.should == 20
+    @view.frame.size.width.should == 22
+    @view.frame.size.height.should == 12
+  end
+
   it 'should support setting the frame via `from_top_left(view)`' do
     @layout.context(@view) do
       retval = @layout.frame @layout.from_top_left(@another_view, x: 1, y: 1)
