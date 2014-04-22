@@ -206,7 +206,11 @@ module MotionKit
       @assign_root = true
       layout
       unless @view
-        NSLog('Warning! No root view was set in ViewLayout#layout. Did you mean to call `root`?')
+        if @assign_root
+          create_default_root_context
+        else
+          NSLog('Warning! No root view was set in ViewLayout#layout. Did you mean to call `root`?')
+        end
       end
       @assign_root = false
       # context can be set via the 'create_default_root_context' method, which
