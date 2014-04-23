@@ -89,6 +89,10 @@ module MotionKit
     end
 
     def _calculate_frame(f, from: from_view, relative_to: point)
+      if from_view.is_a?(Symbol)
+        from_view = self.get(from_view)
+      end
+
       from_view_size = from_view.frame.size
       o = from_view.convertPoint([0, 0], toView: target.superview)
 
