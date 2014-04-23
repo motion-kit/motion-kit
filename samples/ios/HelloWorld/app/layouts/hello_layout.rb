@@ -39,18 +39,19 @@ class HelloLayout < MotionKit::Layout
 
   def label_style
     initial do
-      self.default_label_style
+      default_label_style
       text 'Hello World!'
       background_color UIColor.whiteColor
     end
 
-    if portrait?
+    portrait do
       frame [[100, 30], [100, 20]]
       # top 10
       # left 100
       # height 20
       # width 100
-    else
+    end
+    landscape do
       frame [[100, 60], [100, 20]]
       # top 40
       # left 100
