@@ -147,10 +147,12 @@ module MotionKit
     #   frame from_top_left(width: 80, height: 22)
     #   frame from_top_left(another_view, width: 80, height: 22)
     def from_top_left(from_view=nil, f=nil)
-      unless from_view.is_a?(UIView)
-        f = from_view || {}
-        from_view = target.superview
+      if from_view.is_a?(Hash)
+        f = from_view
+        from_view = nil
       end
+      f ||= {}
+      from_view ||= target.superview
       _calculate_frame(f, from: from_view, relative_to: { x: :min, y: :min })
     end
 
@@ -159,10 +161,12 @@ module MotionKit
     #   frame from_top(width: 80, height: 22)
     #   frame from_top(another_view, width: 80, height: 22)
     def from_top(from_view=nil, f=nil)
-      unless from_view.is_a?(UIView)
-        f = from_view || {}
-        from_view = target.superview
+      if from_view.is_a?(Hash)
+        f = from_view
+        from_view = nil
       end
+      f ||= {}
+      from_view ||= target.superview
       _calculate_frame(f, from: from_view, relative_to: { x: :mid, y: :min })
     end
 
@@ -171,10 +175,12 @@ module MotionKit
     #   frame from_top_right(width: 80, height: 22)
     #   frame from_top_right(another_view, width: 80, height: 22)
     def from_top_right(from_view=nil, f=nil)
-      unless from_view.is_a?(UIView)
-        f = from_view || {}
-        from_view = target.superview
+      if from_view.is_a?(Hash)
+        f = from_view
+        from_view = nil
       end
+      f ||= {}
+      from_view ||= target.superview
       _calculate_frame(f, from: from_view, relative_to: { x: :max, y: :min })
     end
 
@@ -183,10 +189,12 @@ module MotionKit
     #   frame from_left(width: 80, height: 22)
     #   frame from_left(another_view, width: 80, height: 22)
     def from_left(from_view=nil, f=nil)
-      unless from_view.is_a?(UIView)
-        f = from_view || {}
-        from_view = target.superview
+      if from_view.is_a?(Hash)
+        f = from_view
+        from_view = nil
       end
+      f ||= {}
+      from_view ||= target.superview
       _calculate_frame(f, from: from_view, relative_to: { x: :min, y: :mid })
     end
 
@@ -195,10 +203,12 @@ module MotionKit
     #   frame from_center(width: 80, height: 22)
     #   frame from_center(another_view, width: 80, height: 22)
     def from_center(from_view=nil, f=nil)
-      unless from_view.is_a?(UIView)
-        f = from_view || {}
-        from_view = target.superview
+      if from_view.is_a?(Hash)
+        f = from_view
+        from_view = nil
       end
+      f ||= {}
+      from_view ||= target.superview
       _calculate_frame(f, from: from_view, relative_to: { x: :mid, y: :mid })
     end
 
@@ -207,10 +217,12 @@ module MotionKit
     #   frame from_right(width: 80, height: 22)
     #   frame from_right(another_view, width: 80, height: 22)
     def from_right(from_view=nil, f=nil)
-      unless from_view.is_a?(UIView)
-        f = from_view || {}
-        from_view = target.superview
+      if from_view.is_a?(Hash)
+        f = from_view
+        from_view = nil
       end
+      f ||= {}
+      from_view ||= target.superview
       _calculate_frame(f, from: from_view, relative_to: { x: :max, y: :mid })
     end
 
@@ -219,10 +231,12 @@ module MotionKit
     #   frame from_bottom_left(width: 80, height: 22)
     #   frame from_bottom_left(another_view, width: 80, height: 22)
     def from_bottom_left(from_view=nil, f=nil)
-      unless from_view.is_a?(UIView)
-        f = from_view || {}
-        from_view = target.superview
+      if from_view.is_a?(Hash)
+        f = from_view
+        from_view = nil
       end
+      f ||= {}
+      from_view ||= target.superview
       _calculate_frame(f, from: from_view, relative_to: { x: :min, y: :max })
     end
 
@@ -231,10 +245,12 @@ module MotionKit
     #   frame from_bottom(width: 80, height: 22)
     #   frame from_bottom(another_view, width: 80, height: 22)
     def from_bottom(from_view=nil, f=nil)
-      unless from_view.is_a?(UIView)
-        f = from_view || {}
-        from_view = target.superview
+      if from_view.is_a?(Hash)
+        f = from_view
+        from_view = nil
       end
+      f ||= {}
+      from_view ||= target.superview
       _calculate_frame(f, from: from_view, relative_to: { x: :mid, y: :max })
     end
 
@@ -243,10 +259,12 @@ module MotionKit
     #   frame from_bottom_right(width: 80, height: 22)
     #   frame from_bottom_right(another_view, width: 80, height: 22)
     def from_bottom_right(from_view=nil, f=nil)
-      unless from_view.is_a?(UIView)
-        f = from_view || {}
-        from_view = target.superview
+      if from_view.is_a?(Hash)
+        f = from_view
+        from_view = nil
       end
+      f ||= {}
+      from_view ||= target.superview
       _calculate_frame(f, from: from_view, relative_to: { x: :max, y: :max })
     end
 
