@@ -168,10 +168,10 @@ class LoginLayout < MotionKit::Layout
       autoresizing_mask :pin_to_top, :flexible_height, :flexible_width
 
       # we'll use 'sizeToFit' to calculate the height
-      add text_field, :username_input do
+      add UITextField, :username_input do
         frame [[10, 10], ['100% - 10', :auto]]
       end
-      add text_field, :password_input do
+      add UITextField, :password_input do
         frame below(:username_input, margin: 8)
       end
     end
