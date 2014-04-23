@@ -324,7 +324,7 @@ end
 These are available on iOS.
 
 ```ruby
-add UIView, :container
+add UIView, :container do
   portrait do
     frame from_top(width: '100%', height: 100)
   end
