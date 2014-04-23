@@ -40,8 +40,8 @@ module MotionKit
     end
 
     [:iphone, :iphone4, :iphone35, :ipad, :retina].each do |method_name|
-      define_method("#{method_name}?") do |&block|
-        block.call if self.send(method_name)
+      define_method(method_name) do |&block|
+        block.call if self.send("#{method_name}?")
       end
     end
 
