@@ -53,6 +53,54 @@ describe 'Autoresize helpers' do
     mask.should == UIViewAutoresizingFlexibleBottomMargin
   end
 
+  it 'should support :rigid_left' do
+    mask = nil
+    @layout.context(@view) do
+      mask = @layout.autoresizing_mask :flexible_right, :flexible_left, :rigid_left
+    end
+    mask.should == UIViewAutoresizingFlexibleRightMargin
+  end
+
+  it 'should support :rigid_width' do
+    mask = nil
+    @layout.context(@view) do
+      mask = @layout.autoresizing_mask :flexible_height, :flexible_width, :rigid_width
+    end
+    mask.should == UIViewAutoresizingFlexibleHeight
+  end
+
+  it 'should support :rigid_right' do
+    mask = nil
+    @layout.context(@view) do
+      mask = @layout.autoresizing_mask :flexible_left, :flexible_right, :rigid_right
+    end
+    mask.should == UIViewAutoresizingFlexibleLeftMargin
+  end
+
+  it 'should support :rigid_top' do
+    mask = nil
+    @layout.context(@view) do
+      mask = @layout.autoresizing_mask :flexible_bottom, :flexible_top, :rigid_top
+    end
+    mask.should == UIViewAutoresizingFlexibleBottomMargin
+  end
+
+  it 'should support :rigid_height' do
+    mask = nil
+    @layout.context(@view) do
+      mask = @layout.autoresizing_mask :flexible_width, :flexible_height, :rigid_height
+    end
+    mask.should == UIViewAutoresizingFlexibleWidth
+  end
+
+  it 'should support :rigid_bottom' do
+    mask = nil
+    @layout.context(@view) do
+      mask = @layout.autoresizing_mask :flexible_top, :flexible_bottom, :rigid_bottom
+    end
+    mask.should == UIViewAutoresizingFlexibleTopMargin
+  end
+
   it 'should support :fill' do
     mask = nil
     @layout.context(@view) do

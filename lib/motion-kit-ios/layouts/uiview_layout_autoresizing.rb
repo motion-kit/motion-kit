@@ -19,6 +19,20 @@ module MotionKit
           value |= UIViewAutoresizingFlexibleHeight
         when :flexible_bottom
           value |= UIViewAutoresizingFlexibleBottomMargin
+
+        when :rigid_left
+          value ^= UIViewAutoresizingFlexibleLeftMargin
+        when :rigid_width
+          value ^= UIViewAutoresizingFlexibleWidth
+        when :rigid_right
+          value ^= UIViewAutoresizingFlexibleRightMargin
+        when :rigid_top
+          value ^= UIViewAutoresizingFlexibleTopMargin
+        when :rigid_height
+          value ^= UIViewAutoresizingFlexibleHeight
+        when :rigid_bottom
+          value ^= UIViewAutoresizingFlexibleBottomMargin
+
         when :fill
           value |= UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight
         when :fill_top
@@ -29,6 +43,7 @@ module MotionKit
           value |= UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin
         when :fill_right
           value |= UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin
+
         when :pin_to_top_left
           value |= UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin
         when :pin_to_top
@@ -37,8 +52,6 @@ module MotionKit
           value |= UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin
         when :pin_to_left
           value |= UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin
-        when :pin_to_center, :pin_to_middle
-          value |= UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin
         when :pin_to_center, :pin_to_middle
           value |= UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin
         when :pin_to_right

@@ -19,6 +19,20 @@ module MotionKit
           value |= NSViewHeightSizable
         when :flexible_bottom
           value |= NSViewMinYMargin
+
+        when :rigid_left
+          value ^= NSViewMinXMargin
+        when :rigid_width
+          value ^= NSViewWidthSizable
+        when :rigid_right
+          value ^= NSViewMaxXMargin
+        when :rigid_top
+          value ^= NSViewMaxYMargin
+        when :rigid_height
+          value ^= NSViewHeightSizable
+        when :rigid_bottom
+          value ^= NSViewMinYMargin
+
         when :fill
           value |= NSViewWidthSizable | NSViewHeightSizable
         when :fill_top
@@ -29,6 +43,7 @@ module MotionKit
           value |= NSViewHeightSizable | NSViewMaxXMargin
         when :fill_right
           value |= NSViewHeightSizable | NSViewMinXMargin
+
         when :pin_to_top_left
           value |= NSViewMaxXMargin | NSViewMinYMargin
         when :pin_to_top
@@ -37,8 +52,6 @@ module MotionKit
           value |= NSViewMinXMargin | NSViewMinYMargin
         when :pin_to_left
           value |= NSViewMaxYMargin | NSViewMinYMargin | NSViewMaxXMargin
-        when :pin_to_center, :pin_to_middle
-          value |= NSViewMaxYMargin | NSViewMinYMargin | NSViewMinXMargin | NSViewMaxXMargin
         when :pin_to_center, :pin_to_middle
           value |= NSViewMaxYMargin | NSViewMinYMargin | NSViewMinXMargin | NSViewMaxXMargin
         when :pin_to_right
