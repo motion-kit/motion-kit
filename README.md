@@ -339,24 +339,31 @@ size ['90%', '90%']
 center ['50%', '50%']
 
 # you can position the view *relative to other views*, either the superview or
-# *any* other view.
-from_bottom_right size: [100, 100]  # 100x100pt in the BR corner
-from_bottom size: ['100%', 32]  # full width, 32pt height
-from_top_right left: 5
+# *any* other view.  You must pass the return value to `frame`
+frame from_bottom_right size: [100, 100]  # 100x100pt in the BR corner
+frame from_bottom size: ['100%', 32]  # full width, 32pt height
+frame from_top_right left: 5
 
 # from_top_left      from_top       from_top_right
 # from_left         from_center         from_right
 # from_bottom_left  from_bottom  from_bottom_right
 
-# these require another view
+# these require another view.  you can either pass a view directly, or if that
+# view is already in the hierarchy you can pass in its name
+frame above :foo, up: 8
+
 foo = self.get(:foo)
-above foo, up: 8
-#      above
-# before   after
-# left_of  right_of
-#      below
-relative_to foo, down: 5, right: 5
-from_bottom_left foo, up: 5, left: 5
+frame above foo, up: 8
+frame before foo, left: 8
+#          above
+#          +---+
+#  left_of |   | right_of
+# (before) |   | (after)
+#          +---+
+#          below
+
+frame relative_to :foo, down: 5, right: 5
+frame from_bottom_left :foo, up: 5, left: 5
 ```
 
 
