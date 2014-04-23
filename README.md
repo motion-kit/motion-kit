@@ -217,11 +217,11 @@ include multiple stylesheets this way, just be careful around name collisions.
 module LoginStyles
 
   def login_button_style
-    background_color "51A8E7"
-    title "Log In"
+    background_color '#51A8E7'.uicolor
+    title 'Log In'
     layer do
       corner_radius 7.0
-      shadow_color "000000"
+      shadow_color '#000000'.cgcolor
       shadow_opacity 0.9
       shadow_radius 2.0
       shadow_offset [0, 0]
