@@ -5,7 +5,11 @@ module MotionKit
     targets UIButton
 
     def title(value)
-      self.setTitle(value, forState: UIControlStateNormal)
+      target.setTitle(value, forState: UIControlStateNormal)
+    end
+
+    def image(value)
+      target.setImage(value, forState: UIControlStateNormal)
     end
 
   end
