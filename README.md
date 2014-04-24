@@ -319,13 +319,20 @@ end
 
 ### Frames
 
-There are lots of frame helpers for NSView and UIView subclasses:
+There are lots of frame helpers for NSView and UIView subclasses.  It's cool
+that you can set position and sizes as percents, but scroll down to see examples
+of setting frames *based on another view*.  These are super useful!  Most of the
+ideas, method names, and some code come straight out of
+[geomotion](https://github.com/clayallsopp/geomotion).  It's not *quite as
+powerful* as geomotion, but it's close!
 
 ```ruby
 # most direct
 frame [[0, 0], [320, 568]]
 # using relative sizes (relative to superview)
-frame [[5, 5], ['100% - 10', '100% - 10']]
+frame [[5, 5], ['100% - 10pt', '100% - 10pt']]
+# the 'pt' suffix is optional, and ignored.  in the future we could add support
+# for other suffixes - would that even be useful?  probably not really...
 
 # same, but using separate methods
 origin [5, 5]
@@ -339,24 +346,31 @@ size ['90%', '90%']
 center ['50%', '50%']
 
 # you can position the view *relative to other views*, either the superview or
-# *any* other view.
-from_bottom_right size: [100, 100]  # 100x100pt in the BR corner
-from_bottom size: ['100%', 32]  # full width, 32pt height
-from_top_right left: 5
+# *any* other view.  You must pass the return value to `frame`
+frame from_bottom_right(size: [100, 100])  # 100x100pt in the BR corner
+frame from_bottom(size: ['100%', 32])  # full width, 32pt height
+frame from_top_right(left: 5)
 
 # from_top_left      from_top       from_top_right
 # from_left         from_center         from_right
 # from_bottom_left  from_bottom  from_bottom_right
 
-# these require another view
+# these require another view.  you can either pass a view directly, or if that
+# view is already in the hierarchy you can pass in its name
+frame above(:foo, up: 8)
+
 foo = self.get(:foo)
-above foo, up: 8
-#      above
-# before   after
-# left_of  right_of
-#      below
-relative_to foo, down: 5, right: 5
-from_bottom_left foo, up: 5, left: 5
+frame above(foo, up: 8)
+frame before(foo, left: 8)
+#          above
+#          +---+
+#  left_of |   | right_of
+# (before) |   | (after)
+#          +---+
+#          below
+
+frame relative_to(:foo, down: 5, right: 5)
+frame from_bottom_left(:foo, up: 5, left: 5)
 ```
 
 

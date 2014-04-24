@@ -128,6 +128,9 @@ module MotionKit
     # with this element_id in the tree, where *first* means the view closest to
     # the root view. Aliased to `first` to distinguish it from `last`.
     def get(element_id)
+      if @layout && @layout != self
+        return @layout.get(element_id)
+      end
       self.get(element_id, in: self.view)
     end
     def first(element_id) ; get(element_id) ; end
@@ -142,6 +145,9 @@ module MotionKit
     # with this element_id, where last means the view deepest and furthest from
     # the root view.
     def last(element_id)
+      if @layout && @layout != self
+        return @layout.last(element_id)
+      end
       self.last(element_id, in: self.view)
     end
 
@@ -152,6 +158,9 @@ module MotionKit
 
     # Returns all the elements with a given element_id in the view tree.
     def all(element_id)
+      if @layout && @layout != self
+        return @layout.all(element_id)
+      end
       self.all(element_id, in: self.view)
     end
 
@@ -162,6 +171,9 @@ module MotionKit
 
     # Returns all the elements with a given element_id
     def nth(element_id, index)
+      if @layout && @layout != self
+        return @layout.nth(element_id, index)
+      end
       self.all(element_id, in: self.view)[index]
     end
 
@@ -173,6 +185,9 @@ module MotionKit
     # Removes a view (or several with the same name) from the hierarchy
     # and forgets it entirely.  Returns the views that were removed.
     def remove(element_id)
+      if @layout && @layout != self
+        return @layout.remove(element_id)
+      end
       self.remove(element_id, from: self.view)
     end
 
@@ -219,6 +234,9 @@ module MotionKit
       @context = nil
 
       @view
+    end
+
+    def layout
     end
 
     # Initializes an instance of a view. This will need to be smarter going

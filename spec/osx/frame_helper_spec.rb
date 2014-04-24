@@ -10,10 +10,14 @@ end
 describe 'Frame helpers' do
 
   before do
-    @layout = MK::Layout.new
+    @layout = TestEmptyLayout.new
+    top_view = NSView.alloc.initWithFrame([[0, 0], [500, 500]])
+    @layout.root = top_view
+
     @view_size = CGSize.new(8, 10)
     @view = NSView.alloc.initWithFrame([[0, 0], @view_size])
     @view.backgroundColor = NSColor.whiteColor
+    @view.motion_kit_id = :view
 
     @superview_size = CGSize.new(60, 40)
     @superview = NSView.alloc.initWithFrame([[0, 0], @superview_size])
@@ -26,9 +30,9 @@ describe 'Frame helpers' do
     @flipped_view = NSView.alloc.initWithFrame([[0, 0], @view_size])
     @flipped_superview.addSubview(@flipped_view)
 
-    top_view = NSView.alloc.initWithFrame([[0, 0], [500, 500]])
     @another_view = NSView.alloc.initWithFrame([[10, 100], [120, 48]])
     @another_view.backgroundColor = NSColor.redColor
+    @another_view.motion_kit_id = :another_view
 
     top_view.addSubview(@another_view)
     top_view.addSubview(@superview)
@@ -603,6 +607,17 @@ describe 'Frame helpers' do
   it 'should support setting the frame via `from_bottom_left(view)`' do
     @layout.context(@view) do
       retval = @layout.frame @layout.from_bottom_left(@another_view, x: 1, y: 1)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @another_view.frame.origin.x + 1
+    @view.frame.origin.y.should == @another_view.frame.origin.y + 1
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `from_bottom_left(:view)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_bottom_left(:another_view, x: 1, y: 1)
       retval.should == @view.frame
     end
     @view.frame.origin.x.should == @another_view.frame.origin.x + 1

@@ -2,19 +2,23 @@ describe 'Frame helpers' do
   tests UIViewController
 
   before do
-    @layout = MK::Layout.new
+    @layout = TestEmptyLayout.new
+    top_view = @controller.view
+    @layout.root = top_view
+
     @view_size = CGSize.new(8, 10)
     @view = UIView.alloc.initWithFrame([[0, 0], @view_size])
     @view.backgroundColor = UIColor.whiteColor
+    @view.motion_kit_id = :view
 
     @superview_size = CGSize.new(60, 40)
     @superview = UIView.alloc.initWithFrame([[0, 0], @superview_size])
     @superview.addSubview(@view)
     @superview.backgroundColor = UIColor.blueColor
 
-    top_view = @controller.view
     @another_view = UIView.alloc.initWithFrame([[10, 100], [120, 48]])
     @another_view.backgroundColor = UIColor.redColor
+    @another_view.motion_kit_id = :another_view
 
     top_view.addSubview(@another_view)
     top_view.addSubview(@superview)
@@ -433,6 +437,17 @@ describe 'Frame helpers' do
   it 'should support setting the frame via `from_top_left(view)`' do
     @layout.context(@view) do
       retval = @layout.frame @layout.from_top_left(@another_view, x: 1, y: 1)
+      retval.should == @view.frame
+    end
+    @view.frame.origin.x.should == @another_view.frame.origin.x + 1
+    @view.frame.origin.y.should == @another_view.frame.origin.y + 1
+    @view.frame.size.width.should == @view_size.width
+    @view.frame.size.height.should == @view_size.height
+  end
+
+  it 'should support setting the frame via `from_top_left(:view)`' do
+    @layout.context(@view) do
+      retval = @layout.frame @layout.from_top_left(:another_view, x: 1, y: 1)
       retval.should == @view.frame
     end
     @view.frame.origin.x.should == @another_view.frame.origin.x + 1
