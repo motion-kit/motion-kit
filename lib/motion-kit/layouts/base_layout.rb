@@ -105,7 +105,7 @@ module MotionKit
       raise ArgumentError.new('Block required') unless block
 
       layout ||= self
-      deferred_blocks << [self, block]
+      deferred_blocks << [@context, block]
     end
 
     def deferred_blocks
@@ -116,17 +116,13 @@ module MotionKit
       deferred_blocks = self.deferred_blocks
       @deferred_blocks = nil
 
-      deferred_blocks.each do |layout, block|
-        layout.run_deferred_block(block)
+      deferred_blocks.each do |target, block|
+        context(target, &block)
       end
 
       if @deferred_blocks
         run_deferred
       end
-    end
-
-    def run_deferred_block(block)
-      block.call
     end
 
     # @example

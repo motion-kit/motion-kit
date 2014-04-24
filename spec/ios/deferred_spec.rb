@@ -64,4 +64,26 @@ describe TestDeferredLayout do
     end
   end
 
+  describe 'from apply_layouts' do
+    before do
+      @layout.apply_layouts
+    end
+
+    it 'should run the deferred block' do
+      @layout.apply_layouts_test_ran.should == 3
+    end
+
+    it 'should have assigned text to the label' do
+      @layout.apply_layouts_label.text.should == 'after'
+    end
+
+    it 'should have assigned title to the button' do
+      @layout.apply_layouts_button.currentTitle.should == 'after'
+    end
+
+    it 'should have assigned opacity to the layer' do
+      @layout.apply_layouts_layer.opacity.should == 0.5
+    end
+  end
+
 end
