@@ -360,6 +360,50 @@ from_bottom_left foo, up: 5, left: 5
 ```
 
 
+### Autoresizing mask
+
+You can pass symbols like `autoresizing_mask :flexible_width`, or use
+symbols that have more intuitive meaning than the usual
+`UIViewAutoresizingFlexible*` constants.  These work in iOS and OS X.
+
+```ruby
+autoresizing_mask :flexible_right, :flexible_bottom, :flexible_width
+autoresizing_mask :pin_to_left, :rigid_top  # 'rigid' undoes a 'flexible' setting
+autoresizing_mask :pin_to_bottom, :flexible_width
+autoresizing_mask :fill_top
+
+flexible_left:       Sticks to the right side
+flexible_width:      Width varies with parent
+flexible_right:      Sticks to the left side
+flexible_top:        Sticks to the bottom
+flexible_height:     Height varies with parent
+flexible_bottom:     Sticks to the top
+
+rigid_left:          Left side stays constant (undoes :flexible_left)
+rigid_width:         Width stays constant (undoes :flexible_width)
+rigid_right:         Right side stays constant (undoes :flexible_right)
+rigid_top:           Top stays constant (undoes :flexible_top)
+rigid_height:        Height stays constant (undoes :flexible_height)
+rigid_bottom:        Bottom stays constant (undoes :flexible_bottom)
+
+fill:                The size increases with an increase in parent size
+fill_top:            Width varies with parent and view sticks to the top
+fill_bottom:         Width varies with parent and view sticks to the bottom
+fill_left:           Height varies with parent and view sticks to the left
+fill_right:          Height varies with parent and view sticks to the right
+
+pin_to_top_left:     View stays in top-left corner, size does not change.
+pin_to_top:          View stays in top-center, size does not change.
+pin_to_top_right:    View stays in top-right corner, size does not change.
+pin_to_left:         View stays centered on the left, size does not change.
+pin_to_center:       View stays centered, size does not change.
+pin_to_right:        View stays centered on the right, size does not change.
+pin_to_bottom_left:  View stays in bottom-left corner, size does not change.
+pin_to_bottom:       View stays in bottom-center, size does not change.
+pin_to_bottom_right: View stays in bottom-left corner, size does not change.
+```
+
+
 ### Some handy tricks
 
 #### Orientation specific styles
