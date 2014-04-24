@@ -371,20 +371,44 @@ constraints do
 end
 ```
 
-But of course with constraints you can setup *relationships* between views.
+But of course with constraints you can setup *relationships* between views. The
+named views work especially well here.
 
 ```ruby
-foo = self.get(:foo)
 constraints do
   from_top_left x: 5, y:5
-  width.equals(foo).minus(10)
-  height.equals(foo).minus(10)
+  width.equals(:foo).minus(10)
+  height.equals(:foo).minus(10)
   # that's repetitive, so just set 'size'
-  size.equals(foo).minus(10)
-  size.equals(foo).minus([10, 15])  # 10pt thinner, 15pt shorter
+  size.equals(:foo).minus(10)
+  size.equals(:foo).minus([10, 15])  # 10pt thinner, 15pt shorter
 end
 ```
 
+Just like with frame helpers you can use `:names` to refer to other views, but
+get this: the views need not be created yet!  This is because when you setup a
+constraints block, it isn't resolved immediately; the symbols are resolved at
+the end.  This feature uses the `deferred` method behind the scenes to
+accomplish this.
+
+```ruby
+# believe it or not, this code works! :-)
+add UIView, :foo do
+  constraints do
+    width.equals(:bar).plus(10)
+  end
+end
+
+add UIView, :bar do
+  constraints do
+    width.equals(:foo).minus(10)
+
+    # if you have multiple views with the same name:
+    width.equals(last(:foo)).minus(10)
+    width.equals(first(:foo)).minus(10)
+  end
+end
+```
 
 ### Frames
 
@@ -537,8 +561,7 @@ run after the current layout is completed.
 ```ruby
 def login_button_style
   deferred do
-    last_label = self.last(:label)
-    frame below(last_label, height: 20)
+    frame below(last(:label), height: 20)
   end
 end
 ```
