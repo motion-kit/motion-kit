@@ -362,9 +362,9 @@ from_bottom_left foo, up: 5, left: 5
 
 ### Autoresizing mask
 
-You can pass symbols like `:flexible_width` to `autoresizing_mask`, or use
+You can pass symbols like `autoresizing_mask :flexible_width`, or use
 symbols that have more intuitive meaning than the usual
-`UIUIViewAutoresizingFlexible*` constants.  These work in iOS and OS X.
+`UIViewAutoresizingFlexible*` constants.  These work in iOS and OS X.
 
 ```ruby
 autoresizing_mask :flexible_right, :flexible_bottom, :flexible_width
