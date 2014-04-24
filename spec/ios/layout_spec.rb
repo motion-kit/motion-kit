@@ -64,4 +64,10 @@ describe MotionKit::Layout do
     views[2].should.be.kind_of UILabel
   end
 
+  it "should support missing methods" do
+    -> do
+      @subject.foo_bar_baz
+    end.should.raise(NoMethodError)
+  end
+
 end

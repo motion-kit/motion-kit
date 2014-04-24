@@ -109,6 +109,14 @@ module MotionKit
       method_name = method_name.to_s
       raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name}") if method_name.length == 0
 
+      # if there is no target, than we should raise the NoMethodError; someone
+      # called a method on the layout directly.
+      begin
+        target = self.target
+      rescue NoContextError => e
+        raise NoMethodError.new(method_name)
+      end
+
       @layout_delegate ||= Layout.layout_for(@layout, target.class)
       return @layout_delegate.send(method_name, *args, &block) if @layout_delegate.respond_to?(method_name)
 
