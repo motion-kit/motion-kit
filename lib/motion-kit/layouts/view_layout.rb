@@ -224,6 +224,7 @@ module MotionKit
       # Only in the 'layout' method will we allow default container to be
       # created automatically (when 'add' is called)
       @assign_root = true
+      @is_top_level = true
       layout
       unless @view
         if @assign_root
@@ -232,6 +233,8 @@ module MotionKit
           NSLog('Warning! No root view was set in ViewLayout#layout. Did you mean to call `root`?')
         end
       end
+      run_deferred
+      @is_top_level = nil
       @assign_root = false
       # context can be set via the 'create_default_root_context' method, which
       # may be outside a 'context' block, so make sure to restore context to

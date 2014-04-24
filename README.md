@@ -504,7 +504,7 @@ add UIView, :container do
 end
 ```
 
-#### Update views via 'initial', 'reapply', and 'next_tick'
+#### Update views via 'initial', 'reapply', and 'deferred'
 
 If you call 'layout.reapply!', your style methods will be called again (but
 NOT the `layout` method). You very well might want to control what methods get
@@ -531,12 +531,12 @@ end
 ```
 
 Or, you might need to set a frame or other property based on a view that hasn't
-been created yet. In this case, you can use `next_tick` to have a block of code
+been created yet. In this case, you can use `deferred` to have a block of code
 run after the current layout is completed.
 
 ```ruby
 def login_button_style
-  next_tick do
+  deferred do
     last_label = self.last(:label)
     frame below(last_label, height: 20)
   end

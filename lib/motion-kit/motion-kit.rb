@@ -6,6 +6,8 @@ module MotionKit
   end
   class InvalidRootError < Exception
   end
+  class InvalidDeferredError < Exception
+  end
   class ApplyError < Exception
   end
   class NoSuperviewError < Exception

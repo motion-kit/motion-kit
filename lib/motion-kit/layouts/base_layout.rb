@@ -75,14 +75,58 @@ module MotionKit
 
       context_was, parent_was, delegate_was = @context, @parent, @layout_delegate
 
+      was_top = @is_top_level
+      if @is_top_level.nil?
+        @is_top_level = true
+      else
+        @is_top_level = false
+      end
       @parent = MK::Parent.new(context_was)
       @context = target
       @context.motion_kit_meta[:delegate] ||= Layout.layout_for(@layout, @context.class)
       @layout_delegate = @context.motion_kit_meta[:delegate]
       yield
       @layout_delegate, @context, @parent = delegate_was, context_was, parent_was
+      if @is_top_level
+        run_deferred
+      end
+      @is_top_level = was_top
 
       target
+    end
+
+    # Blocks passed to `deferred` are run at the end of a "session", usually
+    # after a call to Layout#layout
+    def deferred(layout=nil, &block)
+      if @layout && @layout != self
+        return @layout.deferred(self, &block)
+      end
+      raise InvalidDeferredError.new('deferred must be run inside of a context') if @is_top_level.nil?
+      raise ArgumentError.new('Block required') unless block
+
+      layout ||= self
+      deferred_blocks << [self, block]
+    end
+
+    def deferred_blocks
+      @deferred_blocks ||= []
+    end
+
+    def run_deferred
+      deferred_blocks = self.deferred_blocks
+      @deferred_blocks = nil
+
+      deferred_blocks.each do |layout, block|
+        layout.run_deferred_block(block)
+      end
+
+      if @deferred_blocks
+        run_deferred
+      end
+    end
+
+    def run_deferred_block(block)
+      block.call
     end
 
     # @example
