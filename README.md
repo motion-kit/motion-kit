@@ -316,52 +316,135 @@ class CustomLayout < MK::UIViewLayout
 end
 ```
 
+
 ### Frames
 
-There are lots of frame helpers for NSView and UIView subclasses:
+There are lots of frame helpers for NSView and UIView subclasses.  It's cool
+that you can set position and sizes as percents, but scroll down to see examples
+of setting frames *based on any other view*.  These are super useful!  Most of
+the ideas, method names, and some code came straight out of
+[geomotion](https://github.com/clayallsopp/geomotion).  It's not *quite as
+powerful* as geomotion, but it's close!
+
+One advantage over geomotion is that many of these frame helpers accept a view
+or view name, so that you can place the view relative to that view.
 
 ```ruby
-# most direct
+# most direct way to set the frame, using pt values
 frame [[0, 0], [320, 568]]
-# using relative sizes (relative to superview)
-frame [[5, 5], ['100% - 10', '100% - 10']]
 
-# same, but using separate methods
+# using sizes relative to superview
+frame [[5, 5], ['100% - 10pt', '100% - 10pt']]
+# the 'pt' suffix is optional, and ignored.  in the future we could add support
+# for other suffixes - would that even be useful?  probably not...
+
+# other available methods:
 origin [5, 5]
-x 5
-y 5
+x 5  # aka left(..)
+right 5  # right side of the view is 5px from the left side of the superview
+bottom 5  # bottom of the view is 5px from the top of the superview
 size ['100% - 10', '100% - 10']
-width '100% - 10'
-height '100% - 10'
+width '100% - 10'  # aka w(...)
+height '100% - 10'  # aka h(...)
 
 size ['90%', '90%']
 center ['50%', '50%']
 
-# you can position the view *relative to other views*, either the superview or
-# *any* other view.
-from_bottom_right size: [100, 100]  # 100x100pt in the BR corner
-from_bottom size: ['100%', 32]  # full width, 32pt height
-from_top_right left: 5
-
-# from_top_left      from_top       from_top_right
-# from_left         from_center         from_right
-# from_bottom_left  from_bottom  from_bottom_right
-
-# these require another view
-foo = self.get(:foo)
-above foo, up: 8
-#      above
-# before   after
-# left_of  right_of
-#      below
-relative_to foo, down: 5, right: 5
-from_bottom_left foo, up: 5, left: 5
+########
+# +--------------------------------------------------+
+# |from_top_left       from_top        from_top_right|
+# |                                                  |
+# |from_left          from_center          from_right|
+# |                                                  |
+# |from_bottom_left   from_bottom   from_bottom_right|
+# +--------------------------------------------------+
 ```
 
-### Constraints / AutoLayout
+You can position the view *relative to other views*, either the superview or any
+other view.  You must pass the return value to `frame`.
+
+```ruby
+# If you don't specify a view to base off of, the view is positioned relative to
+# the superview:
+frame from_bottom_right(size: [100, 100])  # 100x100 in the BR corner
+frame from_bottom(size: ['100%', 32])  # full width, 32pt height
+frame from_top_right(left: 5)
+
+# But if you pass a view or symbol as the first arg, the position will be
+# relative to that view
+from_top_right(:info_container, left: 5)
+
+
+########
+#          above
+#          +---+
+#  left_of |   | right_of
+# (before) |   | (after)
+#          +---+
+#          below
+
+# these methods *require* another view.
+frame above(:foo, up: 8)
+
+frame above(:foo, up: 8)
+frame before(:foo, left: 8)
+frame relative_to(:foo, down: 5, right: 5)
+
+# it's not common, but you can also pass a view to any of these methods
+foo = self.get(:foo)
+frame from_bottom_left(foo, up: 5, left: 5)
+```
+
+
+### Autoresizing mask
+
+You can pass symbols like `autoresizing_mask :flexible_width`, or use
+symbols that have more intuitive meaning than the usual
+`UIViewAutoresizingFlexible*` constants.  These work in iOS and OS X.
+
+```ruby
+autoresizing_mask :flexible_right, :flexible_bottom, :flexible_width
+autoresizing_mask :pin_to_left, :rigid_top  # 'rigid' undoes a 'flexible' setting
+autoresizing_mask :pin_to_bottom, :flexible_width
+autoresizing_mask :fill_top
+
+flexible_left:       Sticks to the right side
+flexible_width:      Width varies with parent
+flexible_right:      Sticks to the left side
+flexible_top:        Sticks to the bottom
+flexible_height:     Height varies with parent
+flexible_bottom:     Sticks to the top
+
+rigid_left:          Left side stays constant (undoes :flexible_left)
+rigid_width:         Width stays constant (undoes :flexible_width)
+rigid_right:         Right side stays constant (undoes :flexible_right)
+rigid_top:           Top stays constant (undoes :flexible_top)
+rigid_height:        Height stays constant (undoes :flexible_height)
+rigid_bottom:        Bottom stays constant (undoes :flexible_bottom)
+
+fill:                The size increases with an increase in parent size
+fill_top:            Width varies with parent and view sticks to the top
+fill_bottom:         Width varies with parent and view sticks to the bottom
+fill_left:           Height varies with parent and view sticks to the left
+fill_right:          Height varies with parent and view sticks to the right
+
+pin_to_top_left:     View stays in top-left corner, size does not change.
+pin_to_top:          View stays in top-center, size does not change.
+pin_to_top_right:    View stays in top-right corner, size does not change.
+pin_to_left:         View stays centered on the left, size does not change.
+pin_to_center:       View stays centered, size does not change.
+pin_to_right:        View stays centered on the right, size does not change.
+pin_to_bottom_left:  View stays in bottom-left corner, size does not change.
+pin_to_bottom:       View stays in bottom-center, size does not change.
+pin_to_bottom_right: View stays in bottom-left corner, size does not change.
+```
+
+
+### Constraints / Auto Layout
 
 Inside a `constraints` block you can use the same helpers as above, but you'll
-be using AutoLayout instead!
+be using Auto Layout instead.  This is the recommended way to set your frames,
+but beware, Auto Layout can be frustrating...
 
 ```ruby
 constraints do
@@ -408,106 +491,6 @@ add UIView, :bar do
     width.equals(first(:foo)).minus(10)
   end
 end
-```
-
-### Frames
-
-There are lots of frame helpers for NSView and UIView subclasses.  It's cool
-that you can set position and sizes as percents, but scroll down to see examples
-of setting frames *based on another view*.  These are super useful!  Most of the
-ideas, method names, and some code come straight out of
-[geomotion](https://github.com/clayallsopp/geomotion).  It's not *quite as
-powerful* as geomotion, but it's close!
-
-```ruby
-# most direct
-frame [[0, 0], [320, 568]]
-# using relative sizes (relative to superview)
-frame [[5, 5], ['100% - 10pt', '100% - 10pt']]
-# the 'pt' suffix is optional, and ignored.  in the future we could add support
-# for other suffixes - would that even be useful?  probably not really...
-
-# same, but using separate methods
-origin [5, 5]
-x 5
-y 5
-size ['100% - 10', '100% - 10']
-width '100% - 10'
-height '100% - 10'
-
-size ['90%', '90%']
-center ['50%', '50%']
-
-# you can position the view *relative to other views*, either the superview or
-# *any* other view.  You must pass the return value to `frame`
-frame from_bottom_right(size: [100, 100])  # 100x100pt in the BR corner
-frame from_bottom(size: ['100%', 32])  # full width, 32pt height
-frame from_top_right(left: 5)
-
-# from_top_left      from_top       from_top_right
-# from_left         from_center         from_right
-# from_bottom_left  from_bottom  from_bottom_right
-
-# these require another view.  you can either pass a view directly, or if that
-# view is already in the hierarchy you can pass in its name
-frame above(:foo, up: 8)
-
-foo = self.get(:foo)
-frame above(foo, up: 8)
-frame before(foo, left: 8)
-#          above
-#          +---+
-#  left_of |   | right_of
-# (before) |   | (after)
-#          +---+
-#          below
-
-frame relative_to(:foo, down: 5, right: 5)
-frame from_bottom_left(:foo, up: 5, left: 5)
-```
-
-
-### Autoresizing mask
-
-You can pass symbols like `autoresizing_mask :flexible_width`, or use
-symbols that have more intuitive meaning than the usual
-`UIViewAutoresizingFlexible*` constants.  These work in iOS and OS X.
-
-```ruby
-autoresizing_mask :flexible_right, :flexible_bottom, :flexible_width
-autoresizing_mask :pin_to_left, :rigid_top  # 'rigid' undoes a 'flexible' setting
-autoresizing_mask :pin_to_bottom, :flexible_width
-autoresizing_mask :fill_top
-
-flexible_left:       Sticks to the right side
-flexible_width:      Width varies with parent
-flexible_right:      Sticks to the left side
-flexible_top:        Sticks to the bottom
-flexible_height:     Height varies with parent
-flexible_bottom:     Sticks to the top
-
-rigid_left:          Left side stays constant (undoes :flexible_left)
-rigid_width:         Width stays constant (undoes :flexible_width)
-rigid_right:         Right side stays constant (undoes :flexible_right)
-rigid_top:           Top stays constant (undoes :flexible_top)
-rigid_height:        Height stays constant (undoes :flexible_height)
-rigid_bottom:        Bottom stays constant (undoes :flexible_bottom)
-
-fill:                The size increases with an increase in parent size
-fill_top:            Width varies with parent and view sticks to the top
-fill_bottom:         Width varies with parent and view sticks to the bottom
-fill_left:           Height varies with parent and view sticks to the left
-fill_right:          Height varies with parent and view sticks to the right
-
-pin_to_top_left:     View stays in top-left corner, size does not change.
-pin_to_top:          View stays in top-center, size does not change.
-pin_to_top_right:    View stays in top-right corner, size does not change.
-pin_to_left:         View stays centered on the left, size does not change.
-pin_to_center:       View stays centered, size does not change.
-pin_to_right:        View stays centered on the right, size does not change.
-pin_to_bottom_left:  View stays in bottom-left corner, size does not change.
-pin_to_bottom:       View stays in bottom-center, size does not change.
-pin_to_bottom_right: View stays in bottom-left corner, size does not change.
 ```
 
 

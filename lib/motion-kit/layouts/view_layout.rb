@@ -12,6 +12,9 @@ module MotionKit
 
     # The parent view.  This method builds the layout and returns the root view.
     def view
+      if @layout && @layout != self
+        return @layout.view
+      end
       @view ||= build_view
     end
 
