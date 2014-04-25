@@ -23,33 +23,29 @@ describe 'Assigning explicit root view' do
   end
 
   it "should raise exception if you try to specify two roots" do
-    subject = TestDuplicateRootLayout.new
-
     -> do
+      subject = TestDuplicateRootLayout.new
       subject.view
     end.should.raise(MotionKit::ContextConflictError)
   end
 
   it "should raise exception if you don't add views inside the root" do
-    subject = TestNoRootContextLayout.new
-
     -> do
+      subject = TestNoRootContextLayout.new
       subject.view
     end.should.raise(MotionKit::NoContextError)
   end
 
   it 'should raise an exception when there is no context' do
-    subject = TestNoContextLayout.new
-
     -> do
+      subject = TestNoContextLayout.new
       subject.foo
     end.should.raise(MotionKit::NoContextError)
   end
 
   it 'should raise an exception when creating a root view outside of `layout`' do
-    subject = TestInvalidRootContextLayout.new
-
     -> do
+      subject = TestInvalidRootContextLayout.new
       subject.foo
     end.should.raise(MotionKit::InvalidRootError)
   end
