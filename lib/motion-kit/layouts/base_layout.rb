@@ -198,7 +198,7 @@ module MotionKit
         objc_name = MotionKit.objective_c_method_name(method_name)
         self.apply(objc_name, *args)
       else
-        raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name}")
+        raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name} (from #{@layout_delegate && @layout_delegate.class})")
       end
     end
 

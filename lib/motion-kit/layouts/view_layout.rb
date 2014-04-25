@@ -27,9 +27,6 @@ module MotionKit
       if @view
         raise ContextConflictError.new("Already created the root view")
       end
-      if @context
-        raise ContextConflictError.new("Already in a context")
-      end
       unless @assign_root
         raise InvalidRootError.new("You should only create a 'root' view from inside the 'layout' method (use 'create' elsewhere)")
       end
@@ -44,6 +41,10 @@ module MotionKit
 
       @view = initialize_view(element)
       if block
+        if @context
+          raise ContextConflictError.new("Already in a context")
+        end
+
         context(@view) do
           # We're just using the `create` method for its side effects: calling the
           # style method and calling the block.
@@ -123,6 +124,9 @@ module MotionKit
       self.target
 
       element = initialize_view(element)
+      unless @context
+        create_default_root_context
+      end
       self.apply(:add_child, element)
       create(element, element_id, &block)
 
@@ -209,7 +213,7 @@ module MotionKit
       if @assign_root
         # Originally I thought default_root should be `apply`ied like other
         # view-related methods, but actually this method *only* gets called
-        # from within the `layout` method, and so should already inside the
+        # from within the `layout` method, and so should already be inside the
         # correct Layout subclass.
         @context = root(default_root)
       else
