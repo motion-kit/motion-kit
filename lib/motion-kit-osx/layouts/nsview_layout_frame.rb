@@ -98,6 +98,7 @@ module MotionKit
       target.frame = f
       return CGRectGetWidth(f)
     end
+    alias w width
 
     def height(value)
       value = _fix_frame_value(value)
@@ -106,6 +107,7 @@ module MotionKit
       target.frame = f
       return CGRectGetHeight(f)
     end
+    alias h height
 
     def origin(value)
       value = _fix_frame_value(value)

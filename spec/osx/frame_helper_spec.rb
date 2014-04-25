@@ -239,6 +239,18 @@ describe 'Frame helpers' do
     end
   end
 
+  it 'should support `w` method' do
+    @layout.context(@view) do
+      retval = @layout.w 1
+      retval.should == CGRectGetWidth(@view.frame)
+      @view.frame.size.width.should == 1
+
+      retval = @layout.w '100% - 1'
+      retval.should == CGRectGetWidth(@view.frame)
+      @view.frame.size.width.should == @superview_size.width - 1
+    end
+  end
+
   it 'should support `height` method' do
     @layout.context(@view) do
       retval = @layout.height 1
@@ -246,6 +258,18 @@ describe 'Frame helpers' do
       @view.frame.size.height.should == 1
 
       retval = @layout.height '100% - 1'
+      retval.should == CGRectGetHeight(@view.frame)
+      @view.frame.size.height.should == @superview_size.height - 1
+    end
+  end
+
+  it 'should support `h` method' do
+    @layout.context(@view) do
+      retval = @layout.h 1
+      retval.should == CGRectGetHeight(@view.frame)
+      @view.frame.size.height.should == 1
+
+      retval = @layout.h '100% - 1'
       retval.should == CGRectGetHeight(@view.frame)
       @view.frame.size.height.should == @superview_size.height - 1
     end
