@@ -1,7 +1,7 @@
 motion_require 'uiview_layout'
 
 module MotionKit
-  class Layout
+  class BaseLayout
 
     # This method is used to check the orientation.  On an ipad, this method
     # returns true for :portrait if the device is "upside down", but it returns

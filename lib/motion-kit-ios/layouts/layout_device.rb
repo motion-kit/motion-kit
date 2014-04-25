@@ -1,7 +1,7 @@
 motion_require 'uiview_layout'
 
 module MotionKit
-  class Layout
+  class BaseLayout
 
     def iphone?
       UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone
