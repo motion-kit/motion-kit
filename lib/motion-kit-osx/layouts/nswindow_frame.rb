@@ -1,5 +1,4 @@
-motion_require 'nswindow_layout'
-
+# @requires MotionKit::NSWindowLayout
 module MotionKit
   class NSWindowLayout
 

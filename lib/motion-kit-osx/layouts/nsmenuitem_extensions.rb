@@ -1,5 +1,4 @@
-motion_require 'nsmenu_layout'
-
+# @requires MotionKit::NSMenuLayout
 module MotionKit
   class NSMenuLayout
 

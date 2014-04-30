@@ -1,5 +1,5 @@
-motion_require "./base_layout_class_methods"
-
+# @provides MotionKit::BaseLayout
+# @requires MotionKit::BaseLayoutClassMethods
 module MotionKit
   # Abstract base class, responsible for "registration" of layout classes with
   # the class `targets` method.

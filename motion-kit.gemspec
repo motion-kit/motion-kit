@@ -20,5 +20,5 @@ DESC
 
   gem.require_paths = ['lib']
 
-  gem.add_dependency "motion-require", ">= 0.2.0"
+  gem.add_dependency "dbt"
 end
