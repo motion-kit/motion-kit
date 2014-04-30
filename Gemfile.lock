@@ -7,7 +7,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    dbt (1.1.2)
+    dbt (1.1.4)
     motion-redgreen (0.1.0)
     rake (10.1.1)
 

@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem "rake"
+gem 'rake'
 gem 'dbt'
 gem 'motion-redgreen'
 gemspec
