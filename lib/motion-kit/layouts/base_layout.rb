@@ -184,7 +184,15 @@ module MotionKit
       assign = method_name + '='
 
       # The order is important here.
-      if target.respond_to?(setter)
+      # - unchanged method name if no args are passed (e.g. `layer`)
+      # - setter (`setLayer(val)`)
+      # - assign (`layer=val`)
+      # - unchanged method name *again*, because many Ruby classes provide a
+      #   combined getter/setter (`layer(val)`)
+      # - lastly, try again after converting to camelCase
+      if args.empty? && target.respond_to?(method_name)
+        target.send(method_name, *args)
+      elsif target.respond_to?(setter)
         target.send(setter, *args)
       elsif target.respond_to?(assign)
         target.send(assign, *args)

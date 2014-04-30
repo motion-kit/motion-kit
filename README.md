@@ -219,6 +219,8 @@ module LoginStyles
   def login_button_style
     background_color '#51A8E7'.uicolor
     title 'Log In'
+    # `layer` returns a CALayer, which in turn becomes the new context inside
+    # this block!
     layer do
       corner_radius 7.0
       shadow_color '#000000'.cgcolor
@@ -250,15 +252,32 @@ the view.  In MotionKit we make use of `method_missing` to call these methods
 indirectly.  But other than that, the design is very similar.
 
 ```ruby
+  def login_label_style
+    text 'Press me'  # this gets delegated to UILabel#text
+  end
+
+  # It's not hard to add extensions for common tasks, like setting the "normal"
+  # title on a UIButton
   def login_button_style
-    title 'Press me'  # this gets delegated to UIButtonLayout#title(view, title)
+    title 'Press me'
+    # this gets delegated to UIButtonLayout#title(title), which in turn calls
+    # button.setTitle(title, forState: UIControlStateNormal)
   end
 ```
 
-There's an additional step where any un-handled methods are sent to the view
-directly, using the appropriate setter method. This step also takes care of
-converting methods from `snake_case` to the Objective-C style `camelCase`, and
-takes care of discrepencies like `setFoo(value)` vs `foo=(value)`.
+MotionKit offers shortcuts and mini-DSLs for frames, auto-layout, and
+miscellaneous helpers.  But if a method is not defined, it is sent to the view
+after a little introspection. If you call a method like `title_color value`, MotionKit
+will try to call:
+
+- `setTitle_color(value)`
+- `title_color=(value)`
+- `title_color(value)`
+- (try again, converting to camelCase)
+- `setTitleColor(value)`
+- `titleColor=(value)`
+- `titleColor(value)`
+- (failure:) `raise NoMethodError`
 
 ```ruby
   def login_button_style
@@ -266,36 +285,42 @@ takes care of discrepencies like `setFoo(value)` vs `foo=(value)`.
   end
 ```
 
-You can easily add new helpers to MotionKit's existing Layout classes. They are
-all named consistenly, e.g. `UIViewLayout`, e.g. `UILabelLayout`.  Just open up
-these classes and hack away.
+You can easily add your own helpers to MotionKit's existing Layout classes. They
+are all named consistenly, e.g. `MotionKit::UIViewLayout`, e.g.
+`MotionKit::UILabelLayout`.  Just open up these classes and hack away.
 
 ```ruby
-# these helpers will only be applied to instances of UILabel and UILabel
-# subclasses
-class UILabelLayout
+module MotionKit
+  # these helpers will only be applied to instances of UILabel and UILabel
+  # subclasses
+  class UILabelLayout
 
-  # style methods can accept any number of arguments, and a block. The current
-  # view should be referred to via the method `target`
-  def color(color)
-    target.textColor = color
-  end
-
-  # If a block is passed it is your responsibility to call `context(val,
-  # &block)`, if that is appropriate.  Other handlers can use the block to
-  # conditionally call code; on iOS there are orientation helpers `portrait`,
-  # `landscape`, etc that apply styles based on the current orientation.
-  def layer(&block)
-    context(target.layer, &block)
-  end
-
-  # Sure, you can add flow-control mechanisms if that's your thing!
-  def sometimes(&block)
-    if rand > 0.5
-      yield
+    # style methods can accept any number of arguments, and a block. The current
+    # view should be referred to via the method `target`
+    def color(color)
+      target.textColor = color
     end
-  end
 
+    # If a block is passed it is your responsibility to call `context(val,
+    # &block)`, if that is appropriate.  I'll use `UIView#layer` as an example,
+    # but actually if you pass a block to a method that returns an object, that
+    # block will be called with that object as the context.
+    def layer(&block)
+      context(target.layer, &block)
+    end
+
+    # Sure, you can add flow-control mechanisms if that's your thing!
+    #
+    # You can use the block to conditionally call code; on iOS there are
+    # orientation helpers `portrait`, `landscape`, etc that apply styles based
+    # on the current orientation.
+    def sometimes(&block)
+      if rand > 0.5
+        yield
+      end
+    end
+
+  end
 end
 ```
 
