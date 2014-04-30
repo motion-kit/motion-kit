@@ -117,6 +117,9 @@ module MotionKit
     # adds the view to the current view on the view stack.  If no view exists on
     # the stack, a default root view can be created if that has been enabled.
     def add(element, element_id=nil, &block)
+      # make sure we have a target - raises NoContextError if none exists
+      self.target
+
       element = initialize_view(element)
       self.apply(:add_child, element)
       create(element, element_id, &block)
