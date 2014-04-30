@@ -1,5 +1,4 @@
-motion_require '../constraints/constraints_target'
-
+# @requires MotionKit::BaseLayout
 module MotionKit
   class ConstraintsLayout < BaseLayout
     targets ConstraintsTarget

@@ -1,5 +1,4 @@
-motion_require 'nsview_layout'
-
+# @requires MotionKit::NSViewLayout
 module MotionKit
   class NSViewLayout
 
