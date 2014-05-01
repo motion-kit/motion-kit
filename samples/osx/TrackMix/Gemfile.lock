@@ -2,15 +2,16 @@ PATH
   remote: ../../..
   specs:
     motion-kit (0.0.1)
+      dbt
 
 GEM
   remote: https://rubygems.org/
   specs:
-    motion-require (0.0.7)
+    dbt (1.1.4)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  dbt
   motion-kit!
-  motion-require
