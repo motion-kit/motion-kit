@@ -15,10 +15,11 @@ DESC
 
   gem.homepage    = 'https://github.com/rubymotion/motion-kit'
 
-  gem.files        = `git ls-files`.split($\)
-  gem.test_files   = `git ls-files`.split($\).grep(/^spec/)
+  gem.files       = Dir.glob('lib/**/*.rb')
+  gem.files      << 'README.md'
+  gem.test_files  = Dir.glob('spec/**/*.rb')
 
   gem.require_paths = ['lib']
 
-  gem.add_dependency "dbt"
+  gem.add_dependency 'dbt'
 end
