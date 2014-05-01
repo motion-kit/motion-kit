@@ -4,7 +4,7 @@ module MotionKit
     targets ConstraintsTarget
 
     def x(value=nil)
-      constraint = Constraint.new(target, :left, :equal)
+      constraint = Constraint.new(target.view, :left, :equal)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -13,7 +13,7 @@ module MotionKit
     alias left x
 
     def min_x(value=nil)
-      constraint = Constraint.new(target, :left, :gte)
+      constraint = Constraint.new(target.view, :left, :gte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -22,7 +22,7 @@ module MotionKit
     alias min_left min_x
 
     def max_x(value=nil)
-      constraint = Constraint.new(target, :left, :lte)
+      constraint = Constraint.new(target.view, :left, :lte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -30,8 +30,32 @@ module MotionKit
     end
     alias max_left max_x
 
+    def leading(value=nil)
+      constraint = Constraint.new(target.view, :leading, :equal)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
+    end
+
+    def min_leading(value=nil)
+      constraint = Constraint.new(target.view, :leading, :gte)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
+    end
+
+    def max_leading(value=nil)
+      constraint = Constraint.new(target.view, :leading, :lte)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
+    end
+
     def center_x(value=nil)
-      constraint = Constraint.new(target, :center_x, :equal)
+      constraint = Constraint.new(target.view, :center_x, :equal)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -39,7 +63,7 @@ module MotionKit
     end
 
     def min_center_x(value=nil)
-      constraint = Constraint.new(target, :center_x, :gte)
+      constraint = Constraint.new(target.view, :center_x, :gte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -47,7 +71,7 @@ module MotionKit
     end
 
     def max_center_x(value=nil)
-      constraint = Constraint.new(target, :center_x, :lte)
+      constraint = Constraint.new(target.view, :center_x, :lte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -55,7 +79,7 @@ module MotionKit
     end
 
     def right(value=nil)
-      constraint = Constraint.new(target, :right, :equal)
+      constraint = Constraint.new(target.view, :right, :equal)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -63,7 +87,7 @@ module MotionKit
     end
 
     def min_right(value=nil)
-      constraint = Constraint.new(target, :right, :gte)
+      constraint = Constraint.new(target.view, :right, :gte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -71,7 +95,31 @@ module MotionKit
     end
 
     def max_right(value=nil)
-      constraint = Constraint.new(target, :right, :lte)
+      constraint = Constraint.new(target.view, :right, :lte)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
+    end
+
+    def trailing(value=nil)
+      constraint = Constraint.new(target.view, :trailing, :equal)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
+    end
+
+    def min_trailing(value=nil)
+      constraint = Constraint.new(target.view, :trailing, :gte)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
+    end
+
+    def max_trailing(value=nil)
+      constraint = Constraint.new(target.view, :trailing, :lte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -79,7 +127,7 @@ module MotionKit
     end
 
     def y(value=nil)
-      constraint = Constraint.new(target, :top, :equal)
+      constraint = Constraint.new(target.view, :top, :equal)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -88,7 +136,7 @@ module MotionKit
     alias top y
 
     def min_y(value=nil)
-      constraint = Constraint.new(target, :top, :gte)
+      constraint = Constraint.new(target.view, :top, :gte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -97,7 +145,7 @@ module MotionKit
     alias min_top min_y
 
     def max_y(value=nil)
-      constraint = Constraint.new(target, :top, :lte)
+      constraint = Constraint.new(target.view, :top, :lte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -106,7 +154,7 @@ module MotionKit
     alias max_top max_y
 
     def center_y(value=nil)
-      constraint = Constraint.new(target, :center_y, :equal)
+      constraint = Constraint.new(target.view, :center_y, :equal)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -114,7 +162,7 @@ module MotionKit
     end
 
     def min_center_y(value=nil)
-      constraint = Constraint.new(target, :center_y, :gte)
+      constraint = Constraint.new(target.view, :center_y, :gte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -122,7 +170,7 @@ module MotionKit
     end
 
     def max_center_y(value=nil)
-      constraint = Constraint.new(target, :center_y, :lte)
+      constraint = Constraint.new(target.view, :center_y, :lte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -130,7 +178,7 @@ module MotionKit
     end
 
     def bottom(value=nil)
-      constraint = Constraint.new(target, :bottom, :equal)
+      constraint = Constraint.new(target.view, :bottom, :equal)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -138,7 +186,7 @@ module MotionKit
     end
 
     def min_bottom(value=nil)
-      constraint = Constraint.new(target, :bottom, :gte)
+      constraint = Constraint.new(target.view, :bottom, :gte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -146,7 +194,31 @@ module MotionKit
     end
 
     def max_bottom(value=nil)
-      constraint = Constraint.new(target, :bottom, :lte)
+      constraint = Constraint.new(target.view, :bottom, :lte)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
+    end
+
+    def baseline(value=nil)
+      constraint = Constraint.new(target.view, :baseline, :equal)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
+    end
+
+    def min_baseline(value=nil)
+      constraint = Constraint.new(target.view, :baseline, :gte)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
+    end
+
+    def max_baseline(value=nil)
+      constraint = Constraint.new(target.view, :baseline, :lte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -154,8 +226,12 @@ module MotionKit
     end
 
     def width(value=nil)
-      constraint = Constraint.new(target, :width, :equal)
-      constraint.constant = value if value
+      constraint = Constraint.new(target.view, :width, :equal)
+      if value && (value.is_a?(String) || value.is_a?(Symbol))
+        constraint.relative_to = value
+      else
+        constraint.constant = value if value
+      end
 
       target.add_constraints([constraint])
       return constraint
@@ -163,7 +239,7 @@ module MotionKit
     alias w width
 
     def min_width(value=nil)
-      constraint = Constraint.new(target, :width, :gte)
+      constraint = Constraint.new(target.view, :width, :gte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -171,7 +247,7 @@ module MotionKit
     end
 
     def max_width(value=nil)
-      constraint = Constraint.new(target, :width, :lte)
+      constraint = Constraint.new(target.view, :width, :lte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -179,7 +255,7 @@ module MotionKit
     end
 
     def height(value=nil)
-      constraint = Constraint.new(target, :height, :equal)
+      constraint = Constraint.new(target.view, :height, :equal)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -188,7 +264,7 @@ module MotionKit
     alias h height
 
     def min_height(value=nil)
-      constraint = Constraint.new(target, :height, :gte)
+      constraint = Constraint.new(target.view, :height, :gte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
@@ -196,20 +272,59 @@ module MotionKit
     end
 
     def max_height(value=nil)
-      constraint = Constraint.new(target, :height, :lte)
+      constraint = Constraint.new(target.view, :height, :lte)
       constraint.constant = value if value
 
       target.add_constraints([constraint])
       return constraint
     end
 
-    def origin(value=nil)
+    def size(value=nil)
+      constraint = SizeConstraint.new(target.view, :size, :equal)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
+    end
+
+    def min_size(value=nil)
+      constraint = SizeConstraint.new(target.view, :size, :gte)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
+    end
+
+    def max_size(value=nil)
+      constraint = SizeConstraint.new(target.view, :size, :lte)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
     end
 
     def center(value=nil)
+      constraint = PointConstraint.new(target.view, [:center_x, :center_y], :equal)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
     end
 
-    def size(value=nil)
+    def min_center(value=nil)
+      constraint = PointConstraint.new(target.view, [:center_x, :center_y], :gte)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
+    end
+
+    def max_center(value=nil)
+      constraint = PointConstraint.new(target.view, [:center_x, :center_y], :lte)
+      constraint.constant = value if value
+
+      target.add_constraints([constraint])
+      return constraint
     end
 
     def frame(value=nil)

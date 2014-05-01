@@ -4,9 +4,9 @@ module MotionKit
 
     def constraints(&block)
       deferred do
-        constraints = ConstraintsTarget.new
+        constraints = ConstraintsTarget.new(target)
         context(constraints, &block)
-        constraints.resolve_all(self.view)
+        constraints.resolve_all(self)
       end
     end
 

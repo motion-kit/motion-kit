@@ -75,7 +75,7 @@ module MotionKit
 
       context_was, parent_was, delegate_was = @context, @parent, @layout_delegate
 
-      was_top = @is_top_level
+      was_top_level = @is_top_level
       if @is_top_level.nil?
         @is_top_level = true
       else
@@ -88,31 +88,40 @@ module MotionKit
       yield
       @layout_delegate, @context, @parent = delegate_was, context_was, parent_was
       if @is_top_level
-        run_deferred
+        run_deferred(target)
       end
-      @is_top_level = was_top
+      @is_top_level = was_top_level
 
       target
     end
 
     # Blocks passed to `deferred` are run at the end of a "session", usually
-    # after a call to Layout#layout
-    def deferred(layout=nil, &block)
+    # after a call to Layout#layout.
+    def deferred(&block)
       if @layout && @layout != self
-        return @layout.deferred(self, &block)
+        return @layout.add_deferred_block(self, &block)
+      else
+        return self.add_deferred_block(self, &block)
       end
+    end
+
+    # Only intended for private use
+    def add_deferred_block(layout, &block)
       raise InvalidDeferredError.new('deferred must be run inside of a context') if @is_top_level.nil?
       raise ArgumentError.new('Block required') unless block
 
-      layout ||= self
-      deferred_blocks << [@context, block]
+      self.deferred_blocks << [@context, block]
+
+      self
     end
 
+    # Only intended for private use
     def deferred_blocks
       @deferred_blocks ||= []
     end
 
-    def run_deferred
+    # Only intended for private use
+    def run_deferred(top_level_context)
       deferred_blocks = self.deferred_blocks
       @deferred_blocks = nil
 
@@ -121,7 +130,7 @@ module MotionKit
       end
 
       if @deferred_blocks
-        run_deferred
+        run_deferred(top_level_context)
       end
     end
 

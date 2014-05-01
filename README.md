@@ -41,7 +41,7 @@ be replaced with a new project, rather than upgraded or refactored.
 From your controller you will instantiate a `MotionKit::Layout` instance, and
 request views from it.  `layout.view` is the root view, and it's common to
 assign this to `self.view` in your `loadView` method.  You'll also want to hook
-up your instance variables, using `layout.get(:id)`.
+up your instance variables, using `layout.get(:id)` or using instance variables.
 
 ```ruby
 class LoginController < UIViewController
@@ -50,6 +50,7 @@ class LoginController < UIViewController
     self.view = @layout.view
 
     @button = @layout.get(:button)  # This will be created in our layout (below)
+    @button = @layout.button  # Alternatively you can use instance variables and accessor methods
   end
 
   def viewDidLoad
@@ -72,10 +73,18 @@ Here's a layout that just puts a label and a button in the middle of the screen:
 
 ```ruby
 class SimpleLayout < MotionKit::Layout
+  view :button
 
   def layout
     add UILabel, :label
-    add UIButton, :button
+
+    # the `view` method above creates a read-only accessor that will build the
+    # layout if it hasn't been built already, so you can call `layout.button`
+    # before `layout.view` and you won't get nil, and layout.view will be built.
+    @button = add UIButton, :button
+
+    # If you want Key-Value Observation compliance you can use the setter:
+    self.button = add UIButton, :button
   end
 
   def label_style
@@ -85,6 +94,7 @@ class SimpleLayout < MotionKit::Layout
     center [CGRectGetMidX(superview.bounds), CGRectGetMidY(superview.bounds)]
     text_alignment UITextAlignmentCenter
     text_color UIColor.whiteColor
+
     # if you prefer to use shorthands from another gem, you certainly can!
     background_color rmq.color.white  # from RMQ
     background_color :white.uicolor   # from SugarCube

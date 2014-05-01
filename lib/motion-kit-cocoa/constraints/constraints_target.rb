@@ -1,7 +1,9 @@
 module MotionKit
   class ConstraintsTarget
+    attr :view
 
-    def initialize
+    def initialize(target)
+      @view = target
       @constraints = []
     end
 
@@ -9,7 +11,10 @@ module MotionKit
       @constraints.concat(constraints)
     end
 
-    def resolve_all(root)
+    def resolve_all(layout)
+      @constraints.each do |constraint|
+        resolved = constraint.resolve_all(layout)
+      end
     end
 
   end

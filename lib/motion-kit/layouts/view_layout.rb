@@ -10,6 +10,44 @@ module MotionKit
   # MotionKit.
   class ViewLayout < BaseLayout
 
+    class << self
+
+      # This is an `attr_reader`-like method that also calls `build_view` if the
+      # @view doesn't exist, and so you can use it to refer to views that are
+      # assigned to ivars in your `layout` method.
+      #
+      # @example
+      #     class MyLayout < MK::Layout
+      #       view :label
+      #       view :login_button
+      #
+      #       def layout
+      #         # if element id and attr name match, no need to assign to ivar
+      #         add UILabel, :label
+      #         # if they don't match you must assign.  If you are using
+      #         # Key-Value observation you should use the setter:
+      #         self.login_button = add UIButton, :button
+      #       end
+      #
+      #     end
+      def view(name)
+        ivar_name = "@#{name}"
+        define_method(name) do
+          unless instance_variable_get(ivar_name)
+            build_view
+            unless instance_variable_get(ivar_name)
+              view = self.get(name)
+              self.send("#{ivar_name}=", view)
+            end
+          end
+          return instance_variable_get(ivar_name)
+        end
+        # KVO compliance
+        attr_writer name
+      end
+
+    end
+
     # The parent view.  This method builds the layout and returns the root view.
     def view
       if @layout && @layout != self
@@ -231,6 +269,7 @@ module MotionKit
       # Only in the 'layout' method will we allow default container to be
       # created automatically (when 'add' is called)
       @assign_root = true
+      was_top_level = @is_top_level
       @is_top_level = true
       layout
       unless @view
@@ -240,8 +279,8 @@ module MotionKit
           NSLog('Warning! No root view was set in ViewLayout#layout. Did you mean to call `root`?')
         end
       end
-      run_deferred
-      @is_top_level = nil
+      run_deferred(@view)
+      @is_top_level = was_top_level
       @assign_root = false
       # context can be set via the 'create_default_root_context' method, which
       # may be outside a 'context' block, so make sure to restore context to
@@ -249,6 +288,15 @@ module MotionKit
       @context = nil
 
       @view
+    end
+
+    def run_deferred(top_level_context)
+      view_was = @view
+      @view = top_level_context
+      retval = super
+      @view = view_was
+
+      return retval
     end
 
     def layout
