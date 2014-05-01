@@ -221,14 +221,30 @@ module MotionKit
 
   public
 
-    # this last little "catch-all" method is helpful to warn against methods
-    # that are defined already. Since magic methods are so important, this
-    # warning can come in handy.
-    def self.method_added(method_name)
-      if self < BaseLayout && BaseLayout.method_defined?(method_name)
-        NSLog("Warning! The method #{self.name}##{method_name} has already been defined on MotionKit::BaseLayout or one of its ancestors.")
+    class << self
+      def overrides(method_name)
+        overridden_methods << method_name
       end
+
+      def overridden_methods
+        @overridden_methods ||= []
+      end
+
+      # this last little "catch-all" method is helpful to warn against methods
+      # that are defined already. Since magic methods are so important, this
+      # warning can come in handy.
+      def method_added(method_name)
+        if self < BaseLayout && BaseLayout.method_defined?(method_name)
+          if overridden_methods.include?(method_name)
+            overridden_methods.delete(method_name)
+          else
+            NSLog("Warning! The method #{self.name}##{method_name} has already been defined on MotionKit::BaseLayout or one of its ancestors.")
+          end
+        end
+      end
+
     end
+
 
   end
 
