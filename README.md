@@ -517,8 +517,11 @@ class MainLayout < UIViewLayout
   end
 
   def add_constraints(controller)
-    constraints(:label) do
-      top.equals(controller.topLayoutGuide)
+    unless @layout_constraints_added
+      @layout_constraints_added = true
+      constraints(:label) do
+        top.equals(controller.topLayoutGuide)
+      end
     end
   end
 
@@ -529,8 +532,12 @@ class MainController < UIViewController
   def loadView
     @layout = MainLayout.new(self)
     self.view = @layout
+  end
 
+  # for the constraints to work reliably they should be added in this method:
+  def updateViewConstraints
     @layout.add_constraints(self)  # !!!
+    super
   end
 
 end
