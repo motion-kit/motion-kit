@@ -13,6 +13,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.center([10, 10])
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
@@ -44,6 +45,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.min_center([10, 10])
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :gte
     @constraint.multiplier.should == [1, 1]
@@ -57,6 +59,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.max_center([10, 10])
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :lte
     @constraint.multiplier.should == [1, 1]
@@ -70,6 +73,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.center(x: 10, y: 10)
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
@@ -83,6 +87,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.min_center(x: 10, y: 10)
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :gte
     @constraint.multiplier.should == [1, 1]
@@ -96,6 +101,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.max_center(x: 10, y: 10)
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :lte
     @constraint.multiplier.should == [1, 1]
@@ -110,6 +116,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.center.equals(:another_view)
       end
     end
+
     @constraint.constant.should == [0, 0]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
@@ -124,6 +131,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.center.equals(:another_view).plus(10).plus([5, 10])
       end
     end
+
     @constraint.constant.should == [15, 20]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
@@ -138,6 +146,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.min_center.equals(:another_view)
       end
     end
+
     @constraint.constant.should == [0, 0]
     @constraint.relationship.should == :gte
     @constraint.multiplier.should == [1, 1]
@@ -170,6 +179,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.max_center.equals(:another_view)
       end
     end
+
     @constraint.constant.should == [0, 0]
     @constraint.relationship.should == :lte
     @constraint.multiplier.should == [1, 1]
@@ -184,6 +194,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.center.equals(:another_view).plus(10)
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
@@ -198,6 +209,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.min_center.equals(:another_view).plus(10)
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :gte
     @constraint.multiplier.should == [1, 1]
@@ -212,6 +224,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.max_center.equals(:another_view).plus(10)
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :lte
     @constraint.multiplier.should == [1, 1]
@@ -226,6 +239,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.center.equals(:another_view).plus([10, 10])
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
@@ -240,6 +254,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.min_center.equals(:another_view).plus([10, 10])
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :gte
     @constraint.multiplier.should == [1, 1]
@@ -254,6 +269,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.max_center.equals(:another_view).plus(x: 10, y: 10)
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :lte
     @constraint.multiplier.should == [1, 1]
@@ -268,6 +284,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.center.equals(:another_view).times(2).plus(10)
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [2, 2]
@@ -282,6 +299,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.min_center.equals(:another_view).times(2).plus(10)
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :gte
     @constraint.multiplier.should == [2, 2]
@@ -296,6 +314,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.max_center.equals(:another_view).times(2).plus(10)
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :lte
     @constraint.multiplier.should == [2, 2]
@@ -328,6 +347,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.center.equals(:another_view).times([2, 2]).plus(10)
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [2, 2]
@@ -342,6 +362,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.min_center.equals(:another_view).times([2, 2]).plus(10)
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :gte
     @constraint.multiplier.should == [2, 2]
@@ -356,6 +377,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.max_center.equals(:another_view).times(x: 2, y: 2).plus(10)
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :lte
     @constraint.multiplier.should == [2, 2]
@@ -370,6 +392,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.center.equals(:another_view).times(2).times([3, 4])
       end
     end
+
     @constraint.constant.should == [0, 0]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [6, 8]
@@ -384,6 +407,7 @@ describe 'Constraints - Center helpers' do
         @constraint = @layout.center.equals(:another_view).divided_by(2)
       end
     end
+
     @constraint.constant.should == [0, 0]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [0.5, 0.5]

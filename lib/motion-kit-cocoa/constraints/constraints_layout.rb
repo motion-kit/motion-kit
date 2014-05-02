@@ -463,6 +463,7 @@ module MotionKit
       target.add_constraints([constraint])
       return constraint
     end
+    alias origin top_left
 
     def top_right(value=nil)
       constraint = PointConstraint.new(target.view, [:right, :top], :equal)

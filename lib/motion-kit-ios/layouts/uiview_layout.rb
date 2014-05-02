@@ -42,7 +42,6 @@ module MotionKit
 
   end
 
-  # this is the default container layout, which is different for each platform.
   class UIViewLayout < Layout
     targets UIView
   end

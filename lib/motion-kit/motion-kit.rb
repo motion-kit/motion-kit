@@ -12,5 +12,7 @@ module MotionKit
   end
   class NoSuperviewError < Exception
   end
+  class NoCommonAncestorError < Exception
+  end
 end
 ::MK = MotionKit unless defined?(::MK)

@@ -13,6 +13,7 @@ describe 'Constraints - Relative corners helpers' do
         @constraint = @layout.top_left([10, 10])
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
@@ -45,6 +46,7 @@ describe 'Constraints - Relative corners helpers' do
         @constraint = @layout.top_left.equals(:another_view).plus(10).plus([5, 10])
       end
     end
+
     @constraint.constant.should == [15, 20]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
@@ -77,6 +79,7 @@ describe 'Constraints - Relative corners helpers' do
         @constraint = @layout.top_right([10, 10])
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
@@ -109,6 +112,7 @@ describe 'Constraints - Relative corners helpers' do
         @constraint = @layout.top_right.equals(:another_view).plus(10).plus([5, 10])
       end
     end
+
     @constraint.constant.should == [15, 20]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
@@ -141,6 +145,7 @@ describe 'Constraints - Relative corners helpers' do
         @constraint = @layout.bottom_left([10, 10])
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
@@ -173,6 +178,7 @@ describe 'Constraints - Relative corners helpers' do
         @constraint = @layout.bottom_left.equals(:another_view).plus(10).plus([5, 10])
       end
     end
+
     @constraint.constant.should == [15, 20]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
@@ -205,6 +211,7 @@ describe 'Constraints - Relative corners helpers' do
         @constraint = @layout.bottom_right([10, 10])
       end
     end
+
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
@@ -237,6 +244,7 @@ describe 'Constraints - Relative corners helpers' do
         @constraint = @layout.bottom_right.equals(:another_view).plus(10).plus([5, 10])
       end
     end
+
     @constraint.constant.should == [15, 20]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]

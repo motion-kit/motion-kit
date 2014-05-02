@@ -71,7 +71,7 @@ module MotionKit
       return target unless block
       # this little line is incredibly important; the context is only set on
       # the top-level Layout object.
-      return @layout.context(target, &block) if @layout && @layout != self
+      return @layout.context(target, &block) if @layout != self
 
       context_was, parent_was, delegate_was = @context, @parent, @layout_delegate
 
@@ -98,7 +98,7 @@ module MotionKit
     # Blocks passed to `deferred` are run at the end of a "session", usually
     # after a call to Layout#layout.
     def deferred(&block)
-      if @layout && @layout != self
+      if @layout != self
         return @layout.add_deferred_block(self, &block)
       else
         return self.add_deferred_block(self, &block)

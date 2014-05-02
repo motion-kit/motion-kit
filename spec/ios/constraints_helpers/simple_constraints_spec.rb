@@ -14,6 +14,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.x(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -37,6 +38,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.x.is == 10
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -50,6 +52,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.x.is <= 10
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -63,6 +66,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.min_x.is == 10
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -78,6 +82,7 @@ describe 'Constraints - Simple helpers' do
           end.should.raise(MotionKit::InvalidRelationshipError)
         end
       end
+
     end
     it 'should support `(x.is >= 10).priority(:low)`' do
       @view = @layout.context(UIView.new) do
@@ -85,6 +90,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = (@layout.x.is >= 10).priority(:low)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -99,6 +105,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.min_x(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -114,6 +121,7 @@ describe 'Constraints - Simple helpers' do
           end
         end
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 0.5
@@ -130,6 +138,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 0.5
@@ -146,6 +155,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 0.5
@@ -159,6 +169,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.max_x(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -173,6 +184,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -187,6 +199,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 30
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -201,6 +214,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == -10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -215,6 +229,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -229,6 +244,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -243,6 +259,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -257,6 +274,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -271,6 +289,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -285,6 +304,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -299,6 +319,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -313,6 +334,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -327,6 +349,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
@@ -341,6 +364,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 6
@@ -355,6 +379,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 0.5
@@ -369,6 +394,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
@@ -383,6 +409,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
@@ -397,6 +424,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
@@ -411,6 +439,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
@@ -425,6 +454,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
@@ -451,6 +481,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.center_x(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -474,6 +505,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.min_center_x(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -487,6 +519,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.max_center_x(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -501,6 +534,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -515,6 +549,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -529,6 +564,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -543,6 +579,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -557,6 +594,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -571,6 +609,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -585,6 +624,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -599,6 +639,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -613,6 +654,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -627,6 +669,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
@@ -641,6 +684,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
@@ -655,6 +699,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
@@ -681,6 +726,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.right(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -704,6 +750,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.min_right(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -717,6 +764,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.max_right(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -731,6 +779,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -745,6 +794,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -759,6 +809,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -773,6 +824,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -787,6 +839,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -801,6 +854,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -815,6 +869,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -829,6 +884,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -843,6 +899,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -857,6 +914,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
@@ -871,6 +929,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
@@ -885,6 +944,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
@@ -911,6 +971,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.y(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -934,6 +995,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.min_y(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -947,6 +1009,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.max_y(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -961,6 +1024,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -975,6 +1039,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -989,6 +1054,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1003,6 +1069,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1017,6 +1084,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1031,6 +1099,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1045,6 +1114,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1059,6 +1129,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1073,6 +1144,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1087,6 +1159,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
@@ -1101,6 +1174,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
@@ -1115,6 +1189,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
@@ -1129,6 +1204,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
@@ -1143,6 +1219,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
@@ -1157,6 +1234,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
@@ -1183,6 +1261,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.center_y(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1206,6 +1285,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.min_center_y(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1219,6 +1299,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.max_center_y(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1233,6 +1314,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1247,6 +1329,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1261,6 +1344,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1275,6 +1359,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1289,6 +1374,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1303,6 +1389,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1317,6 +1404,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1331,6 +1419,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1345,6 +1434,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1359,6 +1449,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
@@ -1373,6 +1464,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
@@ -1387,6 +1479,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
@@ -1413,6 +1506,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.bottom(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1436,6 +1530,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.min_bottom(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1449,6 +1544,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.max_bottom(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1463,6 +1559,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1477,6 +1574,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1491,6 +1589,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1505,6 +1604,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1519,6 +1619,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1533,6 +1634,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1547,6 +1649,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1561,6 +1664,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1575,6 +1679,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1589,6 +1694,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
@@ -1603,6 +1709,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
@@ -1617,6 +1724,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
@@ -1643,6 +1751,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.width(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1666,6 +1775,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.min_width(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1679,6 +1789,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.max_width(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1693,6 +1804,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1707,6 +1819,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1721,6 +1834,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1735,6 +1849,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1749,6 +1864,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1763,6 +1879,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1777,6 +1894,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
@@ -1791,6 +1909,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
@@ -1805,6 +1924,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
@@ -1831,6 +1951,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.height(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1854,6 +1975,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.min_height(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1867,6 +1989,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.max_height(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1881,6 +2004,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1895,6 +2019,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1909,6 +2034,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1923,6 +2049,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -1937,6 +2064,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -1951,6 +2079,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -1965,6 +2094,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
@@ -1979,6 +2109,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
@@ -1993,6 +2124,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
@@ -2019,6 +2151,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.leading(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -2042,6 +2175,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.min_leading(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -2055,6 +2189,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.max_leading(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -2069,6 +2204,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -2083,6 +2219,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -2097,6 +2234,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -2111,6 +2249,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -2125,6 +2264,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -2139,6 +2279,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -2153,6 +2294,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
@@ -2167,6 +2309,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
@@ -2181,6 +2324,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
@@ -2207,6 +2351,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.trailing(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -2230,6 +2375,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.min_trailing(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -2243,6 +2389,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.max_trailing(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -2257,6 +2404,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -2271,6 +2419,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -2285,6 +2434,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -2299,6 +2449,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -2313,6 +2464,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -2327,6 +2479,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -2341,6 +2494,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
@@ -2355,6 +2509,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
@@ -2369,6 +2524,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
@@ -2395,6 +2551,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.baseline(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -2418,6 +2575,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.min_baseline(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -2431,6 +2589,7 @@ describe 'Constraints - Simple helpers' do
           @constraint = @layout.max_baseline(10)
         end
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -2445,6 +2604,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -2459,6 +2619,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -2473,6 +2634,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -2487,6 +2649,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
@@ -2501,6 +2664,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
@@ -2515,6 +2679,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
@@ -2529,6 +2694,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
@@ -2543,6 +2709,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
@@ -2557,6 +2724,7 @@ describe 'Constraints - Simple helpers' do
         end
         @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       end
+
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2

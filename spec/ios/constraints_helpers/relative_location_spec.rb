@@ -14,6 +14,7 @@ describe 'Constraints - Relative location helpers' do
         @constraint = @layout.above(:another_view)
       end
     end
+
     @constraint.constant.should == 0
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == 1
@@ -38,6 +39,7 @@ describe 'Constraints - Relative location helpers' do
         @constraint = @layout.below(:another_view)
       end
     end
+
     @constraint.constant.should == 0
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == 1
@@ -62,6 +64,7 @@ describe 'Constraints - Relative location helpers' do
         @constraint = @layout.before(:another_view)
       end
     end
+
     @constraint.constant.should == 0
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == 1
@@ -86,6 +89,7 @@ describe 'Constraints - Relative location helpers' do
         @constraint = @layout.after(:another_view)
       end
     end
+
     @constraint.constant.should == 0
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == 1

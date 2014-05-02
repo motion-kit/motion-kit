@@ -491,6 +491,53 @@ be using Cocoa's Auto Layout system instead.  This is the recommended way to set
 your frames, now that Apple is introducing multiple display sizes.  But beware,
 Auto Layout can be frustrating... :-/
 
+One pain point in working with constraints is determining when to add them to
+your views.  We tried really hard to figure out a way to automatically add them,
+but it's just an untenable problem (Teacup suffers from a similar conundrum).
+
+Essentially, the problem comes down to this: you will often want to set
+constraints that are related to the view controller's `view`, but those must be
+created/set *after* `controller.view = @layout.view`.  Without doing some crazy
+method mangling on NS/UIView we just can't do this automatically
+
+Long story short: If you need to create constraints that refer to the controller
+view, you need to use a separate method that is called after the view hierarchy
+is created.
+
+```ruby
+class MainLayout < UIViewLayout
+
+  def layout
+    add UILabel, :label do
+      constraints do
+        x 0
+        width('100%')
+      end
+    end
+  end
+
+  def add_constraints(controller)
+    constraints(:label) do
+      top.equals(controller.topLayoutGuide)
+    end
+  end
+
+end
+
+class MainController < UIViewController
+
+  def loadView
+    @layout = MainLayout.new(self)
+    self.view = @layout
+
+    @layout.add_constraints(self)  # !!!
+  end
+
+end
+```
+
+OK, with that hack out of the way, on to the examples!
+
 ```ruby
 constraints do
   top_left x: 5, y: 10
