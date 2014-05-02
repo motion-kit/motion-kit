@@ -1,4 +1,11 @@
 module MotionKit
+  class InvalidRelationshipError < Exception
+  end
+  class InvalidAttributeError < Exception
+  end
+  class InvalidPriorityError < Exception
+  end
+
   class Constraint
     attr_accessor :target
     attr_accessor :attribute
@@ -36,7 +43,7 @@ module MotionKit
       baseline: NSLayoutAttributeBaseline,
     }
 
-    def initialize(target, attribute=nil, relationship=:equal)
+    def initialize(target, attribute=nil, relationship)
       @target = target
       @attribute = attribute
       @attribute2 = attribute
@@ -44,52 +51,130 @@ module MotionKit
       @multiplier = 1
       @constant = 0
       @priority = nil
+      @compare_flag = false
+    end
+
+    # like `equals`, but also sets `compare_flag` to true, so you can use ==,
+    # <=, and >=
+    #
+    # @example
+    #     x.is == 10
+    #     (x.is == 10).priority :required
+    #     width.is >= 100
+    #     height.is <= 200
+    def is(value=nil)
+      if value
+        self.equals(value)
+      end
+      @compare_flag = true
+      self
+    end
+
+    def ==(compare)
+      if @compare_flag
+        equals(compare)
+        @compare_flag = false
+
+        self
+      else
+        super
+      end
+    end
+
+    def >=(compare)
+      if @compare_flag
+        if @relationship && Constraint.relationship_lookup(@relationship) != NSLayoutRelationEqual
+          raise InvalidRelationshipError.new("You cannot use `.is >=` on a constraint that is already defined as #{@relationship}")
+        end
+
+        gte(compare)
+        @compare_flag = false
+
+        self
+      else
+        super
+      end
+    end
+
+    def <=(compare)
+      if @compare_flag
+        if @relationship && Constraint.relationship_lookup(@relationship) != NSLayoutRelationEqual
+          raise InvalidRelationshipError.new("You cannot use `.is <=` on a constraint that is already defined as #{@relationship}")
+        end
+
+        lte(compare)
+        @compare_flag = false
+
+        self
+      else
+        super
+      end
     end
 
     def equals(target, attribute2=nil)
-      @relationship ||= :equal
-      if constant?(target)
-        @constant = target
+      self.relationship ||= :equal
+      if Constraint.constant?(target)
+        self.constant = target
+      elsif Constraint.calculate?(target)
+        calc = Calculator.scan(target)
+        self.multiplier = calc.factor
+        self.constant = calc.constant || 0
+        self.relative_to ||= :superview
       else
-        @relative_to = target
+        self.relative_to = target
         if attribute2
-          @attribute2 = attribute2
+          self.attribute2 = attribute2
         end
       end
+      @compare_flag = false
       self
     end
     alias is_equal_to equals
+    alias equal_to equals
 
     def lte(target, attribute2=nil)
-      @relationship ||= :lte
-      if constant?(target)
-        @constant = target
+      self.relationship = :lte
+      if Constraint.constant?(target)
+        self.constant = target
       else
-        @relative_to = target
+        self.relative_to = target
         if attribute2
-          @attribute2 = attribute2
+          self.attribute2 = attribute2
         end
       end
+      @compare_flag = false
       self
     end
     alias is_at_most lte
+    alias at_most lte
 
     def gte(target, attribute2=nil)
-      @relationship ||= :gte
-      if constant?(target)
-        @constant = target
+      self.relationship = :gte
+      if Constraint.constant?(target)
+        self.constant = target
       else
-        @relative_to = target
+        self.relative_to = target
         if attribute2
-          @attribute2 = attribute2
+          self.attribute2 = attribute2
         end
       end
+      @compare_flag = false
       self
     end
     alias is_at_least gte
+    alias at_least gte
+
+    # width.is('100%').of(:view, :width)
+    def of(target, attribute2=nil)
+      self.relative_to = target
+      if attribute2
+        self.attribute2 = attribute2
+      end
+      self
+    end
 
     def times(multiplier)
-      @multiplier *= multiplier
+      self.multiplier *= multiplier
       self
     end
 
@@ -105,10 +190,10 @@ module MotionKit
     #
     #     c.equals(:view, :x).minus(10)
     def plus(constant)
-      unless @relationship
+      unless self.relationship
         constant = -constant
       end
-      @constant += constant
+      self.constant += constant
       self
     end
 
@@ -130,87 +215,120 @@ module MotionKit
       self
     end
 
-    def resolve_all(layout)
+    def resolve_all(layout, view)
       @resolved ||= begin
-        item = view_lookup(layout, self.target)
-        rel_item = view_lookup(layout, self.relative_to)
+        item = Constraint.view_lookup(layout, view, self.target)
+        rel_item = Constraint.view_lookup(layout, view, self.relative_to)
 
         nsconstraint = NSLayoutConstraint.constraintWithItem(item,
-          attribute: attribute_lookup(self.attribute),
-          relatedBy: relationship_lookup(self.relationship),
+          attribute: Constraint.attribute_lookup(self.attribute),
+          relatedBy: Constraint.relationship_lookup(self.relationship),
           toItem: rel_item,
-          attribute: attribute_lookup(self.attribute2),
+          attribute: Constraint.attribute_lookup(self.attribute2),
           multiplier: self.multiplier,
           constant: self.constant
           )
 
-        if @priority
-          nsconstraint.priority = priority_lookup(self.priority)
+        if self.priority
+          nsconstraint.priority = Constraint.priority_lookup(self.priority)
         end
 
-        if @identifier
-          nsconstraint.setIdentifier(@identifier)
+        if self.identifier
+          nsconstraint.setIdentifier(self.identifier)
         end
 
         [nsconstraint]
       end
     end
 
-private
-    def view_lookup(layout, target)
-      if ! target || target.is_a?(MotionKit.base_view_class)
-        target
-      else
-        layout.get(target)
-      end
-    end
+    class << self
 
-    def attribute_lookup(attribute)
-      if attribute.is_a? Fixnum
-        return attribute
-      end
+      def axis_lookup(axis)
+        case axis
+        when :horizontal
+          axis = UILayoutConstraintAxisHorizontal
+        when :vertical
+          axis = UILayoutConstraintAxisVertical
+        end
 
-      unless Attributes.key? attribute
-        raise "Unsupported attribute #{attribute.inspect}"
+        return axis
       end
 
-      Attributes[attribute]
-    end
+      def orientation_lookup(orientation)
+        case orientation
+        when :horizontal
+          orientation = NSLayoutConstraintOrientationHorizontal
+        when :vertical
+          orientation = NSLayoutConstraintOrientationVertical
+        end
 
-    def priority_lookup(priority)
-      if priority.is_a? Fixnum
-        return priority
+        return orientation
       end
 
-      unless Priorities.key? priority
-        raise "Unsupported priority #{priority.inspect}"
+      def view_lookup(layout, view, target)
+        if ! target || target.is_a?(MotionKit.base_view_class)
+          target
+        elsif target.is_a?(ConstraintPlaceholder)
+          target.resolve(layout)
+        elsif target == :superview
+          view.superview
+        else
+          layout.get(target)
+        end
       end
 
-      Priorities[priority]
-    end
+      def attribute_lookup(attribute)
+        if attribute.is_a? Fixnum
+          return attribute
+        end
 
-    def relationship_lookup(relationship)
-      if relationship.is_a? Fixnum
-        return relationship
+        unless Attributes.key? attribute
+          raise InvalidAttributeError.new("Unsupported attribute #{attribute.inspect}")
+        end
+
+        Attributes[attribute]
       end
 
-      unless Relationships.key? relationship
-        raise "Unsupported relationship #{relationship.inspect}"
+      def priority_lookup(priority)
+        if priority.is_a? Fixnum
+          return priority
+        end
+
+        unless Priorities.key? priority
+          raise InvalidPriorityError.new("Unsupported priority #{priority.inspect}")
+        end
+
+        Priorities[priority]
       end
 
-      Relationships[relationship]
-    end
+      def relationship_lookup(relationship)
+        if relationship.is_a? Fixnum
+          return relationship
+        end
 
-    def attribute_reverse(attribute)
-      Attributes.key(attribute) || :none
-    end
+        unless Relationships.key? relationship
+          raise InvalidRelationshipError.new("Unsupported relationship #{relationship.inspect}")
+        end
 
-    def relationship_reverse(relationship)
-      Relationships.key(relationship)
-    end
+        Relationships[relationship]
+      end
 
-    def constant?(value)
-      value.is_a?(Numeric) || value.is_a?(Hash) || value.is_a?(Array)
+      def attribute_reverse(attribute)
+        Attributes.key(attribute) || :none
+      end
+
+      def relationship_reverse(relationship)
+        Relationships.key(relationship)
+      end
+
+      def calculate?(value)
+        value.is_a?(String)
+      end
+
+      def constant?(value)
+        value.is_a?(Numeric) || value.is_a?(Hash) || value.is_a?(Array)
+      end
+
     end
 
   end
@@ -224,12 +342,12 @@ private
     end
 
     def constant=(constant)
-      @constant = [0, 0]
+      super([0, 0])
       self.plus(constant)
     end
 
     def multiplier=(multiplier)
-      @multiplier = [1, 1]
+      super([1, 1])
       self.times(multiplier)
     end
 
@@ -244,32 +362,32 @@ private
     end
 
     def attribute=(value)
-      raise NoMethodError.new(:attribute)
+      raise NoMethodError.new('attribute=')
     end
 
     def attribute2=(value)
-      raise NoMethodError.new(:attribute2)
+      raise NoMethodError.new('attribute2=')
     end
 
     def plus(constant)
       if constant.is_a?(Array)
-        @constant[0] += constant[0]
-        @constant[1] += constant[1]
+        self.constant[0] += constant[0]
+        self.constant[1] += constant[1]
       elsif constant.is_a?(Hash)
         if constant.key?(:w)
-          @constant[0] += constant[:w]
+          self.constant[0] += constant[:w]
         elsif constant.key?(:width)
-          @constant[0] += constant[:width]
+          self.constant[0] += constant[:width]
         end
 
         if constant.key?(:h)
-          @constant[1] += constant[:h]
+          self.constant[1] += constant[:h]
         elsif constant.key?(:height)
-          @constant[1] += constant[:height]
+          self.constant[1] += constant[:height]
         end
       else
-        @constant[0] += constant
-        @constant[1] += constant
+        self.constant[0] += constant
+        self.constant[1] += constant
       end
 
       self
@@ -277,23 +395,23 @@ private
 
     def minus(constant)
       if constant.is_a?(Array)
-        @constant[0] -= constant[0]
-        @constant[1] -= constant[1]
+        self.constant[0] -= constant[0]
+        self.constant[1] -= constant[1]
       elsif constant.is_a?(Hash)
         if constant.key?(:w)
-          @constant[0] -= constant[:w]
+          self.constant[0] -= constant[:w]
         elsif constant.key?(:width)
-          @constant[0] -= constant[:width]
+          self.constant[0] -= constant[:width]
         end
 
         if constant.key?(:h)
-          @constant[1] -= constant[:h]
+          self.constant[1] -= constant[:h]
         elsif constant.key?(:height)
-          @constant[1] -= constant[:height]
+          self.constant[1] -= constant[:height]
         end
       else
-        @constant[0] -= constant
-        @constant[1] -= constant
+        self.constant[0] -= constant
+        self.constant[1] -= constant
       end
 
       self
@@ -301,23 +419,23 @@ private
 
     def times(multiplier)
       if multiplier.is_a?(Array)
-        @multiplier[0] *= multiplier[0]
-        @multiplier[1] *= multiplier[1]
+        self.multiplier[0] *= multiplier[0]
+        self.multiplier[1] *= multiplier[1]
       elsif multiplier.is_a?(Hash)
         if multiplier.key?(:w)
-          @multiplier[0] *= multiplier[:w]
+          self.multiplier[0] *= multiplier[:w]
         elsif multiplier.key?(:width)
-          @multiplier[0] *= multiplier[:width]
+          self.multiplier[0] *= multiplier[:width]
         end
 
         if multiplier.key?(:h)
-          @multiplier[1] *= multiplier[:h]
+          self.multiplier[1] *= multiplier[:h]
         elsif multiplier.key?(:height)
-          @multiplier[1] *= multiplier[:height]
+          self.multiplier[1] *= multiplier[:height]
         end
       else
-        @multiplier[0] *= multiplier
-        @multiplier[1] *= multiplier
+        self.multiplier[0] *= multiplier
+        self.multiplier[1] *= multiplier
       end
 
       self
@@ -325,49 +443,49 @@ private
 
     def divided_by(multiplier)
       if multiplier.is_a?(Array)
-        @multiplier[0] /= multiplier[0].to_f
-        @multiplier[1] /= multiplier[1].to_f
+        self.multiplier[0] /= multiplier[0].to_f
+        self.multiplier[1] /= multiplier[1].to_f
       elsif multiplier.is_a?(Hash)
         if multiplier.key?(:w)
-          @multiplier[0] /= multiplier[:w].to_f
+          self.multiplier[0] /= multiplier[:w].to_f
         elsif multiplier.key?(:width)
-          @multiplier[0] /= multiplier[:width].to_f
+          self.multiplier[0] /= multiplier[:width].to_f
         end
 
         if multiplier.key?(:h)
-          @multiplier[1] /= multiplier[:h].to_f
+          self.multiplier[1] /= multiplier[:h].to_f
         elsif multiplier.key?(:height)
-          @multiplier[1] /= multiplier[:height].to_f
+          self.multiplier[1] /= multiplier[:height].to_f
         end
       else
-        @multiplier[0] /= multiplier.to_f
-        @multiplier[1] /= multiplier.to_f
+        self.multiplier[0] /= multiplier.to_f
+        self.multiplier[1] /= multiplier.to_f
       end
 
       self
     end
 
-    def resolve_all(layout)
+    def resolve_all(layout, view)
       @resolved ||= begin
-        item = view_lookup(layout, self.target)
-        rel_item = view_lookup(layout, self.relative_to)
+        item = Constraint.view_lookup(layout, view, self.target)
+        rel_item = Constraint.view_lookup(layout, view, self.relative_to)
 
         [[:width, 0], [:height, 1]].map do |attribute, index|
           nsconstraint = NSLayoutConstraint.constraintWithItem(item,
-            attribute: attribute_lookup(attribute),
-            relatedBy: relationship_lookup(self.relationship),
+            attribute: Constraint.attribute_lookup(attribute),
+            relatedBy: Constraint.relationship_lookup(self.relationship),
             toItem: rel_item,
-            attribute: attribute_lookup(attribute),
+            attribute: Constraint.attribute_lookup(attribute),
             multiplier: self.multiplier[index],
             constant: self.constant[index]
             )
 
-          if @priority
-            nsconstraint.priority = priority_lookup(self.priority)
+          if self.priority
+            nsconstraint.priority = Constraint.priority_lookup(self.priority)
           end
 
-          if @identifier
-            nsconstraint.setIdentifier(@identifier)
+          if self.identifier
+            nsconstraint.setIdentifier(self.identifier)
           end
 
           nsconstraint
@@ -381,27 +499,27 @@ private
 
     def plus(constant)
       if constant.is_a?(Array)
-        @constant[0] += constant[0]
-        @constant[1] += constant[1]
+        self.constant[0] += constant[0]
+        self.constant[1] += constant[1]
       elsif constant.is_a?(Hash)
         if constant.key?(:x)
-          @constant[0] += constant[:x]
+          self.constant[0] += constant[:x]
         elsif constant.key?(:right)
-          @constant[0] += constant[:right]
+          self.constant[0] += constant[:right]
         elsif constant.key?(:left)
-          @constant[0] -= constant[:left]
+          self.constant[0] -= constant[:left]
         end
 
         if constant.key?(:y)
-          @constant[1] += constant[:y]
+          self.constant[1] += constant[:y]
         elsif constant.key?(:up)
-          @constant[1] += constant[:up]
+          self.constant[1] += constant[:up]
         elsif constant.key?(:down)
-          @constant[1] -= constant[:down]
+          self.constant[1] -= constant[:down]
         end
       else
-        @constant[0] += constant
-        @constant[1] += constant
+        self.constant[0] += constant
+        self.constant[1] += constant
       end
 
       self
@@ -409,27 +527,27 @@ private
 
     def minus(constant)
       if constant.is_a?(Array)
-        @constant[0] -= constant[0]
-        @constant[1] -= constant[1]
+        self.constant[0] -= constant[0]
+        self.constant[1] -= constant[1]
       elsif constant.is_a?(Hash)
         if constant.key?(:x)
-          @constant[0] -= constant[:x]
+          self.constant[0] -= constant[:x]
         elsif constant.key?(:right)
-          @constant[0] -= constant[:right]
+          self.constant[0] -= constant[:right]
         elsif constant.key?(:left)
-          @constant[0] += constant[:left]
+          self.constant[0] += constant[:left]
         end
 
         if constant.key?(:y)
-          @constant[1] -= constant[:y]
+          self.constant[1] -= constant[:y]
         elsif constant.key?(:up)
-          @constant[1] -= constant[:up]
+          self.constant[1] -= constant[:up]
         elsif constant.key?(:down)
-          @constant[1] += constant[:down]
+          self.constant[1] += constant[:down]
         end
       else
-        @constant[0] -= constant
-        @constant[1] -= constant
+        self.constant[0] -= constant
+        self.constant[1] -= constant
       end
 
       self
@@ -437,19 +555,19 @@ private
 
     def times(multiplier)
       if multiplier.is_a?(Array)
-        @multiplier[0] *= multiplier[0]
-        @multiplier[1] *= multiplier[1]
+        self.multiplier[0] *= multiplier[0]
+        self.multiplier[1] *= multiplier[1]
       elsif multiplier.is_a?(Hash)
         if multiplier.key?(:x)
-          @multiplier[0] *= multiplier[:x]
+          self.multiplier[0] *= multiplier[:x]
         end
 
         if multiplier.key?(:y)
-          @multiplier[1] *= multiplier[:y]
+          self.multiplier[1] *= multiplier[:y]
         end
       else
-        @multiplier[0] *= multiplier
-        @multiplier[1] *= multiplier
+        self.multiplier[0] *= multiplier
+        self.multiplier[1] *= multiplier
       end
 
       self
@@ -457,47 +575,47 @@ private
 
     def divided_by(multiplier)
       if multiplier.is_a?(Array)
-        @multiplier[0] /= multiplier[0].to_f
-        @multiplier[1] /= multiplier[1].to_f
+        self.multiplier[0] /= multiplier[0].to_f
+        self.multiplier[1] /= multiplier[1].to_f
       elsif multiplier.is_a?(Hash)
         if multiplier.key?(:x)
-          @multiplier[0] /= multiplier[:x].to_f
+          self.multiplier[0] /= multiplier[:x].to_f
         end
 
         if multiplier.key?(:y)
-          @multiplier[1] /= multiplier[:y].to_f
+          self.multiplier[1] /= multiplier[:y].to_f
         end
       else
-        @multiplier[0] /= multiplier.to_f
-        @multiplier[1] /= multiplier.to_f
+        self.multiplier[0] /= multiplier.to_f
+        self.multiplier[1] /= multiplier.to_f
       end
 
       self
     end
 
-    def resolve_all(layout)
+    def resolve_all(layout, view)
       @resolved ||= begin
-        item = view_lookup(layout, self.target)
-        rel_item = view_lookup(layout, self.relative_to)
+        item = Constraint.view_lookup(layout, view, self.target)
+        rel_item = Constraint.view_lookup(layout, view, self.relative_to)
 
         [0, 1].map do |index|
-          attribute = attribute_lookup(self.attribute[index])
+          attribute = Constraint.attribute_lookup(self.attribute[index])
 
           nsconstraint = NSLayoutConstraint.constraintWithItem(item,
             attribute: attribute,
-            relatedBy: relationship_lookup(self.relationship),
+            relatedBy: Constraint.relationship_lookup(self.relationship),
             toItem: rel_item,
             attribute: attribute,
             multiplier: self.multiplier[index],
             constant: self.constant[index]
             )
 
-          if @priority
-            nsconstraint.priority = priority_lookup(self.priority)
+          if self.priority
+            nsconstraint.priority = Constraint.priority_lookup(self.priority)
           end
 
-          if @identifier
-            nsconstraint.setIdentifier(@identifier)
+          if self.identifier
+            nsconstraint.setIdentifier(self.identifier)
           end
 
           nsconstraint

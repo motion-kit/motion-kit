@@ -70,6 +70,10 @@ def window_style
 end
 ```
 
+## AutoLayout
+
+## Frames
+
 ## NSMenu
 
 Building menus with MotionKit is a total breeze, and it can even assist in

@@ -45,224 +45,224 @@ describe 'Constraints helpers' do
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
-    it 'should support `x.equals(:view[, :left])`' do
+    it 'should support `x.equals(:another_view[, :left])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.x.equals(:view)
+          @constraint = @layout.x.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
-    it 'should support `x.equals(:view).plus(10)`' do
+    it 'should support `x.equals(:another_view).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.x.equals(:view).plus(10)
+          @constraint = @layout.x.equals(:another_view).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
-    it 'should support `x.equals(:view).plus(10).plus(20)`' do
+    it 'should support `x.equals(:another_view).plus(10).plus(20)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.x.equals(:view).plus(10).plus(20)
+          @constraint = @layout.x.equals(:another_view).plus(10).plus(20)
         end
       end
       @constraint.constant.should == 30
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
-    it 'should support `min_x.equals(:view[, :left])`' do
+    it 'should support `min_x.equals(:another_view[, :left])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_x.equals(:view)
+          @constraint = @layout.min_x.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
-    it 'should support `max_x.equals(:view[, :left])`' do
+    it 'should support `max_x.equals(:another_view[, :left])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_x.equals(:view)
+          @constraint = @layout.max_x.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
-    it 'should support `x.equals(:view, :right)`' do
+    it 'should support `x.equals(:another_view, :right)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.x.equals(:view, :right)
+          @constraint = @layout.x.equals(:another_view, :right)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :right
     end
-    it 'should support `min_x.equals(:view, :right)`' do
+    it 'should support `min_x.equals(:another_view, :right)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_x.equals(:view, :right)
+          @constraint = @layout.min_x.equals(:another_view, :right)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :right
     end
-    it 'should support `max_x.equals(:view, :right)`' do
+    it 'should support `max_x.equals(:another_view, :right)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_x.equals(:view, :right)
+          @constraint = @layout.max_x.equals(:another_view, :right)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :right
     end
-    it 'should support `x.equals(:view, :right).minus(10)`' do
+    it 'should support `x.equals(:another_view, :right).minus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.x.equals(:view, :right).minus(10)
+          @constraint = @layout.x.equals(:another_view, :right).minus(10)
         end
       end
       @constraint.constant.should == -10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :right
     end
-    it 'should support `min_x.equals(:view, :right).plus(10)`' do
+    it 'should support `min_x.equals(:another_view, :right).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_x.equals(:view, :right).plus(10)
+          @constraint = @layout.min_x.equals(:another_view, :right).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :right
     end
-    it 'should support `max_x.equals(:view, :right).plus(10)`' do
+    it 'should support `max_x.equals(:another_view, :right).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_x.equals(:view, :right).plus(10)
+          @constraint = @layout.max_x.equals(:another_view, :right).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :right
     end
-    it 'should support `x.equals(:view).times(2).plus(10)`' do
+    it 'should support `x.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.x.equals(:view).times(2).plus(10)
+          @constraint = @layout.x.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
-    it 'should support `min_x.equals(:view).times(2).plus(10)`' do
+    it 'should support `min_x.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_x.equals(:view).times(2).plus(10)
+          @constraint = @layout.min_x.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
-    it 'should support `max_x.equals(:view).times(2).plus(10)`' do
+    it 'should support `max_x.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_x.equals(:view).times(2).plus(10)
+          @constraint = @layout.max_x.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
-    it 'should support `left.equals(:view).times(2).plus(10)`' do
+    it 'should support `left.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.left.equals(:view).times(2).plus(10)
+          @constraint = @layout.left.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
-    it 'should support `min_left.equals(:view).times(2).plus(10)`' do
+    it 'should support `min_left.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_left.equals(:view).times(2).plus(10)
+          @constraint = @layout.min_left.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
-    it 'should support `max_left.equals(:view).times(2).plus(10)`' do
+    it 'should support `max_left.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_left.equals(:view).times(2).plus(10)
+          @constraint = @layout.max_left.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
@@ -308,159 +308,159 @@ describe 'Constraints helpers' do
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :center_x
     end
-    it 'should support `center_x.equals(:view[, :center_x])`' do
+    it 'should support `center_x.equals(:another_view[, :center_x])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.center_x.equals(:view)
+          @constraint = @layout.center_x.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :center_x
     end
-    it 'should support `min_center_x.equals(:view[, :center_x])`' do
+    it 'should support `min_center_x.equals(:another_view[, :center_x])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_center_x.equals(:view)
+          @constraint = @layout.min_center_x.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :center_x
     end
-    it 'should support `max_center_x.equals(:view[, :center_x])`' do
+    it 'should support `max_center_x.equals(:another_view[, :center_x])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_center_x.equals(:view)
+          @constraint = @layout.max_center_x.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :center_x
     end
-    it 'should support `center_x.equals(:view, :right)`' do
+    it 'should support `center_x.equals(:another_view, :right)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.center_x.equals(:view, :right)
+          @constraint = @layout.center_x.equals(:another_view, :right)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :right
     end
-    it 'should support `min_center_x.equals(:view, :right)`' do
+    it 'should support `min_center_x.equals(:another_view, :right)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_center_x.equals(:view, :right)
+          @constraint = @layout.min_center_x.equals(:another_view, :right)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :right
     end
-    it 'should support `max_center_x.equals(:view, :right)`' do
+    it 'should support `max_center_x.equals(:another_view, :right)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_center_x.equals(:view, :right)
+          @constraint = @layout.max_center_x.equals(:another_view, :right)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :right
     end
-    it 'should support `center_x.equals(:view, :right).plus(10)`' do
+    it 'should support `center_x.equals(:another_view, :right).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.center_x.equals(:view, :right).plus(10)
+          @constraint = @layout.center_x.equals(:another_view, :right).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :right
     end
-    it 'should support `min_center_x.equals(:view, :right).plus(10)`' do
+    it 'should support `min_center_x.equals(:another_view, :right).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_center_x.equals(:view, :right).plus(10)
+          @constraint = @layout.min_center_x.equals(:another_view, :right).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :right
     end
-    it 'should support `max_center_x.equals(:view, :right).plus(10)`' do
+    it 'should support `max_center_x.equals(:another_view, :right).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_center_x.equals(:view, :right).plus(10)
+          @constraint = @layout.max_center_x.equals(:another_view, :right).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :right
     end
-    it 'should support `center_x.equals(:view).times(2).plus(10)`' do
+    it 'should support `center_x.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.center_x.equals(:view).times(2).plus(10)
+          @constraint = @layout.center_x.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :center_x
     end
-    it 'should support `min_center_x.equals(:view).times(2).plus(10)`' do
+    it 'should support `min_center_x.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_center_x.equals(:view).times(2).plus(10)
+          @constraint = @layout.min_center_x.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :center_x
     end
-    it 'should support `max_center_x.equals(:view).times(2).plus(10)`' do
+    it 'should support `max_center_x.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_center_x.equals(:view).times(2).plus(10)
+          @constraint = @layout.max_center_x.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :center_x
     end
@@ -506,159 +506,159 @@ describe 'Constraints helpers' do
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :right
     end
-    it 'should support `right.equals(:view[, :right])`' do
+    it 'should support `right.equals(:another_view[, :right])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.right.equals(:view)
+          @constraint = @layout.right.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :right
     end
-    it 'should support `min_right.equals(:view[, :right])`' do
+    it 'should support `min_right.equals(:another_view[, :right])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_right.equals(:view)
+          @constraint = @layout.min_right.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :right
     end
-    it 'should support `max_right.equals(:view[, :right])`' do
+    it 'should support `max_right.equals(:another_view[, :right])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_right.equals(:view)
+          @constraint = @layout.max_right.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :right
     end
-    it 'should support `right.equals(:view, :left)`' do
+    it 'should support `right.equals(:another_view, :left)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.right.equals(:view, :left)
+          @constraint = @layout.right.equals(:another_view, :left)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :left
     end
-    it 'should support `min_right.equals(:view, :left)`' do
+    it 'should support `min_right.equals(:another_view, :left)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_right.equals(:view, :left)
+          @constraint = @layout.min_right.equals(:another_view, :left)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :left
     end
-    it 'should support `max_right.equals(:view, :left)`' do
+    it 'should support `max_right.equals(:another_view, :left)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_right.equals(:view, :left)
+          @constraint = @layout.max_right.equals(:another_view, :left)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :left
     end
-    it 'should support `right.equals(:view, :left).plus(10)`' do
+    it 'should support `right.equals(:another_view, :left).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.right.equals(:view, :left).plus(10)
+          @constraint = @layout.right.equals(:another_view, :left).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :left
     end
-    it 'should support `min_right.equals(:view, :left).plus(10)`' do
+    it 'should support `min_right.equals(:another_view, :left).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_right.equals(:view, :left).plus(10)
+          @constraint = @layout.min_right.equals(:another_view, :left).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :left
     end
-    it 'should support `max_right.equals(:view, :left).plus(10)`' do
+    it 'should support `max_right.equals(:another_view, :left).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_right.equals(:view, :left).plus(10)
+          @constraint = @layout.max_right.equals(:another_view, :left).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :left
     end
-    it 'should support `right.equals(:view).times(2).plus(10)`' do
+    it 'should support `right.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.right.equals(:view).times(2).plus(10)
+          @constraint = @layout.right.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :right
     end
-    it 'should support `min_right.equals(:view).times(2).plus(10)`' do
+    it 'should support `min_right.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_right.equals(:view).times(2).plus(10)
+          @constraint = @layout.min_right.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :right
     end
-    it 'should support `max_right.equals(:view).times(2).plus(10)`' do
+    it 'should support `max_right.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_right.equals(:view).times(2).plus(10)
+          @constraint = @layout.max_right.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :right
     end
@@ -704,198 +704,198 @@ describe 'Constraints helpers' do
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :top
     end
-    it 'should support `y.equals(:view[, :top])`' do
+    it 'should support `y.equals(:another_view[, :top])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.y.equals(:view)
+          @constraint = @layout.y.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :top
     end
-    it 'should support `min_y.equals(:view[, :top])`' do
+    it 'should support `min_y.equals(:another_view[, :top])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_y.equals(:view)
+          @constraint = @layout.min_y.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :top
     end
-    it 'should support `max_y.equals(:view[, :top])`' do
+    it 'should support `max_y.equals(:another_view[, :top])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_y.equals(:view)
+          @constraint = @layout.max_y.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :top
     end
-    it 'should support `y.equals(:view, :bottom)`' do
+    it 'should support `y.equals(:another_view, :bottom)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.y.equals(:view, :bottom)
+          @constraint = @layout.y.equals(:another_view, :bottom)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :bottom
     end
-    it 'should support `min_y.equals(:view, :bottom)`' do
+    it 'should support `min_y.equals(:another_view, :bottom)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_y.equals(:view, :bottom)
+          @constraint = @layout.min_y.equals(:another_view, :bottom)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :bottom
     end
-    it 'should support `max_y.equals(:view, :bottom)`' do
+    it 'should support `max_y.equals(:another_view, :bottom)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_y.equals(:view, :bottom)
+          @constraint = @layout.max_y.equals(:another_view, :bottom)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :bottom
     end
-    it 'should support `y.equals(:view, :bottom).plus(10)`' do
+    it 'should support `y.equals(:another_view, :bottom).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.y.equals(:view, :bottom).plus(10)
+          @constraint = @layout.y.equals(:another_view, :bottom).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :bottom
     end
-    it 'should support `min_y.equals(:view, :bottom).plus(10)`' do
+    it 'should support `min_y.equals(:another_view, :bottom).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_y.equals(:view, :bottom).plus(10)
+          @constraint = @layout.min_y.equals(:another_view, :bottom).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :bottom
     end
-    it 'should support `max_y.equals(:view, :bottom).plus(10)`' do
+    it 'should support `max_y.equals(:another_view, :bottom).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_y.equals(:view, :bottom).plus(10)
+          @constraint = @layout.max_y.equals(:another_view, :bottom).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :bottom
     end
-    it 'should support `y.equals(:view).times(2).plus(10)`' do
+    it 'should support `y.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.y.equals(:view).times(2).plus(10)
+          @constraint = @layout.y.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :top
     end
-    it 'should support `min_y.equals(:view).times(2).plus(10)`' do
+    it 'should support `min_y.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_y.equals(:view).times(2).plus(10)
+          @constraint = @layout.min_y.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :top
     end
-    it 'should support `max_y.equals(:view).times(2).plus(10)`' do
+    it 'should support `max_y.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_y.equals(:view).times(2).plus(10)
+          @constraint = @layout.max_y.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :top
     end
-    it 'should support `top.equals(:view).times(2).plus(10)`' do
+    it 'should support `top.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.top.equals(:view).times(2).plus(10)
+          @constraint = @layout.top.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :top
     end
-    it 'should support `min_top.equals(:view).times(2).plus(10)`' do
+    it 'should support `min_top.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_top.equals(:view).times(2).plus(10)
+          @constraint = @layout.min_top.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :top
     end
-    it 'should support `max_top.equals(:view).times(2).plus(10)`' do
+    it 'should support `max_top.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_top.equals(:view).times(2).plus(10)
+          @constraint = @layout.max_top.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :top
     end
@@ -941,159 +941,159 @@ describe 'Constraints helpers' do
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :center_y
     end
-    it 'should support `center_y.equals(:view[, :center_y])`' do
+    it 'should support `center_y.equals(:another_view[, :center_y])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.center_y.equals(:view)
+          @constraint = @layout.center_y.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :center_y
     end
-    it 'should support `min_center_y.equals(:view[, :center_y])`' do
+    it 'should support `min_center_y.equals(:another_view[, :center_y])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_center_y.equals(:view)
+          @constraint = @layout.min_center_y.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :center_y
     end
-    it 'should support `max_center_y.equals(:view[, :center_y])`' do
+    it 'should support `max_center_y.equals(:another_view[, :center_y])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_center_y.equals(:view)
+          @constraint = @layout.max_center_y.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :center_y
     end
-    it 'should support `center_y.equals(:view, :top)`' do
+    it 'should support `center_y.equals(:another_view, :top)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.center_y.equals(:view, :top)
+          @constraint = @layout.center_y.equals(:another_view, :top)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :top
     end
-    it 'should support `min_center_y.equals(:view, :top)`' do
+    it 'should support `min_center_y.equals(:another_view, :top)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_center_y.equals(:view, :top)
+          @constraint = @layout.min_center_y.equals(:another_view, :top)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :top
     end
-    it 'should support `max_center_y.equals(:view, :top)`' do
+    it 'should support `max_center_y.equals(:another_view, :top)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_center_y.equals(:view, :top)
+          @constraint = @layout.max_center_y.equals(:another_view, :top)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :top
     end
-    it 'should support `center_y.equals(:view, :top).plus(10)`' do
+    it 'should support `center_y.equals(:another_view, :top).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.center_y.equals(:view, :top).plus(10)
+          @constraint = @layout.center_y.equals(:another_view, :top).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :top
     end
-    it 'should support `min_center_y.equals(:view, :top).plus(10)`' do
+    it 'should support `min_center_y.equals(:another_view, :top).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_center_y.equals(:view, :top).plus(10)
+          @constraint = @layout.min_center_y.equals(:another_view, :top).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :top
     end
-    it 'should support `max_center_y.equals(:view, :top).plus(10)`' do
+    it 'should support `max_center_y.equals(:another_view, :top).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_center_y.equals(:view, :top).plus(10)
+          @constraint = @layout.max_center_y.equals(:another_view, :top).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :top
     end
-    it 'should support `center_y.equals(:view).times(2).plus(10)`' do
+    it 'should support `center_y.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.center_y.equals(:view).times(2).plus(10)
+          @constraint = @layout.center_y.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :center_y
     end
-    it 'should support `min_center_y.equals(:view).times(2).plus(10)`' do
+    it 'should support `min_center_y.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_center_y.equals(:view).times(2).plus(10)
+          @constraint = @layout.min_center_y.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :center_y
     end
-    it 'should support `max_center_y.equals(:view).times(2).plus(10)`' do
+    it 'should support `max_center_y.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_center_y.equals(:view).times(2).plus(10)
+          @constraint = @layout.max_center_y.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :center_y
     end
@@ -1139,159 +1139,159 @@ describe 'Constraints helpers' do
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :bottom
     end
-    it 'should support `bottom.equals(:view[, :bottom])`' do
+    it 'should support `bottom.equals(:another_view[, :bottom])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.bottom.equals(:view)
+          @constraint = @layout.bottom.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :bottom
     end
-    it 'should support `min_bottom.equals(:view[, :bottom])`' do
+    it 'should support `min_bottom.equals(:another_view[, :bottom])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_bottom.equals(:view)
+          @constraint = @layout.min_bottom.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :bottom
     end
-    it 'should support `max_bottom.equals(:view[, :bottom])`' do
+    it 'should support `max_bottom.equals(:another_view[, :bottom])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_bottom.equals(:view)
+          @constraint = @layout.max_bottom.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :bottom
     end
-    it 'should support `bottom.equals(:view, :top)`' do
+    it 'should support `bottom.equals(:another_view, :top)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.bottom.equals(:view, :top)
+          @constraint = @layout.bottom.equals(:another_view, :top)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :top
     end
-    it 'should support `min_bottom.equals(:view, :top)`' do
+    it 'should support `min_bottom.equals(:another_view, :top)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_bottom.equals(:view, :top)
+          @constraint = @layout.min_bottom.equals(:another_view, :top)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :top
     end
-    it 'should support `max_bottom.equals(:view, :top)`' do
+    it 'should support `max_bottom.equals(:another_view, :top)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_bottom.equals(:view, :top)
+          @constraint = @layout.max_bottom.equals(:another_view, :top)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :top
     end
-    it 'should support `bottom.equals(:view, :top).plus(10)`' do
+    it 'should support `bottom.equals(:another_view, :top).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.bottom.equals(:view, :top).plus(10)
+          @constraint = @layout.bottom.equals(:another_view, :top).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :top
     end
-    it 'should support `min_bottom.equals(:view, :top).plus(10)`' do
+    it 'should support `min_bottom.equals(:another_view, :top).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_bottom.equals(:view, :top).plus(10)
+          @constraint = @layout.min_bottom.equals(:another_view, :top).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :top
     end
-    it 'should support `max_bottom.equals(:view, :top).plus(10)`' do
+    it 'should support `max_bottom.equals(:another_view, :top).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_bottom.equals(:view, :top).plus(10)
+          @constraint = @layout.max_bottom.equals(:another_view, :top).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :top
     end
-    it 'should support `bottom.equals(:view).times(2).plus(10)`' do
+    it 'should support `bottom.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.bottom.equals(:view).times(2).plus(10)
+          @constraint = @layout.bottom.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :bottom
     end
-    it 'should support `min_bottom.equals(:view).times(2).plus(10)`' do
+    it 'should support `min_bottom.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_bottom.equals(:view).times(2).plus(10)
+          @constraint = @layout.min_bottom.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :bottom
     end
-    it 'should support `max_bottom.equals(:view).times(2).plus(10)`' do
+    it 'should support `max_bottom.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_bottom.equals(:view).times(2).plus(10)
+          @constraint = @layout.max_bottom.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :bottom
     end
@@ -1337,120 +1337,120 @@ describe 'Constraints helpers' do
       @constraint.attribute.should == :width
       @constraint.attribute2.should == :width
     end
-    it 'should support `width.equals(:view[, :width])`' do
+    it 'should support `width.equals(:another_view[, :width])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.width.equals(:view)
+          @constraint = @layout.width.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :width
       @constraint.attribute2.should == :width
     end
-    it 'should support `min_width.equals(:view[, :width])`' do
+    it 'should support `min_width.equals(:another_view[, :width])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_width.equals(:view)
+          @constraint = @layout.min_width.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :width
       @constraint.attribute2.should == :width
     end
-    it 'should support `max_width.equals(:view[, :width])`' do
+    it 'should support `max_width.equals(:another_view[, :width])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_width.equals(:view)
+          @constraint = @layout.max_width.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :width
       @constraint.attribute2.should == :width
     end
-    it 'should support `width.equals(:view, :height).plus(10)`' do
+    it 'should support `width.equals(:another_view, :height).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.width.equals(:view, :height).plus(10)
+          @constraint = @layout.width.equals(:another_view, :height).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :width
       @constraint.attribute2.should == :height
     end
-    it 'should support `min_width.equals(:view, :height).plus(10)`' do
+    it 'should support `min_width.equals(:another_view, :height).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_width.equals(:view, :height).plus(10)
+          @constraint = @layout.min_width.equals(:another_view, :height).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :width
       @constraint.attribute2.should == :height
     end
-    it 'should support `max_width.equals(:view, :height).plus(10)`' do
+    it 'should support `max_width.equals(:another_view, :height).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_width.equals(:view, :height).plus(10)
+          @constraint = @layout.max_width.equals(:another_view, :height).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :width
       @constraint.attribute2.should == :height
     end
-    it 'should support `width.equals(:view).times(2).plus(10)`' do
+    it 'should support `width.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.width.equals(:view).times(2).plus(10)
+          @constraint = @layout.width.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :width
       @constraint.attribute2.should == :width
     end
-    it 'should support `min_width.equals(:view).times(2).plus(10)`' do
+    it 'should support `min_width.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_width.equals(:view).times(2).plus(10)
+          @constraint = @layout.min_width.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :width
       @constraint.attribute2.should == :width
     end
-    it 'should support `max_width.equals(:view).times(2).plus(10)`' do
+    it 'should support `max_width.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_width.equals(:view).times(2).plus(10)
+          @constraint = @layout.max_width.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :width
       @constraint.attribute2.should == :width
     end
@@ -1496,120 +1496,120 @@ describe 'Constraints helpers' do
       @constraint.attribute.should == :height
       @constraint.attribute2.should == :height
     end
-    it 'should support `height.equals(:view[, :height])`' do
+    it 'should support `height.equals(:another_view[, :height])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.height.equals(:view)
+          @constraint = @layout.height.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :height
       @constraint.attribute2.should == :height
     end
-    it 'should support `min_height.equals(:view[, :height])`' do
+    it 'should support `min_height.equals(:another_view[, :height])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_height.equals(:view)
+          @constraint = @layout.min_height.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :height
       @constraint.attribute2.should == :height
     end
-    it 'should support `max_height.equals(:view[, :height])`' do
+    it 'should support `max_height.equals(:another_view[, :height])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_height.equals(:view)
+          @constraint = @layout.max_height.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :height
       @constraint.attribute2.should == :height
     end
-    it 'should support `height.equals(:view).plus(10)`' do
+    it 'should support `height.equals(:another_view).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.height.equals(:view).plus(10)
+          @constraint = @layout.height.equals(:another_view).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :height
       @constraint.attribute2.should == :height
     end
-    it 'should support `min_height.equals(:view).plus(10)`' do
+    it 'should support `min_height.equals(:another_view).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_height.equals(:view).plus(10)
+          @constraint = @layout.min_height.equals(:another_view).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :height
       @constraint.attribute2.should == :height
     end
-    it 'should support `max_height.equals(:view).plus(10)`' do
+    it 'should support `max_height.equals(:another_view).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_height.equals(:view).plus(10)
+          @constraint = @layout.max_height.equals(:another_view).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :height
       @constraint.attribute2.should == :height
     end
-    it 'should support `height.equals(:view).times(2).plus(10)`' do
+    it 'should support `height.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.height.equals(:view).times(2).plus(10)
+          @constraint = @layout.height.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :height
       @constraint.attribute2.should == :height
     end
-    it 'should support `min_height.equals(:view).times(2).plus(10)`' do
+    it 'should support `min_height.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_height.equals(:view).times(2).plus(10)
+          @constraint = @layout.min_height.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :height
       @constraint.attribute2.should == :height
     end
-    it 'should support `max_height.equals(:view).times(2).plus(10)`' do
+    it 'should support `max_height.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_height.equals(:view).times(2).plus(10)
+          @constraint = @layout.max_height.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :height
       @constraint.attribute2.should == :height
     end
@@ -1655,120 +1655,120 @@ describe 'Constraints helpers' do
       @constraint.attribute.should == :leading
       @constraint.attribute2.should == :leading
     end
-    it 'should support `leading.equals(:view[, :leading])`' do
+    it 'should support `leading.equals(:another_view[, :leading])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.leading.equals(:view)
+          @constraint = @layout.leading.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :leading
       @constraint.attribute2.should == :leading
     end
-    it 'should support `min_leading.equals(:view[, :leading])`' do
+    it 'should support `min_leading.equals(:another_view[, :leading])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_leading.equals(:view)
+          @constraint = @layout.min_leading.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :leading
       @constraint.attribute2.should == :leading
     end
-    it 'should support `max_leading.equals(:view[, :leading])`' do
+    it 'should support `max_leading.equals(:another_view[, :leading])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_leading.equals(:view)
+          @constraint = @layout.max_leading.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :leading
       @constraint.attribute2.should == :leading
     end
-    it 'should support `leading.equals(:view).plus(10)`' do
+    it 'should support `leading.equals(:another_view).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.leading.equals(:view).plus(10)
+          @constraint = @layout.leading.equals(:another_view).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :leading
       @constraint.attribute2.should == :leading
     end
-    it 'should support `min_leading.equals(:view).plus(10)`' do
+    it 'should support `min_leading.equals(:another_view).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_leading.equals(:view).plus(10)
+          @constraint = @layout.min_leading.equals(:another_view).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :leading
       @constraint.attribute2.should == :leading
     end
-    it 'should support `max_leading.equals(:view).plus(10)`' do
+    it 'should support `max_leading.equals(:another_view).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_leading.equals(:view).plus(10)
+          @constraint = @layout.max_leading.equals(:another_view).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :leading
       @constraint.attribute2.should == :leading
     end
-    it 'should support `leading.equals(:view).times(2).plus(10)`' do
+    it 'should support `leading.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.leading.equals(:view).times(2).plus(10)
+          @constraint = @layout.leading.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :leading
       @constraint.attribute2.should == :leading
     end
-    it 'should support `min_leading.equals(:view).times(2).plus(10)`' do
+    it 'should support `min_leading.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_leading.equals(:view).times(2).plus(10)
+          @constraint = @layout.min_leading.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :leading
       @constraint.attribute2.should == :leading
     end
-    it 'should support `max_leading.equals(:view).times(2).plus(10)`' do
+    it 'should support `max_leading.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_leading.equals(:view).times(2).plus(10)
+          @constraint = @layout.max_leading.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :leading
       @constraint.attribute2.should == :leading
     end
@@ -1814,120 +1814,120 @@ describe 'Constraints helpers' do
       @constraint.attribute.should == :trailing
       @constraint.attribute2.should == :trailing
     end
-    it 'should support `trailing.equals(:view[, :trailing])`' do
+    it 'should support `trailing.equals(:another_view[, :trailing])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.trailing.equals(:view)
+          @constraint = @layout.trailing.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :trailing
       @constraint.attribute2.should == :trailing
     end
-    it 'should support `min_trailing.equals(:view[, :trailing])`' do
+    it 'should support `min_trailing.equals(:another_view[, :trailing])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_trailing.equals(:view)
+          @constraint = @layout.min_trailing.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :trailing
       @constraint.attribute2.should == :trailing
     end
-    it 'should support `max_trailing.equals(:view[, :trailing])`' do
+    it 'should support `max_trailing.equals(:another_view[, :trailing])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_trailing.equals(:view)
+          @constraint = @layout.max_trailing.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :trailing
       @constraint.attribute2.should == :trailing
     end
-    it 'should support `trailing.equals(:view).plus(10)`' do
+    it 'should support `trailing.equals(:another_view).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.trailing.equals(:view).plus(10)
+          @constraint = @layout.trailing.equals(:another_view).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :trailing
       @constraint.attribute2.should == :trailing
     end
-    it 'should support `min_trailing.equals(:view).plus(10)`' do
+    it 'should support `min_trailing.equals(:another_view).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_trailing.equals(:view).plus(10)
+          @constraint = @layout.min_trailing.equals(:another_view).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :trailing
       @constraint.attribute2.should == :trailing
     end
-    it 'should support `max_trailing.equals(:view).plus(10)`' do
+    it 'should support `max_trailing.equals(:another_view).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_trailing.equals(:view).plus(10)
+          @constraint = @layout.max_trailing.equals(:another_view).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :trailing
       @constraint.attribute2.should == :trailing
     end
-    it 'should support `trailing.equals(:view).times(2).plus(10)`' do
+    it 'should support `trailing.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.trailing.equals(:view).times(2).plus(10)
+          @constraint = @layout.trailing.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :trailing
       @constraint.attribute2.should == :trailing
     end
-    it 'should support `min_trailing.equals(:view).times(2).plus(10)`' do
+    it 'should support `min_trailing.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_trailing.equals(:view).times(2).plus(10)
+          @constraint = @layout.min_trailing.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :trailing
       @constraint.attribute2.should == :trailing
     end
-    it 'should support `max_trailing.equals(:view).times(2).plus(10)`' do
+    it 'should support `max_trailing.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_trailing.equals(:view).times(2).plus(10)
+          @constraint = @layout.max_trailing.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :trailing
       @constraint.attribute2.should == :trailing
     end
@@ -1973,120 +1973,120 @@ describe 'Constraints helpers' do
       @constraint.attribute.should == :baseline
       @constraint.attribute2.should == :baseline
     end
-    it 'should support `baseline.equals(:view[, :baseline])`' do
+    it 'should support `baseline.equals(:another_view[, :baseline])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.baseline.equals(:view)
+          @constraint = @layout.baseline.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :baseline
       @constraint.attribute2.should == :baseline
     end
-    it 'should support `min_baseline.equals(:view[, :baseline])`' do
+    it 'should support `min_baseline.equals(:another_view[, :baseline])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_baseline.equals(:view)
+          @constraint = @layout.min_baseline.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :baseline
       @constraint.attribute2.should == :baseline
     end
-    it 'should support `max_baseline.equals(:view[, :baseline])`' do
+    it 'should support `max_baseline.equals(:another_view[, :baseline])`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_baseline.equals(:view)
+          @constraint = @layout.max_baseline.equals(:another_view)
         end
       end
       @constraint.constant.should == 0
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :baseline
       @constraint.attribute2.should == :baseline
     end
-    it 'should support `baseline.equals(:view).plus(10)`' do
+    it 'should support `baseline.equals(:another_view).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.baseline.equals(:view).plus(10)
+          @constraint = @layout.baseline.equals(:another_view).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :baseline
       @constraint.attribute2.should == :baseline
     end
-    it 'should support `min_baseline.equals(:view).plus(10)`' do
+    it 'should support `min_baseline.equals(:another_view).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_baseline.equals(:view).plus(10)
+          @constraint = @layout.min_baseline.equals(:another_view).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :baseline
       @constraint.attribute2.should == :baseline
     end
-    it 'should support `max_baseline.equals(:view).plus(10)`' do
+    it 'should support `max_baseline.equals(:another_view).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_baseline.equals(:view).plus(10)
+          @constraint = @layout.max_baseline.equals(:another_view).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :baseline
       @constraint.attribute2.should == :baseline
     end
-    it 'should support `baseline.equals(:view).times(2).plus(10)`' do
+    it 'should support `baseline.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.baseline.equals(:view).times(2).plus(10)
+          @constraint = @layout.baseline.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :baseline
       @constraint.attribute2.should == :baseline
     end
-    it 'should support `min_baseline.equals(:view).times(2).plus(10)`' do
+    it 'should support `min_baseline.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.min_baseline.equals(:view).times(2).plus(10)
+          @constraint = @layout.min_baseline.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :baseline
       @constraint.attribute2.should == :baseline
     end
-    it 'should support `max_baseline.equals(:view).times(2).plus(10)`' do
+    it 'should support `max_baseline.equals(:another_view).times(2).plus(10)`' do
       @layout.context(NSView.new) do
         @layout.constraints do
-          @constraint = @layout.max_baseline.equals(:view).times(2).plus(10)
+          @constraint = @layout.max_baseline.equals(:another_view).times(2).plus(10)
         end
       end
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 2
-      @constraint.relative_to.should == :view
+      @constraint.relative_to.should == :another_view
       @constraint.attribute.should == :baseline
       @constraint.attribute2.should == :baseline
     end

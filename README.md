@@ -2,18 +2,20 @@
 
 *The RubyMotion layout and styling gem.*
 
-1. Non-polluting
-2. Simple, easy to remember syntax
-3. ProMotion/RMQ/SugarCube-compatible
-4. Styles and layouts are compiled
-5. Crossplatform compatibility: iOS, OSX
-6. Crossframework compatibility:
+1. Crossplatform compatibility: iOS, OSX
+2. Simple, easy to learn DSL
+3. Crossframework compatibility:
    - [UIKit][readmore-uikit]
    - [ApplicationKit][readmore-applicationkit]
-   - [Joybox][readmore-joybox]
-   - [SpriteKit][readmore-spritekit]
+   - [AutoLayout][readmore-autolayout]
+   - [Frame geometry][readmore-frames]
    - [CoreAnimation][readmore-coreanimation]
    - [NSMenu/NSMenuItem][readmore-nsmenu]
+   - [Joybox][readmore-joybox] *TODO*
+   - [SpriteKit][readmore-spritekit] *TODO*
+4. Non-polluting
+5. ProMotion/RMQ/SugarCube-compatible (kind of goes hand-in-hand with non-polluting)
+6. Styles and layouts are "just code" (not hash-based like in Teacup)
 7. Written by [the authors][authors] of [ProMotion][] and [Teacup][]
 
 [authors]: CONTRIBUTORS.md
@@ -28,7 +30,10 @@
 [readmore-joybox]:         https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#joybox
 [readmore-spritekit]:      https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#spritekit
 [readmore-coreanimation]:  https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#coreanimation
+[readmore-frames]:  https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#frames
+[readmore-autolayout]:  https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#autolayout
 [readmore-nsmenu]:         https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#nsmenu
+
 
 ## What happened to Teacup??
 
@@ -91,6 +96,7 @@ class SimpleLayout < MotionKit::Layout
     text 'Hi there! Welcome to MotionKit'
     font UIFont.fontWithName('Comic Sans', size: 24)
     sizeToFit
+    # note: there are better ways to set the center, see the frame helpers below
     center [CGRectGetMidX(superview.bounds), CGRectGetMidY(superview.bounds)]
     text_alignment UITextAlignmentCenter
     text_color UIColor.whiteColor
@@ -126,7 +132,7 @@ class LoginLayout < MotionKit::Layout
     # we know it's easy to add a subview, with a stylename...
     add UIImageView, :logo
 
-    # but even better, pass the 'frame' in, too:
+    # inside a block you can set properties on that view
     add UIImageView, :logo do
       frame [[0, 0], [320, 568]]
     end
@@ -154,10 +160,11 @@ class LoginLayout < MotionKit::Layout
       frame from_bottom(height: 50)
 
       # similar to Teacup, views added inside a block are added to that
-      # container.  You can reference the container with 'superview' or
-      # 'parent'.
+      # container.  You can reference the container with 'superview', but then
+      # you're working on the object directly, so no method translation (foo_bar
+      # => fooBar) will be done for you.
       add UIButton, :login_button do
-        background_color superview.background_color
+        background_color superview.backgroundColor
 
         # 'parent' is not instance of a view, it's a special object that
         # acts like a placeholder for various values; if you want to assign
@@ -201,14 +208,14 @@ class LoginLayout < MK::Layout
 
   def layout
     add UIImageView, :logo do
+      # this can be moved into `logo_style` below:
       frame [[0, 0], ['100%', :scale]]
     end
-    add UIView, :button_container do
-      # ...
-    end
+    add UIView, :button_container
   end
 
   def logo_style
+    frame [[0, 0], ['100%', :scale]]
     image UIImage.imageNamed('logo')
   end
 
@@ -247,6 +254,7 @@ class LoginLayout
   include LoginStyles
 
   def layout
+    add UIButton, :login_button
     # ...
   end
 
@@ -259,7 +267,8 @@ end
 If you've used RMQ's Stylers, you'll recognize a very similar pattern here. In
 RMQ the 'style' methods are handed a 'Styler' instance, which wraps access to
 the view.  In MotionKit we make use of `method_missing` to call these methods
-indirectly.  But other than that, the design is very similar.
+indirectly.  That takes care of most methods related to styling, except those
+that take multiple arguments.  Those can get "helper" methods.
 
 ```ruby
   def login_label_style
@@ -477,25 +486,52 @@ pin_to_bottom_right: View stays in bottom-left corner, size does not change.
 
 ### Constraints / Auto Layout
 
-Inside a `constraints` block you can use the same helpers as above, but you'll
-be using Auto Layout instead.  This is the recommended way to set your frames,
-but beware, Auto Layout can be frustrating...
+Inside a `constraints` block you can use similar helpers as above, but you'll
+be using Cocoa's Auto Layout system instead.  This is the recommended way to set
+your frames, now that Apple is introducing multiple display sizes.  But beware,
+Auto Layout can be frustrating... :-/
 
 ```ruby
 constraints do
-  from_top_left x: 5, y: 5
-  # or
-  from_top_left down: 5, right:5
+  top_left x: 5, y: 10
+  # the MotionKit::Constraint class has lots of aliases and "smart" methods,
+  # so you can write very literate code:
+  top_left.equals([5, 10])
+  top_left.is([5, 10])
+  top_left.is.equal_to(x: 5, y: 10)
+  top_left.is == { x: 5, y: 10 }
+  top_left.is >= { x: 5, y: 10 }
+  top_left.is <= { x: 5, y: 10 }
+
+  # this is all the same as setting these two constraints:
+  x 5   # aka `left 5`
+  y 10  # aka `top 10`
+
+  # You can have multiple constraints on the same property, and if the
+  # priorities are set appropriately you can easily have minimum margins,
+  # minimum widths, that kind of thing:
+  x.is.at_least(10).priority(:required)
+  x.is(15).priority(:low)
+  width.is.at_least(100).priority(:required)
+  width.is(150).priority(:low)
+
+  # using the `Constraint#is` method you can even use ==, <= and >=
+  x.is >= 10
+  x.is == 15
+
+  # setting the priority:
+  (x.is >= 10).priority(:required)
+  (x.is == 15).priority(:low)
 end
 ```
 
-But of course with constraints you can setup *relationships* between views. The
-named views work especially well here.
+But of course with AutoLayout you set up *relationships* between views. Using
+the element-id as a placeholder for a view works especially well here.
 
 ```ruby
 constraints do
-  from_top_left x: 5, y:5
-  width.equals(:foo).minus(10)
+  top_left.equals x: 5, y:5
+  width.equals(:foo).minus(10)  # searches for a view named :foo
   height.equals(:foo).minus(10)
   # that's repetitive, so just set 'size'
   size.equals(:foo).minus(10)
@@ -503,27 +539,39 @@ constraints do
 end
 ```
 
-Just like with frame helpers you can use `:names` to refer to other views, but
-get this: the views need not be created yet!  This is because when you setup a
-constraints block, it isn't resolved immediately; the symbols are resolved at
-the end.  This feature uses the `deferred` method behind the scenes to
-accomplish this.
+Just like with frame helpers you can use the `:element_id` to refer to another
+view, but get this: the view need not be created yet!  This is because when you
+setup a constraints block, it isn't resolved immediately; the symbols are
+resolved at the end.  This feature uses the `deferred` method behind the scenes
+to accomplish this.
 
 ```ruby
-# believe it or not, this code works! :-)
 add UIView, :foo do
   constraints do
-    width.equals(:bar).plus(10)
+    width.equals(:bar).plus(10)  # :bar has not been added yet!
   end
 end
 
 add UIView, :bar do
   constraints do
     width.equals(:foo).minus(10)
+    width.equals(100).minus(10)
+    # believe it or not, this ^ code works!  AutoLayout is a strange beast; it's
+    # not an "imperative" system, it solves a system of equations.  In this
+    # case, :bar will have width 110, and :foo will have width 100, because
+    # those values solve these equations:
+    #     foo.width = 100
+    #     foo.width = bar.width - 10
+    #     foo.width = bar.width + 10
+    # If you have constraints that conflict you'll get error messages or
+    # nonsensical values.
 
-    # if you have multiple views with the same name:
-    width.equals(last(:foo)).minus(10)
-    width.equals(first(:foo)).minus(10)
+    # There are helpers that act as placeholders for views, if you have multiple
+    # views with the same name:
+    #     first, last, nth
+    width.equals(last(:foo))
+    width.equals(first(:foo))
+    width.equals(nth(:foo, 5))
   end
 end
 ```

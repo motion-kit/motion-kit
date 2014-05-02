@@ -11,9 +11,9 @@ module MotionKit
       @constraints.concat(constraints)
     end
 
-    def resolve_all(layout)
+    def resolve_all(layout, target)
       @constraints.each do |constraint|
-        resolved = constraint.resolve_all(layout)
+        resolved = constraint.resolve_all(layout, target)
       end
     end
 

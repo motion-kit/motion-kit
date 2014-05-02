@@ -6,7 +6,7 @@ module MotionKit
       deferred do
         constraints = ConstraintsTarget.new(target)
         context(constraints, &block)
-        constraints.resolve_all(self)
+        constraints.resolve_all(self, target)
       end
     end
 
