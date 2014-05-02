@@ -1,7 +1,7 @@
 class TestSetters < MK::Layout
 
   def initialize(obj)
-    super(nil)
+    super()
     @context = obj
   end
 
