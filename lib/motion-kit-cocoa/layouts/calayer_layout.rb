@@ -1,3 +1,5 @@
+# @provides MotionKit::CALayerLayout
+# @requires MotionKit::ViewLayout
 module MotionKit
   class CALayerLayout < ViewLayout
     targets CALayer

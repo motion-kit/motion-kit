@@ -1,3 +1,4 @@
+# @provides MotionKit::Calculator
 module MotionKit
   module_function
 

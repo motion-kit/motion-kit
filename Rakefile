@@ -26,4 +26,6 @@ Motion::Project::App.setup do |app|
     app.specs_dir = 'spec/osx/'
     app.files.delete_if { |file| file =~ %r{app/ios/} }
   end
+
+  DBT.analyze(app)
 end

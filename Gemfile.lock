@@ -2,20 +2,20 @@ PATH
   remote: .
   specs:
     motion-kit (0.0.1)
-      motion-require (>= 0.2.0)
+      dbt
 
 GEM
   remote: https://rubygems.org/
   specs:
+    dbt (1.1.4)
     motion-redgreen (0.1.0)
-    motion-require (0.2.0)
     rake (10.1.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  dbt
   motion-kit!
   motion-redgreen
-  motion-require (~> 0.2.0)
   rake

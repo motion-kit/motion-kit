@@ -1,5 +1,4 @@
-motion_require 'uiview_layout'
-
+# @requires MotionKit::BaseLayout
 module MotionKit
   class BaseLayout
 

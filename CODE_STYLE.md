@@ -22,7 +22,7 @@ We're not TOO picky here, but a few guidelines:
   Example:
   ```ruby
   module MotionKit
-    class Foo
+    class Foo < BaseFoo
 
       class << self
 
@@ -59,6 +59,15 @@ We're not TOO picky here, but a few guidelines:
   to maintain. Break it up into smaller chunks.
 - Write small methods, don't write big behemoths. Method names are some of the
   BEST documentation, and they encourage good, isolated code.
+- We are using [DBT][] to manage file dependencies, with the explicit
+  `MotionKit::` prefix:
+  ```ruby
+  # @provides MotionKit::Foo
+  # @requires MotionKit::BaseFoo
+  module MotionKit
+    class Foo < BaseFoo
+    # ...
+  ```
 
 ### Comments
 

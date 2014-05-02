@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem "rake"
-gem 'motion-require', '~> 0.2.0'
+gem 'rake'
+gem 'dbt'
 gem 'motion-redgreen'
 gemspec

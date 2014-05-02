@@ -1,5 +1,6 @@
-motion_require '../../motion-kit/layouts/layout'
-
+# @provides MotionKit::Layout
+# @provides MotionKit::UIViewLayout
+# @requires MotionKit::ViewLayout
 module MotionKit
   class Layout < ViewLayout
 
