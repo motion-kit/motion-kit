@@ -7,7 +7,8 @@ Welcome to the MotionKit samples directory. Place sample apps using MotionKit he
 
 * HelloWorld - a very simple teacup demo
 * AutoLayout - demonstrates the constraints DSL
-* Chatty - This is a full-blown app, using AutoLayout and a Firebase backend
+* Chatty - This is a full-blown app, using AutoLayout, SugarCube, and a Firebase
+  backend
 
 # OS X
 
