@@ -328,7 +328,7 @@ describe 'Constraints - Size helpers' do
     @constraint.constant.should == [0, 0]
     @constraint.relationship.should == :lte
     @constraint.multiplier.should == [0.5, 0.5]
-    @constraint.relative_to.should == :superview
+    @constraint.relative_to.should == nil
     @constraint.attribute.should == [:width, :height]
     @constraint.attribute2.should == [:width, :height]
   end

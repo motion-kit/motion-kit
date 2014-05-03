@@ -47,6 +47,7 @@ module MotionKit
       @target = target
       @attribute = attribute
       @attribute2 = attribute
+      @relative_to = nil
       @relationship = relationship
       @multiplier = 1
       @constant = 0
@@ -119,7 +120,6 @@ module MotionKit
         calc = Calculator.scan(target)
         self.multiplier = calc.factor
         self.constant = calc.constant || 0
-        self.relative_to ||= :superview
       else
         self.relative_to = target
         if attribute2
@@ -136,6 +136,10 @@ module MotionKit
       self.relationship = :lte
       if Constraint.constant?(target)
         self.constant = target
+      elsif Constraint.calculate?(target)
+        calc = Calculator.scan(target)
+        self.multiplier = calc.factor
+        self.constant = calc.constant || 0
       else
         self.relative_to = target
         if attribute2
@@ -152,6 +156,10 @@ module MotionKit
       self.relationship = :gte
       if Constraint.constant?(target)
         self.constant = target
+      elsif Constraint.calculate?(target)
+        calc = Calculator.scan(target)
+        self.multiplier = calc.factor
+        self.constant = calc.constant || 0
       else
         self.relative_to = target
         if attribute2
@@ -171,6 +179,22 @@ module MotionKit
         self.attribute2 = attribute2
       end
       self
+    end
+
+    def constant=(constant)
+      @constant = constant
+
+      case Constraint.attribute_lookup(self.attribute)
+      when NSLayoutAttributeLeft, NSLayoutAttributeRight, NSLayoutAttributeTop, NSLayoutAttributeBottom, NSLayoutAttributeLeading, NSLayoutAttributeTrailing, NSLayoutAttributeCenterX, NSLayoutAttributeCenterY, NSLayoutAttributeBaseline
+        self.relative_to ||= :superview
+      end
+
+      self.update_constraint
+    end
+
+    def multiplier=(multiplier)
+      @multiplier = multiplier
+      self.update_constraint
     end
 
     def times(multiplier)
@@ -213,6 +237,16 @@ module MotionKit
 
       @identifier = identifier
       self
+    end
+    alias identified_by identifier
+    alias id identifier
+
+    def update_constraint
+      if @resolved
+        constraint = @resolved[0]
+
+        constraint.constant = self.constant
+      end
     end
 
     def resolve_all(layout, view)
@@ -341,14 +375,13 @@ module MotionKit
       @multiplier = [1, 1]
     end
 
-    def constant=(constant)
-      super([0, 0])
-      self.plus(constant)
-    end
-
-    def multiplier=(multiplier)
-      super([1, 1])
-      self.times(multiplier)
+    def update_constraint
+      if @resolved
+        [0, 1].each do |index|
+          constraint = @resolved[index]
+          constraint.constant = self.constant[index]
+        end
+      end
     end
 
   end
@@ -367,6 +400,54 @@ module MotionKit
 
     def attribute2=(value)
       raise NoMethodError.new('attribute2=')
+    end
+
+    def constant=(constant)
+      if constant.is_a?(Array)
+        @constant = constant[0..1]
+      elsif constant.is_a?(Hash)
+        @constant = [0, 0]
+
+        if constant.key?(:w)
+          @constant[0] = constant[:w]
+        elsif constant.key?(:width)
+          @constant[0] = constant[:width]
+        end
+
+        if constant.key?(:h)
+          @constant[1] = constant[:h]
+        elsif constant.key?(:height)
+          @constant[1] = constant[:height]
+        end
+      else
+        @constant = [constant, constant]
+      end
+
+      self.update_constraint
+    end
+
+    def multiplier=(multiplier)
+      if multiplier.is_a?(Array)
+        @multiplier = multiplier[0..1]
+      elsif multiplier.is_a?(Hash)
+        @multiplier = [0, 0]
+
+        if multiplier.key?(:w)
+          @multiplier[0] = multiplier[:w]
+        elsif multiplier.key?(:width)
+          @multiplier[0] = multiplier[:width]
+        end
+
+        if multiplier.key?(:h)
+          @multiplier[1] = multiplier[:h]
+        elsif multiplier.key?(:height)
+          @multiplier[1] = multiplier[:height]
+        end
+      else
+        @multiplier = [multiplier, multiplier]
+      end
+
+      self.update_constraint
     end
 
     def plus(constant)
@@ -390,6 +471,7 @@ module MotionKit
         self.constant[1] += constant
       end
 
+      self.update_constraint
       self
     end
 
@@ -414,6 +496,7 @@ module MotionKit
         self.constant[1] -= constant
       end
 
+      self.update_constraint
       self
     end
 
@@ -438,6 +521,7 @@ module MotionKit
         self.multiplier[1] *= multiplier
       end
 
+      self.update_constraint
       self
     end
 
@@ -462,6 +546,7 @@ module MotionKit
         self.multiplier[1] /= multiplier.to_f
       end
 
+      self.update_constraint
       self
     end
 
@@ -497,6 +582,47 @@ module MotionKit
 
   class PointConstraint < CompoundConstraint
 
+    def constant=(constant)
+      if constant.is_a?(Array)
+        @constant = constant[0..1]
+      elsif constant.is_a?(Hash)
+        @constant = [0, 0]
+
+        if constant.key?(:x)
+          @constant[0] = constant[:x]
+        end
+
+        if constant.key?(:y)
+          @constant[1] = constant[:y]
+        end
+      else
+        @constant = [constant, constant]
+      end
+
+      self.relative_to ||= :superview
+      self.update_constraint
+    end
+
+    def multiplier=(multiplier)
+      if multiplier.is_a?(Array)
+        @multiplier = multiplier[0..1]
+      elsif multiplier.is_a?(Hash)
+        @multiplier = [0, 0]
+
+        if multiplier.key?(:x)
+          @multiplier[0] = multiplier[:x]
+        end
+
+        if multiplier.key?(:y)
+          @multiplier[1] = multiplier[:y]
+        end
+      else
+        @multiplier = [multiplier, multiplier]
+      end
+
+      self.update_constraint
+    end
+
     def plus(constant)
       if constant.is_a?(Array)
         self.constant[0] += constant[0]
@@ -522,6 +648,7 @@ module MotionKit
         self.constant[1] += constant
       end
 
+      self.update_constraint
       self
     end
 
@@ -550,6 +677,7 @@ module MotionKit
         self.constant[1] -= constant
       end
 
+      self.update_constraint
       self
     end
 
@@ -570,6 +698,7 @@ module MotionKit
         self.multiplier[1] *= multiplier
       end
 
+      self.update_constraint
       self
     end
 
@@ -590,7 +719,15 @@ module MotionKit
         self.multiplier[1] /= multiplier.to_f
       end
 
+      self.update_constraint
       self
+    end
+
+    def update_constraint
+      if @resolved
+        @resolved.each do
+        end
+      end
     end
 
     def resolve_all(layout, view)

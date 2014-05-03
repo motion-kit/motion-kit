@@ -18,7 +18,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
 
@@ -32,6 +32,22 @@ describe 'Constraints - Simple helpers' do
       resolved[0].multiplier.should == 1
       resolved[0].constant.should == 10
     end
+    it 'should update the constraint' do
+      @view = @layout.context(UIView.new) do
+        @layout.constraints do
+          @constraint = @layout.x(10)
+        end
+      end
+
+      @constraint.constant.should == 10
+
+      resolved = @constraint.resolve_all(@layout, @view)
+      resolved.length.should == 1
+      resolved[0].constant.should == 10
+
+      @constraint.constant = 100
+      resolved[0].constant.should == 100
+    end
     it 'should support `x.is == 10`' do
       @view = @layout.context(UIView.new) do
         @layout.constraints do
@@ -42,7 +58,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
@@ -56,7 +72,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
@@ -70,7 +86,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
@@ -94,7 +110,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
       @constraint.priority.should == :low
@@ -109,7 +125,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
@@ -173,7 +189,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
@@ -485,7 +501,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :center_x
 
@@ -509,7 +525,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :center_x
     end
@@ -523,7 +539,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :center_x
       @constraint.attribute2.should == :center_x
     end
@@ -730,7 +746,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :right
 
@@ -754,7 +770,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :right
     end
@@ -768,7 +784,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :right
       @constraint.attribute2.should == :right
     end
@@ -975,7 +991,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :top
 
@@ -999,7 +1015,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :top
     end
@@ -1013,7 +1029,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :top
       @constraint.attribute2.should == :top
     end
@@ -1265,7 +1281,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :center_y
 
@@ -1289,7 +1305,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :center_y
     end
@@ -1303,7 +1319,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :center_y
       @constraint.attribute2.should == :center_y
     end
@@ -1510,7 +1526,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :bottom
 
@@ -1534,7 +1550,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :bottom
     end
@@ -1548,7 +1564,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :bottom
       @constraint.attribute2.should == :bottom
     end
@@ -2155,7 +2171,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :leading
       @constraint.attribute2.should == :leading
 
@@ -2179,7 +2195,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :leading
       @constraint.attribute2.should == :leading
     end
@@ -2193,7 +2209,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :leading
       @constraint.attribute2.should == :leading
     end
@@ -2355,7 +2371,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :trailing
       @constraint.attribute2.should == :trailing
 
@@ -2379,7 +2395,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :trailing
       @constraint.attribute2.should == :trailing
     end
@@ -2393,7 +2409,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :trailing
       @constraint.attribute2.should == :trailing
     end
@@ -2555,7 +2571,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :equal
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :baseline
       @constraint.attribute2.should == :baseline
 
@@ -2579,7 +2595,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :gte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :baseline
       @constraint.attribute2.should == :baseline
     end
@@ -2593,7 +2609,7 @@ describe 'Constraints - Simple helpers' do
       @constraint.constant.should == 10
       @constraint.relationship.should == :lte
       @constraint.multiplier.should == 1
-      @constraint.relative_to.should == nil
+      @constraint.relative_to.should == :superview
       @constraint.attribute.should == :baseline
       @constraint.attribute2.should == :baseline
     end

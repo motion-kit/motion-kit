@@ -17,7 +17,7 @@ describe 'Constraints - Center helpers' do
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
-    @constraint.relative_to.should == nil
+    @constraint.relative_to.should == :superview
     @constraint.attribute.should == [:center_x, :center_y]
     @constraint.attribute2.should == [:center_x, :center_y]
 
@@ -49,7 +49,7 @@ describe 'Constraints - Center helpers' do
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :gte
     @constraint.multiplier.should == [1, 1]
-    @constraint.relative_to.should == nil
+    @constraint.relative_to.should == :superview
     @constraint.attribute.should == [:center_x, :center_y]
     @constraint.attribute2.should == [:center_x, :center_y]
   end
@@ -63,7 +63,7 @@ describe 'Constraints - Center helpers' do
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :lte
     @constraint.multiplier.should == [1, 1]
-    @constraint.relative_to.should == nil
+    @constraint.relative_to.should == :superview
     @constraint.attribute.should == [:center_x, :center_y]
     @constraint.attribute2.should == [:center_x, :center_y]
   end
@@ -77,7 +77,7 @@ describe 'Constraints - Center helpers' do
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
-    @constraint.relative_to.should == nil
+    @constraint.relative_to.should == :superview
     @constraint.attribute.should == [:center_x, :center_y]
     @constraint.attribute2.should == [:center_x, :center_y]
   end
@@ -91,7 +91,7 @@ describe 'Constraints - Center helpers' do
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :gte
     @constraint.multiplier.should == [1, 1]
-    @constraint.relative_to.should == nil
+    @constraint.relative_to.should == :superview
     @constraint.attribute.should == [:center_x, :center_y]
     @constraint.attribute2.should == [:center_x, :center_y]
   end
@@ -105,7 +105,7 @@ describe 'Constraints - Center helpers' do
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :lte
     @constraint.multiplier.should == [1, 1]
-    @constraint.relative_to.should == nil
+    @constraint.relative_to.should == :superview
     @constraint.attribute.should == [:center_x, :center_y]
     @constraint.attribute2.should == [:center_x, :center_y]
   end

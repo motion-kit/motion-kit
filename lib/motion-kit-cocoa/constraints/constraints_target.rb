@@ -2,8 +2,8 @@ module MotionKit
   class ConstraintsTarget
     attr :view
 
-    def initialize(target)
-      @view = target
+    def initialize(view)
+      @view = view
       @constraints = []
     end
 

@@ -20,6 +20,8 @@ module MotionKit
 
   class Layout
 
+    # Ensure we always have a context in this method; makes it easier to define
+    # constraints in an `add_constraints` method.
     def constraints(view=nil, &block)
       if @context
         apply(:constraints, view, &block)

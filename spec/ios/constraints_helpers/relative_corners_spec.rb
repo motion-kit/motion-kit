@@ -17,7 +17,7 @@ describe 'Constraints - Relative corners helpers' do
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
-    @constraint.relative_to.should == nil
+    @constraint.relative_to.should == :superview
     @constraint.attribute.should == [:left, :top]
     @constraint.attribute2.should == [:left, :top]
 
@@ -83,7 +83,7 @@ describe 'Constraints - Relative corners helpers' do
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
-    @constraint.relative_to.should == nil
+    @constraint.relative_to.should == :superview
     @constraint.attribute.should == [:right, :top]
     @constraint.attribute2.should == [:right, :top]
 
@@ -149,7 +149,7 @@ describe 'Constraints - Relative corners helpers' do
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
-    @constraint.relative_to.should == nil
+    @constraint.relative_to.should == :superview
     @constraint.attribute.should == [:left, :bottom]
     @constraint.attribute2.should == [:left, :bottom]
 
@@ -215,7 +215,7 @@ describe 'Constraints - Relative corners helpers' do
     @constraint.constant.should == [10, 10]
     @constraint.relationship.should == :equal
     @constraint.multiplier.should == [1, 1]
-    @constraint.relative_to.should == nil
+    @constraint.relative_to.should == :superview
     @constraint.attribute.should == [:right, :bottom]
     @constraint.attribute2.should == [:right, :bottom]
 
