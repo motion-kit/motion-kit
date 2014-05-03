@@ -73,6 +73,10 @@ module MotionKit
       # the top-level Layout object.
       return @layout.context(target, &block) if @layout != self
 
+      if target.is_a?(Symbol)
+        target = self.get(target)
+      end
+
       context_was, parent_was, delegate_was = @context, @parent, @layout_delegate
 
       was_top_level = @is_top_level
