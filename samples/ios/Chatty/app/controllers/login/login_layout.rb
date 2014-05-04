@@ -1,4 +1,6 @@
 class LoginLayout < MK::Layout
+  view :username_field
+  view :submit_button
 
   def layout
     add UIView, :background do
@@ -23,22 +25,26 @@ class LoginLayout < MK::Layout
     end
   end
 
-  def show_keyboard(duration, kbd_height)
+  def show_keyboard(kbd_height, options={})
+    duration = options.fetch(:duration, 0.2)
+    curve = options.fetch(:curve)
     context(:username_field) do
       @bg_bottom.minus kbd_height
 
-      UIView.animateWithDuration(duration, animations: -> do
+      UIView.animateWithDuration(duration, delay: 0, options: curve, animations: -> do
         self.view.layoutIfNeeded
-      end)
+      end, completion: nil)
     end
   end
 
-  def hide_keyboard(duration)
+  def hide_keyboard(options={})
+    duration = options.fetch(:duration, 0.2)
+    curve = options.fetch(:curve)
     context(:username_field) do
       @bg_bottom.constant = -10
-      UIView.animateWithDuration(duration, animations: -> do
+      UIView.animateWithDuration(duration, delay: 0, options: curve, animations: -> do
         self.view.layoutIfNeeded
-      end)
+      end, completion: nil)
     end
   end
 
@@ -46,11 +52,17 @@ class LoginLayout < MK::Layout
     initial do
       placeholder 'username'
 
+      autocorrectionType UITextAutocorrectionTypeNo
+      spellCheckingType UITextSpellCheckingTypeNo
+      autocapitalizationType UITextAutocapitalizationTypeNone
+
       constraints do
         left 10
         right -10
         top 10
       end
+
+      delegate self
     end
   end
 

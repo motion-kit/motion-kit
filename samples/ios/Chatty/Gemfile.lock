@@ -8,11 +8,13 @@ GEM
   remote: https://rubygems.org/
   specs:
     dbt (1.1.4)
+    motion-firebase (2.0.10)
     sugarcube (1.6.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  motion-firebase
   motion-kit!
   sugarcube

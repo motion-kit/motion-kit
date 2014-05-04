@@ -3,6 +3,12 @@ class LoginController < UIViewController
   def loadView
     @layout = LoginLayout.new
     self.view = @layout.view
+
+    @layout.submit_button.on :touch do
+      submit_username
+    end
+
+    self.title = 'Chatty'
   end
 
   def viewWillAppear(animated)
@@ -26,12 +32,27 @@ class LoginController < UIViewController
   def keyboard_will_show(notification)
     kbd_height = notification.userInfo[UIKeyboardFrameEndUserInfoKey].CGRectValue.size.height
     duration = notification[UIKeyboardAnimationDurationUserInfoKey]
-    @layout.show_keyboard(duration, kbd_height)
+    curve = notification[UIKeyboardAnimationCurveUserInfoKey]
+    @layout.show_keyboard(kbd_height, duration: duration, curve: curve)
   end
 
   def keyboard_will_hide(notification)
     duration = notification[UIKeyboardAnimationDurationUserInfoKey]
-    @layout.hide_keyboard(duration)
+    curve = notification[UIKeyboardAnimationCurveUserInfoKey]
+    @layout.hide_keyboard(duration: duration, curve: curve)
+  end
+
+  def submit_username
+    if @layout.username_field.text && ! @layout.username_field.text.empty?
+      username = @layout.username_field.text
+      @layout.username_field.resignFirstResponder
+
+      chatrooms_controller = ChatRoomsController.new
+      # chat_controller = ChatController.new
+      # controllers = [chatrooms_controller, chat_controller]
+      controllers = [chatrooms_controller]
+      navigationController.setViewControllers(controllers, animated: true)
+    end
   end
 
 end

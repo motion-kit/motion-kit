@@ -1,0 +1,2 @@
+class ChatStorage
+end
