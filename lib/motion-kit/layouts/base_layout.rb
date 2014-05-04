@@ -170,18 +170,41 @@ module MotionKit
         raise NoMethodError.new(method_name)
       end
 
+      if args.length == 2 && args[1].is_a?(Hash) && !args[1].empty?
+        long_method_name = "#{method_name}:#{args[1].keys.join(':')}:"
+        long_method_args = [args[0]].concat args[1].values
+      else
+        long_method_name = nil
+        long_method_args = nil
+      end
+
       @layout_delegate ||= Layout.layout_for(@layout, target.class)
-      return @layout_delegate.send(method_name, *args, &block) if @layout_delegate.respond_to?(method_name)
+      if long_method_name && @layout_delegate.respond_to?(long_method_name)
+        return @layout_delegate.send(long_method_name, *long_method_args, &block)
+      elsif @layout_delegate.respond_to?(method_name)
+        return @layout_delegate.send(method_name, *args, &block)
+      end
 
       if block
         apply_with_context(method_name, *args, &block)
       else
-        apply_with_target(method_name, *args, &block)
+        apply_with_target(method_name, *args)
       end
     end
 
     def apply_with_context(method_name, *args, &block)
-      if target.respondsToSelector(method_name)
+      if args.length == 2 && args[1].is_a?(Hash) && !args[1].empty?
+        long_method_name = "#{method_name}:#{args[1].keys.join(':')}:"
+        long_method_args = [args[0]].concat args[1].values
+      else
+        long_method_name = nil
+        long_method_args = nil
+      end
+
+      if long_method_name && target.respond_to?(long_method_name)
+        new_context = target.send(long_method_name, *long_method_args)
+        self.context(new_context, &block)
+      elsif target.respond_to?(method_name)
         new_context = target.send(method_name, *args)
         self.context(new_context, &block)
       elsif method_name.include?('_')
@@ -192,9 +215,16 @@ module MotionKit
       end
     end
 
-    def apply_with_target(method_name, *args, &block)
-      setter = "set" + method_name.capitalize + ':'
-      assign = method_name + '='
+    def apply_with_target(method_name, *args)
+      setter = MotionKit.setter(method_name)
+      assign = "#{method_name}="
+      if args.length == 2 && args[1].is_a?(Hash) && !args[1].empty?
+        long_method_name = "#{method_name}:#{args[1].keys.join(':')}:"
+        long_method_args = [args[0]].concat args[1].values
+      else
+        long_method_name = nil
+        long_method_args = nil
+      end
 
       # The order is important here.
       # - unchanged method name if no args are passed (e.g. `layer`)
@@ -203,7 +233,9 @@ module MotionKit
       # - unchanged method name *again*, because many Ruby classes provide a
       #   combined getter/setter (`layer(val)`)
       # - lastly, try again after converting to camelCase
-      if args.empty? && target.respond_to?(method_name)
+      if long_method_name && target.respond_to?(long_method_name)
+        target.send(long_method_name, *long_method_args)
+      elsif args.empty? && target.respond_to?(method_name)
         target.send(method_name, *args)
       elsif target.respond_to?(setter)
         target.send(setter, *args)
@@ -219,13 +251,23 @@ module MotionKit
         objc_name = MotionKit.objective_c_method_name(method_name)
         self.apply(objc_name, *args)
       else
-        raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name} (from #{@layout_delegate && @layout_delegate.class})")
+        target.send(setter, *args)
+        # raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name} (from #{@layout_delegate && @layout_delegate.class})")
       end
     end
 
   public
 
     class << self
+
+      def override_start
+        @allow_all_override = true
+      end
+
+      def override_stop
+        @allow_all_override = false
+      end
+
       def overrides(method_name)
         overridden_methods << method_name
       end
@@ -238,6 +280,8 @@ module MotionKit
       # that are defined already. Since magic methods are so important, this
       # warning can come in handy.
       def method_added(method_name)
+        return if @allow_all_override
+
         if self < BaseLayout && BaseLayout.method_defined?(method_name)
           if overridden_methods.include?(method_name)
             overridden_methods.delete(method_name)

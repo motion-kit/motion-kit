@@ -17,6 +17,11 @@ module MotionKit
       subview.removeFromSuperlayer
     end
 
+    # a more appropriate name for the root layer
+    def layer
+      self.view
+    end
+
   end
 
 end

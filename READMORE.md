@@ -43,11 +43,42 @@ end
 ```
 
 
+--------------------------------------------------------------------------------
+
+
 ## UIKit
 
 Most of the [README][] is dedicated to examples for iOS/UIKit, so please read
 that first to see how MotionKit can help you organize you `UIView` code. Then
 [read below](#coreanimation) to see how it can help your `CALayer` code, too!
+
+Here are some helpers that come with MotionKit.  These are meant to be
+*examples* of what can be done with MotionKit helpers, not an exhaustive set of
+helpers.  For that, check out the [SweetKit][] gem.
+
+### UIView
+
+```ruby
+gradient do
+  colors [UIColor.whiteColor, UIColor.startColor]
+  start_point [0, 0]
+  end_point [1, 1]
+end
+```
+
+### UIButton
+
+```ruby
+title 'Button title'
+title 'Button title', state: UIControlStateHighlighted
+# these all accept a `:state` option
+title_shadow UIColor.blackColor
+image UIImage.new
+background_image UIImage.new
+```
+
+--------------------------------------------------------------------------------
+
 
 ## ApplicationKit
 
@@ -70,9 +101,21 @@ def window_style
 end
 ```
 
+
+--------------------------------------------------------------------------------
+
+
 ## AutoLayout
 
+
+--------------------------------------------------------------------------------
+
+
 ## Frames
+
+
+--------------------------------------------------------------------------------
+
 
 ## NSMenu
 
@@ -130,10 +173,14 @@ class MainMenu < MK::MenuLayout
 end
 ```
 
+
+--------------------------------------------------------------------------------
+
+
 ## CoreAnimation
 
-Not much to see here, really, but know that you can create hierarchies of
-`CALayer` objects.
+Not much to see here, but know that you can create hierarchies of `CALayer`
+objects.
 
 ```ruby
 class MainLayout < MK::Layout
@@ -150,18 +197,29 @@ class MainLayout < MK::Layout
   end
 
   def gradient_style
-    # ...
+    # this accepts an array of UIColors
+    colors [UIColor.whiteColor, UIColor.blackColor]
   end
 
 end
 ```
 
+
+--------------------------------------------------------------------------------
+
+
 ## SpriteKit
 
 *TODO*
+
+
+--------------------------------------------------------------------------------
+
 
 ## Joybox
 
 *TODO*
 
+
 [README]: https://github.com/rubymotion/motion-kit/blob/master/README.md
+[SweetKit]: https://github.com/rubymotion/sweet-kit/blob/master/README.md

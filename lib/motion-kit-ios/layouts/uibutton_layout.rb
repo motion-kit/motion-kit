@@ -5,27 +5,47 @@ module MotionKit
     targets UIButton
 
     def title(value)
+      title(value, state: UIControlStateNormal)
+    end
+
+    def title(value, state: state)
       if value.is_a?(NSAttributedString)
-        target.setAttributedTitle(value, forState: UIControlStateNormal)
+        target.setAttributedTitle(value, forState: state)
       else
-        target.setTitle(value, forState: UIControlStateNormal)
+        target.setTitle(value, forState: state)
       end
     end
 
     def title_color(value)
-      target.setTitleColor(value, forState: UIControlStateNormal)
+      title_color(value, state: UIControlStateNormal)
+    end
+
+    def title_color(value, state: state)
+      target.setTitleColor(value, forState: state)
     end
 
     def title_shadow_color(value)
-      target.setTitleShadowColor(value, forState: UIControlStateNormal)
+      title_shadow_color(value, state: UIControlStateNormal)
+    end
+
+    def title_shadow_color(value, state: state)
+      target.setTitleShadowColor(value, forState: state)
     end
 
     def background_image(value)
-      target.setBackgroundImage(value, forState: UIControlStateNormal)
+      background_image(value, state: UIControlStateNormal)
+    end
+
+    def background_image(value, state: state)
+      target.setBackgroundImage(value, forState: state)
     end
 
     def image(value)
-      target.setImage(value, forState: UIControlStateNormal)
+      image(value, state: UIControlStateNormal)
+    end
+
+    def image(value, state: state)
+      target.setImage(value, forState: state)
     end
 
   end

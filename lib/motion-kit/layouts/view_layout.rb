@@ -34,11 +34,13 @@ module MotionKit
         ivar_name = "@#{name}"
         define_method(name) do
           unless instance_variable_get(ivar_name)
-            build_view
-            unless instance_variable_get(ivar_name)
-              view = self.get(name)
-              self.send("#{ivar_name}=", view)
+            view = self.get(name)
+            unless view
+              build_view unless @view
+              view = instance_variable_get(ivar_name) || self.get(name)
             end
+            self.send("#{name}=", view)
+            return view
           end
           return instance_variable_get(ivar_name)
         end

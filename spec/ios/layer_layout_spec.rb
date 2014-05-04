@@ -24,6 +24,7 @@ describe TestLayerLayout do
     it 'should have a CAGradientLayer' do
       @subject.view.sublayers[1].opacity.should == 0.5
       @subject.view.sublayers[1].colors.should.not == nil
+      @subject.view.sublayers[1].colors.length.should == 2
     end
 
     it 'should have a CAShapeLayer' do

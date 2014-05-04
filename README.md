@@ -78,24 +78,22 @@ Here's a layout that just puts a label and a button in the middle of the screen:
 
 ```ruby
 class SimpleLayout < MotionKit::Layout
+  # this is a special attr method that calls `layout` if the view hasn't been
+  # created yet. So you can call `layout.button` before `layout.view` and you
+  # won't get nil, and layout.view will be built.
   view :button
 
   def layout
     add UILabel, :label
 
-    # the `view` method above creates a read-only accessor that will build the
-    # layout if it hasn't been built already, so you can call `layout.button`
-    # before `layout.view` and you won't get nil, and layout.view will be built.
     @button = add UIButton, :button
-
-    # If you want Key-Value Observation compliance you can use the setter:
-    self.button = add UIButton, :button
   end
 
   def label_style
     text 'Hi there! Welcome to MotionKit'
     font UIFont.fontWithName('Comic Sans', size: 24)
     sizeToFit
+
     # note: there are better ways to set the center, see the frame helpers below
     center [CGRectGetMidX(superview.bounds), CGRectGetMidY(superview.bounds)]
     text_alignment UITextAlignmentCenter
@@ -107,9 +105,10 @@ class SimpleLayout < MotionKit::Layout
   end
 
   def button_style
-    # this will call 'setTitle(forState:)' via a styling method
+    # this will call 'setTitle(forState:)' via a UIButton helper
     title 'Press it!'
-    center [CGRectGetMidX(superview.bounds), CGRectGetMidY(superview.bounds) + 50]
+    # this shorthand is much better!  More about frame helpers below.
+    center ['50%', '50% + 50']
   end
 
 end
@@ -174,10 +173,7 @@ class LoginLayout < MotionKit::Layout
       end
     end
 
-    # 'container' is a generic view method, and will return 'UIView' on iOS and
-    # 'NSView' on OS X.  Totally optional, but it helps keep your layout files
-    # consistent across multiple platforms.
-    add container, :inputs do
+    add UIView, :inputs do
       frame x: 0, y: 0, width: '100%', height: '100% - 50'
 
       # setting autoresizing_mask should handle rotation events; this overrides
@@ -715,32 +711,6 @@ class LoginLayout < MotionKit::Layout
 end
 ```
 
-#### Use 'container' classes
-
-You saw the `container` method above, right?  Well those are easy to create.  So
-if you've got a 'button' subclass that you just love, you can assign it to a
-layout class method.
-
-```ruby
-module AppViews
-
-  def button
-    MySpecialButton
-  end
-
-end
-
-class MyLayout < MotionKit::Layout
-  extend AppViews
-
-  def layout
-    add button  # adds MySpecialButton instance
-  end
-
-end
-```
-
-
 # Contributing
 
 We welcome your contributions! Please be sure to run the specs before you do,
@@ -761,7 +731,7 @@ If you've worked with XIB/NIB files, you might know that while they can be
 cumbersome to deal with, they have the great benefit of keeping your controllers
 free of layout and styling concerns. [Teacup][] brought some of this benefit, in
 the form of stylesheets, but you still built the layout in the body of your
-controller file.
+controller file.  This needed to be fixed.
 
 Plus Teacup is a beast! Imported stylesheets, orientation change events,
 auto-layout support. It's got a ton of features, but with that comes a lot of
@@ -778,11 +748,12 @@ undertaking.
 
 If you use RMQ or ProMotion already, you'll find that MotionKit fits right in.
 We designed it to be something that can easily be brought into an existing
-project, too; it does not extend any base classes (the cross platform support is
-handled by the [style handlers][handlers]), and it's completely opt-in.
+project, too; it does not extend any base classes, so it's completely opt-in.
 
 Unlike Teacup, you won't have your styles reapplied due to orientation changes,
-but it's *really* easy to set that up, as you'll see.
+but it's *really* easy to set that up, as you'll see.  Or, use AutoLayout (the
+DSL is better than Teacup's, I think) and you'll get orientation changes for
+free!
 
 Big thanks to everyone who contributed on this project!  I hope it serves you
 as well as Teacup, and for even longer into the future.

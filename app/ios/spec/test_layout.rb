@@ -12,8 +12,6 @@ class TestLayout < MotionKit::Layout
       add UIButton, :repeated_label_3
       add UILabel, :repeated_label_3
     end
-
-    add container, :container_view
   end
 
   def other_view

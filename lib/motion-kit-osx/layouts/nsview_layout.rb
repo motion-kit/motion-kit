@@ -11,10 +11,6 @@ module MotionKit
       view_class.alloc.initWithFrame([[0, 0], [0, 0]])
     end
 
-    def container
-      NSView
-    end
-
     def add_child(subview)
       target.addSubview(subview)
     end
@@ -44,7 +40,6 @@ module MotionKit
 
   end
 
-  # this is the default container layout, which is different for each platform.
   class NSViewLayout < Layout
     targets NSView
   end

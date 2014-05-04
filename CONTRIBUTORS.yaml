@@ -26,3 +26,6 @@
             url:      www.clearsightstudio.com
   location: Vancouver, WA
   role:     owner
+  about:
+    Jamon created Promotion to enable rapid application development, and to make
+    obtuse or verbose parts of Cocoa more intuitive.

@@ -8,8 +8,8 @@ class TestLayerLayout < MK::CALayerLayout
     add CAGradientLayer do
       opacity 0.5
       colors [
-        UIColor.whiteColor.CGColor,
-        UIColor.blackColor.CGColor,
+        UIColor.whiteColor,
+        UIColor.blackColor,
       ]
     end
     add CAShapeLayer do
