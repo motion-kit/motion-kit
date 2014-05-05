@@ -219,6 +219,13 @@ class LoginLayout < MK::Layout
     background_color UIColor.clearColor
   end
 
+  # In case you're curious, the MK::Layout#initialize method takes no arguments.
+  # Just be sure to call `super`
+  def initialize
+    super
+    # ...
+  end
+
 end
 ```
 
@@ -526,7 +533,7 @@ end
 class MainController < UIViewController
 
   def loadView
-    @layout = MainLayout.new(self)
+    @layout = MainLayout.new
     self.view = @layout
   end
 
