@@ -4,7 +4,7 @@ class LoginLayout < MK::Layout
 
   def layout
     background_color UIColor.blackColor
-    add UIView, :background do
+    add UIView, :login_container do
       add UITextField, :username_field
       add UIButton, :submit_button
     end
@@ -33,7 +33,7 @@ class LoginLayout < MK::Layout
     end
   end
 
-  def background_style
+  def login_container_style
     initial do
       layer do
         corner_radius 10
