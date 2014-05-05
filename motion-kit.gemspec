@@ -8,9 +8,9 @@ Gem::Specification.new do |gem|
 
   gem.authors = ['Colin T.A. Gray', 'Jamon Holmgren']
   gem.email   = ['colinta@gmail.com', 'jamon@clearsightstudio.com']
-  gem.summary     = %{Dibs.}
+  gem.summary     = %{The RubyMotion layout and styling gem.}
   gem.description = <<-DESC
-Don't worry, this'll be neat.
+MotionKit, for RubyMotion, is a DSL for creating and styling views in iOS and OS X.
 DESC
 
   gem.homepage    = 'https://github.com/rubymotion/motion-kit'
