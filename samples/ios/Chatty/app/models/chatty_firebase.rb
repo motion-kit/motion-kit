@@ -12,8 +12,8 @@ class Chatty
       ref['rooms']
     end
 
-    def room_ref
-      ref['room']
+    def chat_ref
+      ref['chat']
     end
 
   end

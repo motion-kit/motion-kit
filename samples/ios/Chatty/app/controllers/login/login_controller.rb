@@ -43,15 +43,13 @@ class LoginController < UIViewController
   end
 
   def submit_username
-    if @layout.username_field.text && ! @layout.username_field.text.empty?
-      username = @layout.username_field.text
+    username = @layout.username_field.text || ''
+    unless username.empty?
+      $username = username
       @layout.username_field.resignFirstResponder
 
       chatrooms_controller = ChatRoomsController.new
-      # chat_controller = ChatController.new
-      # controllers = [chatrooms_controller, chat_controller]
-      controllers = [chatrooms_controller]
-      navigationController.setViewControllers(controllers, animated: true)
+      navigationController.setViewControllers([chatrooms_controller], animated: true)
     end
   end
 

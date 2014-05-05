@@ -3,25 +3,10 @@ class LoginLayout < MK::Layout
   view :submit_button
 
   def layout
+    background_color UIColor.blackColor
     add UIView, :background do
       add UITextField, :username_field
       add UIButton, :submit_button
-    end
-  end
-
-  def background_style
-    initial do
-      layer do
-        corner_radius 10
-      end
-      background_color UIColor.whiteColor
-
-      constraints do
-        x 10
-        right -10
-        height 100
-        @bg_bottom = bottom -10
-      end
     end
   end
 
@@ -45,6 +30,22 @@ class LoginLayout < MK::Layout
       UIView.animateWithDuration(duration, delay: 0, options: curve, animations: -> do
         self.view.layoutIfNeeded
       end, completion: nil)
+    end
+  end
+
+  def background_style
+    initial do
+      layer do
+        corner_radius 10
+      end
+      background_color UIColor.whiteColor
+
+      constraints do
+        x 10
+        right -10
+        height 100
+        @bg_bottom = bottom -10
+      end
     end
   end
 
