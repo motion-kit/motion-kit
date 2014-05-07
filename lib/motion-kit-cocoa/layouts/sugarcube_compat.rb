@@ -1,38 +1,18 @@
+# These methods are defined in SugarCube's REPL helpers, but we want them to be
+# delegated to either `UIViewLayout#frame` or `CALayer#setFrame`
+#
 # @requires MotionKit::BaseLayout
 module MotionKit
   class BaseLayout
 
-    def frame(*values)
-      apply(:frame, *values)
-    end
-
-    def left(*values)
-      apply(:left, *values)
-    end
-
-    def right(*values)
-      apply(:right, *values)
-    end
-
-    def up(*values)
-      apply(:up, *values)
-    end
-
-    def down(*values)
-      apply(:down, *values)
-    end
-
-    def origin(*values)
-      apply(:origin, *values)
-    end
-
-    def size(*values)
-      apply(:size, *values)
-    end
-
-    def center(*values)
-      apply(:center, *values)
-    end
+    delegate_method_fix :frame
+    delegate_method_fix :left
+    delegate_method_fix :right
+    delegate_method_fix :up
+    delegate_method_fix :down
+    delegate_method_fix :origin
+    delegate_method_fix :size
+    delegate_method_fix :center
 
   end
 end

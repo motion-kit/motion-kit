@@ -276,6 +276,26 @@ module MotionKit
         @overridden_methods ||= []
       end
 
+      # Prevents infinite loops when methods that are defined on Object/Kernel
+      # are not properly delegated to the target.
+      def delegate_method_fix(method_name)
+        running_name = "motion_kit_is_calling_#{method_name}"
+        define_method(method_name) do |*args, &block|
+          if target.motion_kit_meta[running_name]
+            if block
+              apply_with_context(method_name, *args, &block)
+            else
+              apply_with_target(method_name, *args)
+            end
+          else
+            target.motion_kit_meta[running_name] = true
+            retval = apply(method_name, *args)
+            target.motion_kit_meta[running_name] = false
+            return retval
+          end
+        end
+      end
+
       # this last little "catch-all" method is helpful to warn against methods
       # that are defined already. Since magic methods are so important, this
       # warning can come in handy.
