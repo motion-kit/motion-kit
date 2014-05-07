@@ -1,4 +1,3 @@
-      class B; def self.new; abort; end; end
 class HelloLayout < MotionKit::Layout
 
   def layout
