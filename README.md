@@ -675,32 +675,6 @@ relative_to foo, down: 5, right: 5
 from_bottom_left foo, up: 5, left: 5
 ```
 
-### Constraints / AutoLayout
-
-Inside a `constraints` block you can use the same helpers as above, but you'll
-be using AutoLayout instead!
-
-```ruby
-constraints do
-  from_top_left x: 5, y: 5
-end
-```
-
-But of course with constraints you can setup *relationships* between views.
-
-```ruby
-foo = self.get(:foo)
-constraints do
-  from_top_left x: 5, y:5
-  from_top_left down: 5, right:5
-  width.equals(foo).minus(10)
-  height.equals(foo).minus(10)
-  # that's repetitive, so just set 'size'
-  size.equals(foo).minus(10)
-  size.equals(foo).minus([10, 15])  # 10pt thinner, 15pt shorter
-end
-```
-
 
 ### Some handy tricks
 
