@@ -1,4 +1,4 @@
 language: objective-c
 gemfile:
   - Gemfile
-script: bundle exec rake spec platform=ios && bundle exec rake spec platform=osx
+script: bundle exec rake spec
