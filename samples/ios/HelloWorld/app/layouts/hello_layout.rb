@@ -19,7 +19,7 @@ class HelloLayout < MotionKit::Layout
   end
 
   def gradient_layer_style
-    v.frame = superlayer.bounds
+    frame superlayer.bounds
     initial do
       opacity 0.5
     end
