@@ -1,17 +1,18 @@
 PATH
   remote: ../../..
   specs:
-    motion-kit (0.0.1)
-      motion-require (>= 0.2.0)
+    motion-kit (0.9.0)
+      dbt
 
 GEM
   remote: https://rubygems.org/
   specs:
-    motion-require (0.2.0)
+    dbt (1.1.4)
+    rake (10.3.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   motion-kit!
-  motion-require
+  rake

@@ -1,3 +1,4 @@
+      class B; def self.new; abort; end; end
 class HelloLayout < MotionKit::Layout
 
   def layout
@@ -19,7 +20,7 @@ class HelloLayout < MotionKit::Layout
   end
 
   def gradient_layer_style
-    frame superlayer.bounds
+    v.frame = superlayer.bounds
     initial do
       opacity 0.5
     end
