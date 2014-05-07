@@ -1,3 +1,4 @@
+# @provides MotionKit::ConstraintsTarget
 module MotionKit
   class ConstraintsTarget
     attr :view
