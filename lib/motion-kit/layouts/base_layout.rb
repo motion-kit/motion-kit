@@ -276,6 +276,8 @@ module MotionKit
         @overridden_methods ||= []
       end
 
+      # Prevents infinite loops when methods that are defined on Object/Kernel
+      # are not properly delegated to the target.
       def delegate_method_fix(method_name)
         running_name = "motion_kit_is_calling_#{method_name}"
         define_method(method_name) do |*args, &block|
