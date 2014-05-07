@@ -1,7 +1,7 @@
 PATH
   remote: ../../..
   specs:
-    motion-kit (0.0.1)
+    motion-kit (0.9.0)
       dbt
 
 GEM
@@ -9,6 +9,7 @@ GEM
   specs:
     dbt (1.1.4)
     motion-firebase (2.0.10)
+    rake (10.3.1)
     sugarcube (1.6.0)
 
 PLATFORMS
@@ -17,4 +18,5 @@ PLATFORMS
 DEPENDENCIES
   motion-firebase
   motion-kit!
+  rake
   sugarcube
