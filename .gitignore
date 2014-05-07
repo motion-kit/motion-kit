@@ -15,3 +15,5 @@ nbproject
 .sass-cache
 .idea
 .ruby-version
+.bundle/*
+samples/ios/*/vendor
