@@ -27,7 +27,5 @@ Motion::Project::App.setup do |app|
     app.files.delete_if { |file| file =~ %r{app/ios/} }
   end
 
-  # app.detect_dependencies = true
-
   DBT.analyze(app)
 end
