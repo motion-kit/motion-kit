@@ -34,9 +34,9 @@ module MotionKit
 
       return case dimension
       when :width
-        return (view.superview.frame.size.width * factor + constant).round
+        return (full_view.frame.size.width * factor + constant).round
       when :height
-        return (view.superview.frame.size.height * factor + constant).round
+        return (full_view.frame.size.height * factor + constant).round
       else
         raise "Unknown dimension #{dimension}"
       end
