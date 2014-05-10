@@ -107,7 +107,7 @@ module MotionKit
       if f.is_a?(Hash)
         f = f.merge(relative: true)
       end
-      f = MotionKit.calculate(calculate_view, :frame, f, from_view)
+      f = MotionKit.calculate(calculate_view, :frame, f, target.superview)
       f.origin.x += o.x
       f.origin.y += o.y
 
