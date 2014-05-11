@@ -43,6 +43,12 @@ be replaced with a new project, rather than upgraded or refactored.
 
 ## Usage
 
+Install:
+
+```ruby
+gem install 'motion-kit'
+```
+
 From your controller you will instantiate a `MotionKit::Layout` instance, and
 request views from it.  `layout.view` is the root view, and it's common to
 assign this to `self.view` in your `loadView` method.  You'll also want to hook
