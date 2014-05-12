@@ -24,6 +24,7 @@ class TestApplyStyles < MotionKit::Layout
     @did_call_label = true
     self.h1_label_style
     text_color UIColor.blackColor
+    number_of_lines 2
   end
 
 end

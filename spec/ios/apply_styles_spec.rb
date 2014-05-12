@@ -14,6 +14,7 @@ describe "Layouts automatically apply styles" do
   it "should apply all styles" do
     @subject.get(:logo).text.should == 'MK'
     @subject.get(:label).text.should == ':label'
+    @subject.get(:label).numberOfLines.should == 2
     @subject.get(:label).font.pointSize.should == 16
     @subject.get(:label).textColor.should == UIColor.blackColor
   end
