@@ -727,6 +727,22 @@ class LoginLayout < MotionKit::Layout
 end
 ```
 
+
+#### Setting a custom root view
+
+If you need to use a custom root view, you can use the `root` method from within
+the `layout` method.  When you create or assign the root view this way, you must
+assign subviews and styles *inside* a block that you pass to `root`.
+
+```ruby
+def layout
+  root(SomeOtherViewclass) do
+    add UILabel
+  end
+end
+```
+
+
 # Contributing
 
 We welcome your contributions! Please be sure to run the specs before you do,
