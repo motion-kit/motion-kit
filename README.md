@@ -352,8 +352,9 @@ module MotionKit
 end
 ```
 
-For your own custom classes, you can provide a Layout class by calling the
-`targets` method in your class body.
+For your own custom classes, or built-in classes that don't already have a
+`Layout` class defined, you can provide a Layout class by calling the `targets`
+method in your class body.
 
 ```ruby
 # Be sure to extend an existing Layout class, otherwise you'll lose a lot of
@@ -500,59 +501,7 @@ be using Cocoa's Auto Layout system instead.  This is the recommended way to set
 your frames, now that Apple is introducing multiple display sizes.  But beware,
 Auto Layout can be frustrating... :-/
 
-One pain point in working with constraints is determining when to add them to
-your views.  We tried really hard to figure out a way to automatically add them,
-but it's just an untenable problem (Teacup suffers from a similar conundrum).
-
-Essentially, the problem comes down to this: you will often want to set
-constraints that are related to the view controller's `view`, but those must be
-created/set *after* `controller.view = @layout.view`.  Without doing some crazy
-method mangling on NS/UIView we just can't do this automatically
-
-Long story short: If you need to create constraints that refer to the controller
-view, you need to use a separate method that is called after the view hierarchy
-is created.
-
-```ruby
-class MainLayout < UIViewLayout
-
-  def layout
-    add UILabel, :label do
-      constraints do
-        x 0
-        width('100%')
-      end
-    end
-  end
-
-  def add_constraints(controller)
-    unless @layout_constraints_added
-      @layout_constraints_added = true
-      constraints(:label) do
-        top.equals(controller.topLayoutGuide)
-      end
-    end
-  end
-
-end
-
-class MainController < UIViewController
-
-  def loadView
-    @layout = MainLayout.new
-    self.view = @layout
-  end
-
-  # for the constraints to work reliably they should be added in this method:
-  def updateViewConstraints
-    @layout.add_constraints(self)  # !!!
-    super
-  end
-
-end
-```
-
-OK, with that hack out of the way, on to the examples!
+Here are some examples to get started:
 
 ```ruby
 constraints do
@@ -639,50 +588,61 @@ add UIView, :bar do
 end
 ```
 
-### Frames
+One pain point in working with constraints is determining when to add them to
+your views.  We tried really hard to figure out a way to automatically add them,
+but it's just an untenable problem (Teacup suffers from a similar conundrum).
 
-There are lots of frame helpers for NSView and UIView subclasses:
+Essentially, the problem comes down to this: you will often want to set
+constraints that are related to the view controller's `view`, but those must be
+created/set *after* `controller.view = @layout.view`.  Without doing some crazy
+method mangling on NS/UIView we just can't do this automatically
+
+Long story short: If you need to create constraints that refer to the controller
+view, you need to use a separate method that is called after the view hierarchy
+is created.
 
 ```ruby
-# most direct
-frame [[0, 0], [320, 568]]
-# using relative sizes (relative to superview)
-frame [[5, 5], ['100% - 10', '100% - 10']]
+class MainLayout < UIViewLayout
 
-# same, but using separate methods
-origin [5, 5]
-x 5
-y 5
-size ['100% - 10', '100% - 10']
-width '100% - 10'
-height '100% - 10'
+  def layout
+    add UILabel, :label do
+      constraints do
+        x 0
+        width('100%')
+      end
+    end
+  end
 
-size ['90%', '90%']
-center ['50%', '50%']
+  # this method will be called from `UIViewController#updateViewConstraints`
+  def add_constraints(controller)
+    unless @layout_constraints_added
+      @layout_constraints_added = true
+      constraints(:label) do
+        top.equals(controller.topLayoutGuide)
+      end
+    end
+  end
 
-# you can position the view *relative to other views*, either the superview or
-# *any* other view.
-from_bottom_right size: [100, 100]  # 100x100pt in the BR corner
-from_bottom size: ['100%', 32]  # full width, 32pt height
-from_top_right left: 5
+end
 
-# from_top_left      from_top       from_top_right
-# from_left         from_center         from_right
-# from_bottom_left  from_bottom  from_bottom_right
+class MainController < UIViewController
 
-# these require another view
-foo = self.get(:foo)
-above foo, up: 8
-#      above
-# before   after
-# left_of  right_of
-#      below
-relative_to foo, down: 5, right: 5
-from_bottom_left foo, up: 5, left: 5
+  def loadView
+    @layout = MainLayout.new
+    self.view = @layout
+  end
+
+  # for the constraints to work reliably they should be added in this method:
+  def updateViewConstraints
+    @layout.add_constraints(self)
+    super
+  end
+
+end
 ```
 
 
-### Some handy tricks
+### Some handy tricks and Features
 
 #### Orientation specific styles
 
@@ -736,6 +696,7 @@ def login_button_style
   end
 end
 ```
+
 
 #### Apply styles via module
 
