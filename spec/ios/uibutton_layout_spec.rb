@@ -23,7 +23,7 @@ describe 'UIButton Layout and objc-style selectors' do
 
   it 'should set the titleLabel font' do
     font = @layout.get(:button).titleLabel.font
-    should_be_font = UIFont.systemFontOfSize(UIFont.systemFontSize)
+    should_be_font = UIFont.fontWithName(TestButtonLayout::FONT, size: TestButtonLayout::SIZE)
 
     font.familyName.should == should_be_font.familyName
     font.pointSize.should == should_be_font.pointSize
