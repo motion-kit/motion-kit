@@ -15,6 +15,14 @@ class TestButtonLayout < MK::Layout
 
     image IMAGE
     image HIGHLIGHTED_IMAGE, state: UIControlStateHighlighted
+
+    title_label do
+      font UIFont.systemFontOfSize(UIFont.systemFontSize)
+    end
+
+    titleLabel do
+      textAlignment NSTextAlignmentCenter
+    end
   end
 
 end

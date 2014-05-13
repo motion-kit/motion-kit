@@ -21,4 +21,17 @@ describe 'UIButton Layout and objc-style selectors' do
     @layout.get(:button).imageForState(UIControlStateHighlighted).should == TestButtonLayout::HIGHLIGHTED_IMAGE
   end
 
+  it 'should set the titleLabel font' do
+    font = @layout.get(:button).titleLabel.font
+    should_be_font = UIFont.systemFontOfSize(UIFont.systemFontSize)
+
+    font.familyName.should == should_be_font.familyName
+    font.pointSize.should == should_be_font.pointSize
+  end
+
+  it 'should set the titleLabel textAlignment' do
+    alignment = @layout.get(:button).titleLabel.textAlignment
+    alignment.should == NSTextAlignmentCenter
+  end
+
 end
