@@ -8,7 +8,7 @@ module MotionKit
   # delegated to the 'apply' method, which accepts a method name, arguments, and
   # an optional block to set the new context.
   #
-  # The ViewLayout subclass defines methods that are appropriate for adding and
+  # The TreeLayout subclass defines methods that are appropriate for adding and
   # removing views to a view hierarchy.
   class BaseLayout
     # Class methods reside in base_layout_class_methods.rb

@@ -1,6 +1,6 @@
 # @provides MotionKit::CAGradientLayerLayout
 # @requires MotionKit::CALayerLayout
-# @requires MotionKit::ViewLayout
+# @requires MotionKit::TreeLayout
 module MotionKit
   class CAGradientLayerLayout < CALayerLayout
     targets CAGradientLayer

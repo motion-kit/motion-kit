@@ -1,8 +1,8 @@
 # @provides MotionKit::Layout
 # @provides MotionKit::UIViewLayout
-# @requires MotionKit::ViewLayout
+# @requires MotionKit::TreeLayout
 module MotionKit
-  class Layout < ViewLayout
+  class Layout < TreeLayout
 
     # platform specific default root view
     def default_root

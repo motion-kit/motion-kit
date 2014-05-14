@@ -1,8 +1,8 @@
 # @provides MotionKit::MenuLayout
 # @provides MotionKit::NSMenuLayout
-# @requires MotionKit::ViewLayout
+# @requires MotionKit::TreeLayout
 module MotionKit
-  class MenuLayout < ViewLayout
+  class MenuLayout < TreeLayout
 
     # A more sensible name for the menu that is created.
     def menu

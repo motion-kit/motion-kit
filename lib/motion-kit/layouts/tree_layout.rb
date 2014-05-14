@@ -1,14 +1,12 @@
-# @provides MotionKit::ViewLayout
+# @provides MotionKit::TreeLayout
 # @requires MotionKit::BaseLayout
 module MotionKit
-  # A sensible parent class for any View-like layout class. Platform agnostic.
-  # Any platform-specific tasks are offloaded to child views (add_child,
-  # remove_child).
-  # Actually, "view like" is misleading, since technically it only assumes "tree
-  # like". You could use a ViewLayout subclass to construct a hierarchy
+  # A sensible parent class for any Tree-like layout class. Platform agnostic.
+  # Any platform-specific tasks are offloaded to child elements (add_child,
+  # remove_child). You could use a TreeLayout subclass to construct a hierarchy
   # representing a family tree, for instance. But that would be a silly use of
   # MotionKit.
-  class ViewLayout < BaseLayout
+  class TreeLayout < BaseLayout
 
     class << self
 
@@ -278,7 +276,7 @@ module MotionKit
         if @assign_root
           create_default_root_context
         else
-          NSLog('Warning! No root view was set in ViewLayout#layout. Did you mean to call `root`?')
+          NSLog('Warning! No root view was set in TreeLayout#layout. Did you mean to call `root`?')
         end
       end
       run_deferred(@view)
@@ -311,11 +309,11 @@ module MotionKit
     # Accepts a view instance, a class (which is instantiated with 'new') or a
     # `ViewLayout`, which returns the root view.
     def initialize_view(elem)
-      if elem.is_a?(Class) && elem < ViewLayout
+      if elem.is_a?(Class) && elem < TreeLayout
         elem = elem.new_child(@layout, nil, self).view
       elsif elem.is_a?(Class)
         elem = elem.new
-      elsif elem.is_a?(ViewLayout)
+      elsif elem.is_a?(TreeLayout)
         elem = elem.view
       end
 
