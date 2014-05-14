@@ -1,8 +1,8 @@
 # @provides MotionKit::WindowLayout
 # @provides MotionKit::NSWindowLayout
-# @requires MotionKit::ViewLayout
+# @requires MotionKit::TreeLayout
 module MotionKit
-  class WindowLayout < ViewLayout
+  class WindowLayout < TreeLayout
 
     # A more sensible name for the window that is created.
     def window

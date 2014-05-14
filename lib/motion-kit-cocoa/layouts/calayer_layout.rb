@@ -1,7 +1,7 @@
 # @provides MotionKit::CALayerLayout
-# @requires MotionKit::ViewLayout
+# @requires MotionKit::TreeLayout
 module MotionKit
-  class CALayerLayout < ViewLayout
+  class CALayerLayout < TreeLayout
     targets CALayer
 
     # platform specific default root view
