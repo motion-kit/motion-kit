@@ -395,11 +395,11 @@ module MotionKit
     end
 
     def attribute=(value)
-      raise NoMethodError.new('attribute=')
+      raise NoMethodError.new("undefined method `#{:attribute=}' for #{self}:#{self.class}", :attribute=)
     end
 
     def attribute2=(value)
-      raise NoMethodError.new('attribute2=')
+      raise NoMethodError.new("undefined method `#{:attribute2=}' for #{self}:#{self.class}", :attribute2=)
     end
 
     def constant=(constant)

@@ -5,6 +5,7 @@ end
 
 require 'dbt'
 
+
 Motion::Project::App.setup do |app|
   core_lib = File.join(File.dirname(__FILE__), 'motion-kit')
   cocoa_lib = File.join(File.dirname(__FILE__), 'motion-kit-cocoa')

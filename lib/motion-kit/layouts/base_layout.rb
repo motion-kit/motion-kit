@@ -167,7 +167,7 @@ module MotionKit
       begin
         target = self.target
       rescue NoContextError => e
-        raise NoMethodError.new(method_name)
+        raise NoMethodError.new("undefined method `#{method_name}' for #{self}:#{self.class}", method_name)
       end
 
       if args.length == 2 && args[1].is_a?(Hash) && !args[1].empty?
