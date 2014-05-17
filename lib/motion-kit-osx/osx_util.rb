@@ -9,6 +9,10 @@ module MotionKit
     NSView
   end
 
+  def color_class
+    NSColor
+  end
+
   def no_intrinsic_metric
     NSViewNoInstrinsicMetric
   end

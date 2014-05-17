@@ -6,7 +6,7 @@ module MotionKit
     targets CAGradientLayer
 
     def colors(values)
-      target.colors = values.map { |color| color.is_a?(UIColor) ? color.CGColor : color }
+      target.colors = values.map { |color| color.is_a?(MotionKit.color_class) ? color.CGColor : color }
     end
 
   end
