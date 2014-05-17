@@ -157,9 +157,9 @@ module MotionKit
       return self
     end
 
-    # Delegates to `create` to instantiate a view and run a layout block, and
-    # adds the view to the current view on the view stack.  If no view exists on
-    # the stack, a default root view can be created if that has been enabled.
+    # Instantiates a view via `create` and adds the view to the current target.
+    # If no view exists on the stack, a default root view can be created if that
+    # has been enabled.  The block is run in the context of the new view.
     def add(element, element_id=nil, &block)
       # make sure we have a target - raises NoContextError if none exists
       self.target
@@ -169,7 +169,11 @@ module MotionKit
         create_default_root_context
       end
       self.apply(:add_child, element)
-      create(element, element_id, &block)
+      create(element, element_id)
+
+      if block
+        context(element, &block)
+      end
 
       element
     end
