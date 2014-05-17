@@ -13,6 +13,10 @@ module MotionKit
     UIView
   end
 
+  def color_class
+    UIColor
+  end
+
   def no_intrinsic_metric
     UIViewNoIntrinsicMetric
   end
