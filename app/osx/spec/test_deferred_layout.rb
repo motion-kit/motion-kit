@@ -48,7 +48,7 @@ class TestDeferredLayout < MK::Layout
     @apply_layouts_test_ran = 0
 
     @apply_layouts_view = context(NSView.new) do
-      @apply_layouts_label = add(NSTextField.new) do
+      @apply_layouts_label = add(NSTextField) do
         stringValue 'before'
         deferred do
           stringValue 'after'
