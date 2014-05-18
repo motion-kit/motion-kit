@@ -188,7 +188,7 @@ module MotionKit
       if block
         apply_with_context(method_name, *args, &block)
       else
-        apply_with_target(method_name, *args)
+        apply_with_target(method_name, *args, &block)
       end
     end
 
@@ -215,7 +215,7 @@ module MotionKit
       end
     end
 
-    def apply_with_target(method_name, *args)
+    def apply_with_target(method_name, *args, &block)
       setter = MotionKit.setter(method_name)
       assign = "#{method_name}="
       if args.length == 2 && args[1].is_a?(Hash) && !args[1].empty?
@@ -234,24 +234,24 @@ module MotionKit
       #   combined getter/setter (`layer(val)`)
       # - lastly, try again after converting to camelCase
       if long_method_name && target.respond_to?(long_method_name)
-        target.send(long_method_name, *long_method_args)
+        target.send(long_method_name, *long_method_args, &block)
       elsif args.empty? && target.respond_to?(method_name)
-        target.send(method_name, *args)
+        target.send(method_name, *args, &block)
       elsif target.respond_to?(setter)
-        target.send(setter, *args)
+        target.send(setter, *args, &block)
       elsif target.respond_to?(assign)
-        target.send(assign, *args)
+        target.send(assign, *args, &block)
       elsif target.respond_to?(method_name)
-        target.send(method_name, *args)
+        target.send(method_name, *args, &block)
       # UIAppearance classes are a whole OTHER thing; they never return 'true'
       elsif target.is_a?(MotionKit.appearance_class)
-        target.send(setter, *args)
+        target.send(setter, *args, &block)
       # Finally, try again with camel case if there's an underscore.
       elsif method_name.include?('_')
         objc_name = MotionKit.objective_c_method_name(method_name)
         self.apply(objc_name, *args)
       else
-        target.send(setter, *args)
+        target.send(setter, *args, &block)
         # raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name} (from #{@layout_delegate && @layout_delegate.class})")
       end
     end
