@@ -11,12 +11,11 @@
    - [Frame geometry][readmore-frames]
    - [CoreAnimation][readmore-coreanimation]
    - [NSMenu/NSMenuItem][readmore-nsmenu]
-   - [Joybox][readmore-joybox] *TODO*
-   - [SpriteKit][readmore-spritekit] *TODO*
-4. Non-polluting
-5. ProMotion/RMQ/SugarCube-compatible (kind of goes hand-in-hand with non-polluting)
-6. Styles and layouts are "just code" (not hash-based like in Teacup)
-7. Written by [the authors][authors] of [ProMotion][] and [Teacup][]
+4. Easily extendable to support custom, mini-DSLs
+5. Non-polluting
+6. ProMotion/RMQ/SugarCube-compatible (kind of goes hand-in-hand with being non-polluting)
+7. Styles and layouts are "just code" (not hash-based like in Teacup)
+8. Written by [the authors][authors] of [ProMotion][] and [Teacup][]
 
 [authors]: CONTRIBUTORS.md
 [Colin]: https://github.com/colinta
@@ -24,14 +23,14 @@
 [ProMotion]: https://github.com/clearsightstudio/ProMotion
 [RMQ]: https://github.com/infinitered/rmq
 [Teacup]: https://github.com/rubymotion/teacup
+[SweetKit]: https://github.com/rubymotion/sweet-kit
 
+[READMORE]: https://github.com/rubymotion/motion-kit/blob/master/READMORE.md
 [readmore-uikit]:          https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#uikit
 [readmore-applicationkit]: https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#applicationkit
-[readmore-joybox]:         https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#joybox
-[readmore-spritekit]:      https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#spritekit
 [readmore-coreanimation]:  https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#coreanimation
-[readmore-frames]:  https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#frames
-[readmore-autolayout]:  https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#autolayout
+[readmore-frames]:         https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#frames
+[readmore-autolayout]:     https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#autolayout
 [readmore-nsmenu]:         https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#nsmenu
 
 
@@ -370,6 +369,16 @@ class CustomLayout < MK::UIViewLayout
 end
 ```
 
+### Even more information...
+
+...is in the [READMORE][] document.  I re-explain some of these topics, go into
+some more detail, that kinda thing.  Basically an overflow document for topics I
+don't want to stuff into the README.
+
+
+## MotionKit extensions
+
+These are all built-in, unless otherwise specified.
 
 ### Frames
 
@@ -641,10 +650,21 @@ class MainController < UIViewController
 end
 ```
 
+### MotionKit::Events
 
-### Some handy tricks and Features
+    gem install motion-kit-events
 
-#### Orientation specific styles
+Adds `on :event` and `trigger :event` methods to `MK::Layout` objects.  These
+can be used to send events from the Layout to your controller, further
+simplifying the controller code (and usually making it more testable).  See the
+[MotionKit::Events documentation][motion-kit-events] for more information.
+
+[motion-kit-events]: https://github.com/rubymotion/motion-kit-events
+
+
+## Some handy tricks and Features
+
+### Orientation specific styles
 
 These are available on iOS.
 
@@ -659,7 +679,7 @@ add UIView, :container do
 end
 ```
 
-#### Update views via 'initial', 'reapply', and 'deferred'
+### Update views via 'initial', 'reapply', and 'deferred'
 
 If you call 'layout.reapply!', your style methods will be called again (but
 NOT the `layout` method). You very well might want to control what methods get
@@ -698,7 +718,7 @@ end
 ```
 
 
-#### Apply styles via module
+### Apply styles via module
 
 ```ruby
 module AppStyles
@@ -727,8 +747,25 @@ class LoginLayout < MotionKit::Layout
 end
 ```
 
+### Using SweetKit
 
-#### Setting a custom root view
+The [SweetKit][] gem combines MotionKit and SugarCube.  The helpers it provides
+allow for even more expressiveness, for instance:
+
+```ruby
+add UITextField do
+  return_key_type :email
+  text_alignment :right
+end
+```
+
+The OS X helpers are really nice, because it tries to hide most of the
+annoying subtletees of the NSCell/NSControl dichotomy.
+
+    gem install sweet-kit
+
+
+### Setting a custom root view
 
 If you need to use a custom root view, you can use the `root` method from within
 the `layout` method.  When you create or assign the root view this way, you must
