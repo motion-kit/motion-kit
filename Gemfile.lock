@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motion-kit (0.9.6)
+    motion-kit (0.10.0)
       dbt
 
 GEM

@@ -270,6 +270,45 @@ end
 ```
 
 
+### Setting a custom root view
+
+If you need to use a custom root view, you can use the `root` method from within
+the `layout` method.  When you create or assign the root view this way, you must
+assign subviews and styles *inside* a block that you pass to `root`.
+
+```ruby
+def layout
+  root(SomeOtherViewclass) do
+    add UILabel
+  end
+end
+```
+
+You can also pass in a root view to your layout, like this:
+
+```ruby
+def loadView
+  @layout = MyLayout.new(root: self.view)
+end
+```
+
+In this case, if you want to style the root view, just refer to it in your layout:
+
+```ruby
+def layout
+  root :my_root_view do
+    # ...
+  end
+end
+
+def my_root_view_style
+  background_color UIColor.grayColor
+end
+```
+
+This is especially useful with collection views, table views, and table cells.
+
+
 ### How do styles get applied?
 
 If you've used RMQ's Stylers, you'll recognize a very similar pattern here. In
@@ -764,44 +803,6 @@ annoying subtletees of the NSCell/NSControl dichotomy.
 
     gem install sweet-kit
 
-
-### Setting a custom root view
-
-If you need to use a custom root view, you can use the `root` method from within
-the `layout` method.  When you create or assign the root view this way, you must
-assign subviews and styles *inside* a block that you pass to `root`.
-
-```ruby
-def layout
-  root(SomeOtherViewclass) do
-    add UILabel
-  end
-end
-```
-
-You can also pass in a root view to your layout, like this:
-
-```ruby
-def loadView
-  @layout = MyLayout.new(root: self.view)
-end
-```
-
-In this case, if you want to style the root view, just refer to it in your layout:
-
-```ruby
-def layout
-  root :my_root_view do
-    # ...
-  end
-end
-
-def my_root_view_style
-  background_color UIColor.grayColor
-end
-```
-
-This is especially useful with collection views, table views, and table cells.
 
 # Contributing
 
