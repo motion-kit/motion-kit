@@ -16,13 +16,18 @@ module MotionKit
 
     attr :parent
 
-    def initialize
+    def initialize(args={})
       # @layout is the object we look in for style methods
       @layout = self
       # the Layout object that implements custom style methods. Leave this as nil
       # in the initializer.
       @layout_delegate = nil
       @layout_state = :initial
+      # You can set a root view by using .new(root: some_view)
+      if args[:root]
+        @preset_root = args[:root]
+        view # Prebuild the view
+      end
     end
 
     def set_layout(layout)
