@@ -48,7 +48,7 @@ module MotionKit
 
     end
 
-    # The parent view.  This method builds the layout and returns the root view.
+    # The main view.  This method builds the layout and returns the root view.
     def view
       if @layout != self
         return @layout.view
@@ -77,7 +77,11 @@ module MotionKit
       if element.is_a?(Symbol)
         element_id = element
         # See note below about why we don't need to `apply(:default_root)`
-        element = default_root
+        element = preset_root || default_root
+      elsif @preset_root
+        # You're trying to make two roots, one at initialization
+        # and one in your layout itself.
+        raise ContextConflictError.new("Already created the root view")
       end
 
       @view = initialize_view(element)
@@ -267,6 +271,12 @@ module MotionKit
     end
 
   protected
+
+    def preset_root
+      # Set in the initializer
+      # TreeLayout.new(root: some_view)
+      @preset_root
+    end
 
     # This method builds the layout and returns the root view.
     def build_view

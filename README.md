@@ -779,6 +779,29 @@ def layout
 end
 ```
 
+You can also pass in a root view to your layout, like this:
+
+```ruby
+def loadView
+  @layout = MyLayout.new(root: self.view)
+end
+```
+
+In this case, if you want to style the root view, just refer to it in your layout:
+
+```ruby
+def layout
+  root :my_root_view do
+    # ...
+  end
+end
+
+def my_root_view_style
+  background_color UIColor.grayColor
+end
+```
+
+This is especially useful with collection views, table views, and table cells.
 
 # Contributing
 
