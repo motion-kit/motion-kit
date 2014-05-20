@@ -16,12 +16,10 @@ class HomeLayout < MK::Layout
   end
 
   def add_constraints(controller)
-    context(self.view) do
-      constraints do
-        origin [0, 0]
-        width.equals(:superview)
-        height.equals(:superview)
-      end
+    constraints(self.view) do
+      origin [0, 0]
+      width.equals(:superview)
+      height.equals(:superview)
     end
 
     constraints(:label) do
