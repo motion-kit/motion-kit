@@ -288,9 +288,11 @@ You can also pass in a root view to your layout, like this:
 
 ```ruby
 def loadView
-  @layout = MyLayout.new(root: self.view)
+  @layout = MyLayout.new(root: self.view).build
 end
 ```
+
+Make sure to call `.build`; otherwise, the layout will be returned but the view not built.
 
 In this case, if you want to style the root view, just refer to it in your layout:
 
@@ -307,7 +309,6 @@ end
 ```
 
 This is especially useful with collection views, table views, and table cells.
-
 
 ### How do styles get applied?
 

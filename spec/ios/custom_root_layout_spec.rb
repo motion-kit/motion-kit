@@ -33,4 +33,18 @@ describe MotionKit::Layout do
     @subject.view.subviews.first.subviews.first.backgroundColor.should == UIColor.blackColor
   end
 
+  it "shouldn't build if `build` or `view` aren't called" do
+    @subject.built?.should == false
+  end
+
+  it "should build when `build` is called" do
+    @subject.build
+    @subject.built?.should == true
+  end
+
+  it "should build when `view` is called" do
+    @subject.view
+    @subject.built?.should == true
+  end
+
 end
