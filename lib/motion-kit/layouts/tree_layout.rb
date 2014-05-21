@@ -56,6 +56,18 @@ module MotionKit
       @view ||= build_view
     end
 
+    # Builds the layout and then returns self for chaining.
+    def build
+      view
+      self
+    end
+
+    # Checks if the layout has been built yet or not.
+    def built?
+      !@view.nil?
+    end
+    alias build? built? # just in case
+
     # Assign a view to act as the 'root' view for this layout.  This method can
     # only be called once, and must be called before `add` is called for the
     # first time (otherwise `add` will create a default root view).  This method

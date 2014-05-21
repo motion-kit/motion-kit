@@ -24,10 +24,7 @@ module MotionKit
       @layout_delegate = nil
       @layout_state = :initial
       # You can set a root view by using .new(root: some_view)
-      if args[:root]
-        @preset_root = args[:root]
-        view # Prebuild the view
-      end
+      @preset_root = args[:root]
     end
 
     def set_layout(layout)

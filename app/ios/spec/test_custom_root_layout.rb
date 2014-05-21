@@ -48,7 +48,7 @@ class TestNestedView < UIView
 
   def init
     super
-    @layout = TestNestedLayout.new(root: self)
+    @layout = TestNestedLayout.new(root: self).build
     self
   end
 
