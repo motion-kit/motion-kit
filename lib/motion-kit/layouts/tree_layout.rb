@@ -84,7 +84,7 @@ module MotionKit
         raise ContextConflictError.new("Already created the root view")
       end
 
-      @view = initialize_view(element)
+      @view = initialize_element(element)
       if block
         if @context
           raise ContextConflictError.new("Already in a context")
@@ -104,7 +104,7 @@ module MotionKit
 
     # instantiates a view, possibly running a 'layout block' to add child views.
     def create(element, element_id=nil, &block)
-      element = initialize_view(element)
+      element = initialize_element(element)
 
       if element_id
         # We set the optional id and call the '_style' method, if it's been
@@ -168,7 +168,7 @@ module MotionKit
       # make sure we have a target - raises NoContextError if none exists
       self.target
 
-      element = initialize_view(element)
+      element = initialize_element(element)
       unless @context
         create_default_root_context
       end
@@ -322,7 +322,7 @@ module MotionKit
     #
     # Accepts a view instance, a class (which is instantiated with 'new') or a
     # `ViewLayout`, which returns the root view.
-    def initialize_view(elem)
+    def initialize_element(elem)
       if elem.is_a?(Class) && elem < TreeLayout
         elem = elem.new_child(@layout, nil, self).view
       elsif elem.is_a?(Class)
