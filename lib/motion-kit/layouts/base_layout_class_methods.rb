@@ -11,7 +11,13 @@ module MotionKit
       return nil if klass.nil? && self == BaseLayout
       return @targets || superclass.targets if klass.nil?
       @targets = klass
+
+      if BaseLayout.target_klasses.key?(klass) && BaseLayout.target_klasses[klass] != self
+        NSLog('WARNING!  The class “%@” was registered with the layout class “%@”',
+          klass, BaseLayout.target_klasses[klass])
+      end
       BaseLayout.target_klasses[klass] = self
+
       nil
     end
 
