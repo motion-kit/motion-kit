@@ -678,7 +678,7 @@ class MainController < UIViewController
 
   def loadView
     @layout = MainLayout.new
-    self.view = @layout
+    self.view = @layout.view
   end
 
   # for the constraints to work reliably they should be added in this method:
