@@ -47,11 +47,4 @@ describe MotionKit::Layout do
     @subject.built?.should == true
   end
 
-  it "should allow no root call in layout when root is specified in initializer" do
-    @subject = TestNoRootLayout.new(root: @view).build
-    @subject.view.should == @view
-    @subject.view.backgroundColor.should == UIColor.redColor
-    @subject.view.subviews.first.should.be.kind_of?(UILabel)
-  end
-
 end

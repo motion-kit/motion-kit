@@ -50,13 +50,16 @@ module MotionKit
 
     # The main view.  This method builds the layout and returns the root view.
     def view
-      return @layout.view if @layout != self
+      if @layout != self
+        return @layout.view
+      end
       @view ||= build_view
     end
 
     # Builds the layout and then returns self for chaining.
     def build
-      view; self
+      view
+      self
     end
 
     # Checks if the layout has been built yet or not.
