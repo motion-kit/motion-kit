@@ -67,3 +67,16 @@ class TestMultipleNestedLayout < MotionKit::Layout
   end
 
 end
+
+class TestNoRootLayout < MotionKit::Layout
+
+  def layout
+    background_color UIColor.redColor
+    add UILabel, :purple_view
+  end
+
+  def purple_view_style
+    background_color UIColor.purpleColor
+  end
+
+end
