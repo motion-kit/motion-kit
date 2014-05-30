@@ -239,7 +239,6 @@ module MotionKit
       self
     end
     alias identified_by identifier
-    alias id identifier
 
     def update_constraint
       if @resolved
