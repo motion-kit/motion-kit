@@ -276,7 +276,7 @@ Here are the available methods:
 --------------------------------------------------------------------------------
 
 
-## NSMenu
+## NSMenu (OS X)
 
 Building menus with MotionKit is a total breeze, and it can even assist in
 creating menus with changing content. Only available on OS X.
