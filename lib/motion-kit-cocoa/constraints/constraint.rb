@@ -12,10 +12,10 @@ module MotionKit
     attr_accessor :relationship
     attr_accessor :relative_to
     attr_accessor :attribute2
-    attr_accessor :multiplier
-    attr_accessor :constant
-    attr_accessor :priority
-    attr_accessor :identifier
+    attr_reader :multiplier
+    attr_reader :constant
+    attr_writer :priority
+    attr_writer :identifier
 
     Priorities = {
       required: 1000,  # NSLayoutPriorityRequired
