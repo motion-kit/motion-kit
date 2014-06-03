@@ -31,7 +31,7 @@
 [readmore-coreanimation]:  https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#coreanimation
 [readmore-frames]:         https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#frames
 [readmore-autolayout]:     https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#autolayout
-[readmore-nsmenu]:         https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#nsmenu
+[readmore-nsmenu]:         https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#nsmenu-os-x
 
 
 ## What happened to Teacup??
