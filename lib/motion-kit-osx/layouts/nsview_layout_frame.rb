@@ -1,7 +1,6 @@
 # @requires MotionKit::NSViewLayout
 module MotionKit
   class NSViewLayout
-    override_start
 
     def _fix_frame_value(value)
       if value.is_a?(Hash) && value[:relative]
@@ -370,6 +369,5 @@ module MotionKit
       _calculate_frame(f, from: from_view, relative_to: { x: :reset, y: :reset })
     end
 
-    override_stop
   end
 end

@@ -181,8 +181,7 @@ class LoginLayout < MotionKit::Layout
     add UIView, :inputs do
       frame x: 0, y: 0, width: '100%', height: '100% - 50'
 
-      # setting autoresizing_mask should handle rotation events; this overrides
-      # any automatic mask settings that occurred in 'frame'
+      # setting autoresizing_mask should handle rotation events
       autoresizing_mask :pin_to_top, :flexible_height, :flexible_width
 
       # we'll use 'sizeToFit' to calculate the height

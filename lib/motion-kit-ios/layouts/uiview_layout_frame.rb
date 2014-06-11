@@ -1,7 +1,6 @@
 # @requires MotionKit::UIViewLayout
 module MotionKit
   class UIViewLayout
-    override_start
 
     def x(value)
       f = target.frame
@@ -317,6 +316,5 @@ module MotionKit
       _calculate_frame(f, from: from_view, relative_to: { x: :reset, y: :reset })
     end
 
-    override_stop
   end
 end

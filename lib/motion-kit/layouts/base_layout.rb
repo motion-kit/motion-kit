@@ -262,22 +262,6 @@ module MotionKit
 
     class << self
 
-      def override_start
-        @allow_all_override = true
-      end
-
-      def override_stop
-        @allow_all_override = false
-      end
-
-      def overrides(method_name)
-        overridden_methods << method_name
-      end
-
-      def overridden_methods
-        @overridden_methods ||= []
-      end
-
       # Prevents infinite loops when methods that are defined on Object/Kernel
       # are not properly delegated to the target.
       def delegate_method_fix(method_name)
@@ -298,24 +282,11 @@ module MotionKit
         end
       end
 
-      # this last little "catch-all" method is helpful to warn against methods
-      # that are defined already. Since magic methods are so important, this
-      # warning can come in handy.
-      def method_added(method_name)
-        return if @allow_all_override
-
-        if self < BaseLayout && BaseLayout.method_defined?(method_name)
-          if overridden_methods.include?(method_name)
-            overridden_methods.delete(method_name)
-          else
-            NSLog("Warning! The method #{self.name}##{method_name} has already been defined on MotionKit::BaseLayout or one of its ancestors.")
-          end
-        end
-      end
-
     end
 
 
   end
+
+
 
 end

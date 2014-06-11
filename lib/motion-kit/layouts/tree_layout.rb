@@ -316,7 +316,6 @@ module MotionKit
       @view
     end
 
-    overrides :run_deferred
     def run_deferred(top_level_context)
       view_was = @view
       @view = top_level_context

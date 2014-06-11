@@ -2,7 +2,6 @@
 module MotionKit
   class NSWindowLayout
 
-    overrides :frame
     def frame(value, autosave_name=nil)
       retval = target.setFrame(value, display: true)
       if autosave_name
