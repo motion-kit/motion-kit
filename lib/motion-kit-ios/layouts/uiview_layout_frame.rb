@@ -97,11 +97,7 @@ module MotionKit
       from_view_size = from_view.frame.size
       o = from_view.convertPoint([0, 0], toView: target.superview)
 
-      calculate_view = target
-
-      if point[:x] == :reset || point[:y] == :reset
-        calculate_view = UIView.alloc.initWithFrame([[0, 0], target.frame.size])
-      end
+      calculate_view = UIView.alloc.initWithFrame([[0, 0], target.frame.size])
 
       if f.is_a?(Hash)
         f = f.merge(relative: true)
