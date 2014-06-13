@@ -251,10 +251,9 @@ module MotionKit
       # Finally, try again with camel case if there's an underscore.
       elsif method_name.include?('_')
         objc_name = MotionKit.objective_c_method_name(method_name)
-        self.apply(objc_name, *args)
+        self.apply(objc_name, *args, &block)
       else
         target.send(setter, *args, &block)
-        # raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name} (from #{@layout_delegate && @layout_delegate.class})")
       end
     end
 
