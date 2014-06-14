@@ -6,26 +6,29 @@ module MotionKit
     def calculate_origin(view, dimension, amount, my_size=nil, full_view)
       my_size ||= view.frame.size
       if amount == :center
-        x = calculate(view, :width, '50%', full_view) - my_size.width / 2.0
-        y = calculate(view, :height, '50%', full_view) - my_size.height / 2.0
-        return CGPoint.new(x, y)
+        calculate_from_center(view, dimension, amount, my_size, full_view)
       elsif amount.is_a?(Array) || amount.is_a?(Hash)
-        if amount.is_a?(Hash)
-          x, y, x_offset, y_offset = calculate_from_hash(view, dimension, amount, my_size)
-        else
-          x = amount[0]
-          y = amount[1]
-        end
-
-        x = calculate(view, :width, x, full_view) + (x_offset || 0)
-        y = calculate(view, :height, y, full_view) + (y_offset || 0)
-        return CGPoint.new(x, y)
+        calculate_from_hash_array(view, dimension, amount, my_size, full_view)
       else
         return amount
       end
     end
 
-    def calculate_from_hash(view, dimension, amount, my_size=nil)
+    def calculate_from_center(view, dimension, amount, my_size, full_view)
+      x = calculate(view, :width, '50%', full_view) - my_size.width / 2.0
+      y = calculate(view, :height, '50%', full_view) - my_size.height / 2.0
+      return CGPoint.new(x, y)
+    end
+
+    def calculate_from_hash_array(view, dimension, amount, my_size, full_view)
+      x, y, x_offset, y_offset = calculate_from_hash(view, dimension, amount, my_size)
+      x = calculate(view, :width, x, full_view) + (x_offset || 0)
+      y = calculate(view, :height, y, full_view) + (y_offset || 0)
+      return CGPoint.new(x, y)
+    end
+
+    def calculate_from_hash(view, dimension, amount, my_size)
+      return amount[0], amount[1], nil, nil if amount.is_a?(Array)
       if amount[:relative]
         calculate_relative_from_hash(view, dimension, amount, my_size)
       else
