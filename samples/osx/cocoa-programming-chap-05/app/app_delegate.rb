@@ -1,5 +1,5 @@
-
 class AppDelegate
+
   def applicationDidFinishLaunching(notification)
     NSApp.mainMenu = MainMenu.new.menu
 
