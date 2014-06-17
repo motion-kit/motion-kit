@@ -24,7 +24,10 @@ module MotionKit
       @layout_delegate = nil
       @layout_state = :initial
       # You can set a root view by using .new(root: some_view)
-      @preset_root = args[:root]
+      # Explicit roots will not have a strong reference from
+      # MotionKit, so retain one yourself from your controller
+      # or other view to prevent deallocation.
+      @preset_root = WeakRef.new(args[:root])
     end
 
     def set_layout(layout)

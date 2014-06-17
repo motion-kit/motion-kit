@@ -308,6 +308,8 @@ end
 ```
 
 This is especially useful with collection views, table views, and table cells.
+Keep in mind that MotionKit will **not** retain a strong reference to your provided
+root view, so retain one yourself to prevent it from being deallocated.
 
 ### How do styles get applied?
 
