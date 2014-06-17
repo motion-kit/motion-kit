@@ -710,6 +710,16 @@ simplifying the controller code (and usually making it more testable).  See the
 [motion-kit-events]: https://github.com/rubymotion/motion-kit-events
 
 
+### MotionKit::Templates
+
+    gem install motion-kit-templates
+
+Adds project templates, for use with `motion create`.
+
+    motion create foo --template=mk-ios
+    motion create foo --template=mk-osx
+
+
 ## Some handy tricks and Features
 
 ### Orientation specific styles
