@@ -4,7 +4,9 @@ module MotionKit
 
     # useful when writing menus
     def app_name
-      NSBundle.mainBundle.infoDictionary['CFBundleName']
+      # this returns an ImmediateRef, whatever that is.  It needs to be
+      # converted to a String.
+      "#{NSBundle.mainBundle.infoDictionary['CFBundleName']}"
     end
 
     def _menu_title_and_options(title, options, default_title=nil, default_options={})
