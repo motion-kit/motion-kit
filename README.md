@@ -506,11 +506,18 @@ You can pass symbols like `autoresizing_mask :flexible_width`, or use
 symbols that have more intuitive meaning than the usual
 `UIViewAutoresizingFlexible*` constants.  These work in iOS and OS X.
 
+All of the `:pin_to_` shorthands have a fixed size, whereas the `:fill_`
+shorthands have flexible size.
+
 ```ruby
-autoresizing_mask :flexible_right, :flexible_bottom, :flexible_width
-autoresizing_mask :pin_to_left, :rigid_top  # 'rigid' undoes a 'flexible' setting
-autoresizing_mask :pin_to_bottom, :flexible_width
+# the :fill shorthands will get you a ton of mileage
 autoresizing_mask :fill_top
+# but if you want the size to stay constant, use :pin_to
+autoresizing_mask :pin_to_bottom
+# or, a list of flexible sides
+autoresizing_mask :flexible_right, :flexible_bottom, :flexible_width
+# or, combine them in some crazy fancy way
+autoresizing_mask :pin_to_left, :rigid_top  # 'rigid' undoes a 'flexible' setting
 
 flexible_left:       Sticks to the right side
 flexible_width:      Width varies with parent
