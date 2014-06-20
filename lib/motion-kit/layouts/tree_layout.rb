@@ -343,7 +343,7 @@ module MotionKit
     # `ViewLayout`, which returns the root view.
     def initialize_element(elem)
       if elem.is_a?(Class) && elem < TreeLayout
-        elem = elem.new_child(@layout, nil, self).view
+        elem = elem.new_child(@layout).view
       elsif elem.is_a?(Class)
         elem = elem.new
       elsif elem.is_a?(TreeLayout)
