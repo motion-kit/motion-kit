@@ -9,8 +9,8 @@ module MotionKit
       end
       view.setTranslatesAutoresizingMaskIntoConstraints(false)
 
-      deferred do
-        constraints_target = ConstraintsTarget.new(view)
+      constraints_target = ConstraintsTarget.new(view)
+      deferred(constraints_target) do
         context(constraints_target, &block)
         constraints_target.apply_all_constraints(self, view)
       end
