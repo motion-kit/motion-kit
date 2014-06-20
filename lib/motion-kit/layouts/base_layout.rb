@@ -31,11 +31,7 @@ module MotionKit
     end
 
     def set_layout(layout)
-      if layout.respond_to?(:weakref_alive?)
-        @layout = layout
-      else
-        @layout = layout && WeakRef.new(layout)
-      end
+      @layout = WeakRef.new(layout)
     end
 
     def target
