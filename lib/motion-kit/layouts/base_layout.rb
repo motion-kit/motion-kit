@@ -111,13 +111,17 @@ module MotionKit
     # Blocks passed to `deferred` are run at the end of a "session", usually
     # after a call to Layout#layout.
     def deferred(context=nil, &block)
+      context ||= @context
       return @layout.add_deferred_block(context, &block)
     end
 
     # Only intended for private use
-    def add_deferred_block(context=nil, &block)
+    def add_deferred_block(context, &block)
       context ||= @context
-      raise InvalidDeferredError.new('deferred must be run inside of a context') if context.nil?
+      if context.nil? && @assign_root
+        context ||= self.create_default_root_context
+      end
+      raise InvalidDeferredError.new('deferred must be run inside of a context') unless context
       raise ArgumentError.new('Block required') unless block
 
       self.deferred_blocks << [context, block]

@@ -90,7 +90,7 @@ module MotionKit
         element_id = element
         # See note below about why we don't need to `apply(:default_root)`
         element = preset_root || default_root
-      elsif @preset_root && @preset_root != element
+      elsif preset_root && preset_root != element
         # You're trying to make two roots, one at initialization
         # and one in your layout itself.
         raise ContextConflictError.new("Already created the root view")
