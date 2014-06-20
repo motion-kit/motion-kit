@@ -154,20 +154,28 @@ module MotionKit
       return self
     end
 
+    def reapply?
+      @layout_state == :reapply
+    end
+
     # Calls the style method of all objects in the view hierarchy
     def reapply(&block)
       raise ArgumentError.new('Block required') unless block
 
-      if @layout_state == :reapply
+      if reapply?
         yield
       end
       return self
     end
 
+    def initial?
+      @layout_state == :initial
+    end
+
     def initial(&block)
       raise ArgumentError.new('Block required') unless block
 
-      if @layout_state == :initial
+      if initial?
         yield
       end
       return self
