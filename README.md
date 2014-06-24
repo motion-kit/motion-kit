@@ -42,10 +42,10 @@ be replaced with a new project, rather than upgraded or refactored.
 
 ## Usage
 
-Install:
+In your Gemfile
 
 ```ruby
-gem install 'motion-kit'
+gem 'motion-kit'
 ```
 
 From your controller you will instantiate a `MotionKit::Layout` instance, and
@@ -76,7 +76,7 @@ end
 In a layout class, the `layout` method is expected to create the view hierarchy,
 and it should also take care of frames and styling.  You can apply styles here,
 and it's handy to do so when you are creating a quick mock-up, or a very small
-app.  But in a real application, you'll want to include a Stylesheet module, so
+app.  But in a real application, you'll want to include a Stylesheet module so
 your layout isn't cluttered with all your styling code.
 
 Here's a layout that just puts a label and a button in the middle of the screen:
@@ -97,7 +97,7 @@ class SimpleLayout < MotionKit::Layout
   def label_style
     text 'Hi there! Welcome to MotionKit'
     font UIFont.fontWithName('Comic Sans', size: 24)
-    sizeToFit
+    size_to_fit
 
     # note: there are better ways to set the center, see the frame helpers below
     center [CGRectGetMidX(superview.bounds), CGRectGetMidY(superview.bounds)]
@@ -119,13 +119,11 @@ class SimpleLayout < MotionKit::Layout
 end
 ```
 
-Nice, that should be pretty easy to follow, right?  M'kay, in this next, more
-complicated layout we'll create a login page, with a 'Login' button and inputs
-for username and password.  In this example, I will assign the frame in the
-`layout` method, instead of in the `_style` methods.  This is purely an
-aesthetic choice.  Some people like to have their frame code in the layout
-method, others like to put it in the _style methods.  I point it out only as an
-available feature.
+That's easy enough, right? In this next, more complicated layout, we'll
+create a login page with a 'Login' button and inputs for username and password.
+I will assign the frame in the `layout` method instead of in the `_style` methods.
+This is purely an aesthetic choice. Some people like to have their frame code in
+the `layout` method, others like to put it in the `*_style` methods.
 
 ```ruby
 class LoginLayout < MotionKit::Layout
@@ -140,20 +138,16 @@ class LoginLayout < MotionKit::Layout
     add UIImageView, :logo do
       frame [[0, 0], [320, 568]]
     end
-    # hardcoded dimensions!? there's got to be a better way...
 
-    # This frame argument will be handed to the 'MotionKit::Layout#frame'
-    # method, which can accept lots of shorthands.  Let's use one to scale the
-    # imageview so that it fills the width, but keeps its aspect ratio.
+    # you can set the size to fill horizontally and keep the aspect ratio
     add UIImageView, :logo do
       frame [[0, 0], ['100%', :scale]]
     end
-    # 'scale' uses sizeToFit and the other width/height property to keep the
-    # aspect ratio the same. Neat, huh?
 
+    # many other examples here
     add UIView, :button_container do
-      # Like I said, the frame method is very powerful, there are lots of
-      # ways it can help with laying out your rects, and it will even try to
+
+      # Like I said, the frame method is very powerful. It will try to
       # apply the correct autoresizingMask for you; the from_bottom method will
       # set the UIAutoresizingMask to "FlexibleTop", and using '100%' in the
       # width will ensure the frame stays the width of its parent.
@@ -163,15 +157,15 @@ class LoginLayout < MotionKit::Layout
       # same as above; assumes full width
       frame from_bottom(height: 50)
 
-      # similar to Teacup, views added inside a block are added to that
+      # views added inside a block are added to that
       # container.  You can reference the container with 'superview', but then
       # you're working on the object directly, so no method translation (foo_bar
       # => fooBar) will be done for you.
       add UIButton, :login_button do
         background_color superview.backgroundColor
 
-        # 'parent' is not instance of a view, it's a special object that
-        # acts like a placeholder for various values; if you want to assign
+        # 'parent' is not instance of a view; it's a special object that
+        # acts like a placeholder for various values. If you want to assign
         # *any* superview property, use 'superview' instead.  'parent' is mostly
         # useful for setting the frame.
         frame [[ 10, 5 ], [ 50, parent.height - 10 ]]
@@ -238,6 +232,7 @@ and include them in your layout! Sounds clean and organized to me! You can
 include multiple stylesheets this way, just be careful around name collisions.
 
 ```ruby
+# app/styles/login_styles.rb
 module LoginStyles
 
   def login_button_style
@@ -353,6 +348,10 @@ will try to call:
   end
 ```
 
+Introspection and method_missing add a little overhead to your code, but in our
+benchmarking it is insignificant and undetectable. Let us know if you find any
+performance issues.
+
 You can easily add your own helpers to MotionKit's existing Layout classes. They
 are all named consistenly, e.g. `MotionKit::UIViewLayout`, e.g.
 `MotionKit::UILabelLayout`.  Just open up these classes and hack away.
@@ -369,8 +368,8 @@ module MotionKit
       target.textColor = color
     end
 
-    # If a block is passed it is your responsibility to call `context(val,
-    # &block)`, if that is appropriate.  I'll use `UIView#layer` as an example,
+    # If a block is passed it is your responsibility to call `context(val, &block)`
+    # if that is appropriate.  I'll use `UIView#layer` as an example,
     # but actually if you pass a block to a method that returns an object, that
     # block will be called with that object as the context.
     def layer(&block)
