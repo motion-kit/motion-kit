@@ -45,7 +45,7 @@ be replaced with a new project, rather than upgraded or refactored.
 In your Gemfile
 
 ```ruby
-gem 'MotionKit', '~> 0.10.8'
+gem 'motion-kit'
 ```
 
 From your controller you will instantiate a `MotionKit::Layout` instance, and
