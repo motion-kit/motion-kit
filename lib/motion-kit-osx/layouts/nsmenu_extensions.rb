@@ -5,7 +5,7 @@ module MotionKit
     # useful when writing menus
     def app_name
       # this returns an ImmediateRef, whatever that is.  It needs to be
-      # converted to a String.
+      # converted to a String.  Doesn't work in 10.10.
       "#{NSBundle.mainBundle.infoDictionary['CFBundleName']}"
     end
 

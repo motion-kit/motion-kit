@@ -49,9 +49,11 @@ module MotionKit
         y
       end
 
+      x_offset = 0
       x_offset = amount[:right] if amount.key?(:right)
       x_offset = -amount[:left] if amount.key?(:left)
 
+      y_offset = 0
       y_offset = amount[:down] if amount.key?(:down)
       y_offset = -amount[:up] if amount.key?(:up)
       y_offset = -y_offset if amount[:flipped]
