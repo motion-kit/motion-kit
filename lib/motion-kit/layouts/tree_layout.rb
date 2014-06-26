@@ -56,6 +56,14 @@ module MotionKit
       @view ||= build_view
     end
 
+    # For private use.  The "root" is context sensitive, whereas the "view" is
+    # constant.  In most cases they are the same object, but when you are
+    # building a hierarchy that is *outside* the view created from the "layout"
+    # method, the top-most view in that hierarchy will be "root".
+    def _root
+      @root || view
+    end
+
     # Builds the layout and then returns self for chaining.
     def build
       view
@@ -209,7 +217,7 @@ module MotionKit
       if @layout != self
         return @layout.get(element_id)
       end
-      self.get(element_id, in: self.view)
+      self.get(element_id, in: self._root)
     end
     def first(element_id) ; get(element_id) ; end
 
@@ -226,7 +234,7 @@ module MotionKit
       if @layout != self
         return @layout.last(element_id)
       end
-      self.last(element_id, in: self.view)
+      self.last(element_id, in: self._root)
     end
 
     # Same as `last`, but with the root view specified.
@@ -239,7 +247,7 @@ module MotionKit
       if @layout != self
         return @layout.all(element_id)
       end
-      self.all(element_id, in: self.view)
+      self.all(element_id, in: self._root)
     end
 
     # Same as `all`, but with the root view specified.
@@ -249,10 +257,7 @@ module MotionKit
 
     # Returns all the elements with a given element_id
     def nth(element_id, index)
-      if @layout != self
-        return @layout.nth(element_id, index)
-      end
-      self.all(element_id, in: self.view)[index]
+      self.all(element_id)[index]
     end
 
     # Same as `nth`, but with the root view specified.
@@ -266,7 +271,7 @@ module MotionKit
       if @layout != self
         return @layout.remove(element_id)
       end
-      self.remove(element_id, from: self.view)
+      self.remove(element_id, from: self._root)
     end
 
     # Same as `remove`, but with the root view specified.
@@ -303,8 +308,8 @@ module MotionKit
       # Only in the 'layout' method will we allow default container to be
       # created automatically (when 'add' is called)
       @assign_root = true
-      was_top_level = @is_top_level
-      @is_top_level = true
+      prev_should_run = @should_run_deferred
+      @should_run_deferred = true
       layout
       unless @view
         if @assign_root
@@ -314,7 +319,7 @@ module MotionKit
         end
       end
       run_deferred(@view)
-      @is_top_level = was_top_level
+      @should_run_deferred = prev_should_run
       @assign_root = false
       # context can be set via the 'create_default_root_context' method, which
       # may be outside a 'context' block, so make sure to restore context to
@@ -324,11 +329,13 @@ module MotionKit
       @view
     end
 
+    # This method needs to set the @root so that calls to `get(:id)` defer to
+    # the "current root", not the layout root view.
     def run_deferred(top_level_context)
-      view_was = @view
-      @view = top_level_context
+      root_was = @root
+      @root = top_level_context
       retval = super
-      @view = view_was
+      @root = root_was
 
       return retval
     end

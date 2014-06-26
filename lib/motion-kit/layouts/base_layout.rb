@@ -84,11 +84,11 @@ module MotionKit
 
       context_was, parent_was, delegate_was = @context, @parent, @layout_delegate
 
-      was_top_level = @is_top_level
-      if @is_top_level.nil?
-        @is_top_level = true
+      prev_should_run = @should_run_deferred
+      if @should_run_deferred.nil?
+        @should_run_deferred = true
       else
-        @is_top_level = false
+        @should_run_deferred = false
       end
       @parent = MK::Parent.new(context_was)
       @context = target
@@ -96,10 +96,10 @@ module MotionKit
       @layout_delegate = @context.motion_kit_meta[:delegate]
       yield
       @layout_delegate, @context, @parent = delegate_was, context_was, parent_was
-      if @is_top_level
+      if @should_run_deferred
         run_deferred(target)
       end
-      @is_top_level = was_top_level
+      @should_run_deferred = prev_should_run
 
       target
     end
