@@ -1,15 +1,14 @@
 PATH
   remote: ../../..
   specs:
-    motion-kit (0.10.8)
-      dbt
+    motion-kit (0.10.9)
+      dbt (~> 1.1.5)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    dbt (1.1.4)
+    dbt (1.1.5)
     motion-firebase (2.0.10)
-    rake (10.3.1)
     sugarcube (1.6.0)
 
 PLATFORMS
@@ -18,5 +17,4 @@ PLATFORMS
 DEPENDENCIES
   motion-firebase
   motion-kit!
-  rake
   sugarcube
