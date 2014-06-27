@@ -31,41 +31,49 @@ module MotionKit
     def reapply!(window=nil)
       window ||= self.window
       call_style_method(window, window.motion_kit_id) if window.motion_kit_id
-      super(window.contentView)
+      context(window) do
+        super(window.contentView)
+      end
     end
 
     def get(element_id)
       if self.window.motion_kit_id == element_id
         return self.window
-      else
+      elsif self._root == self.window
         self.get(element_id, in: self.window.contentView)
+      else
+        super
       end
     end
 
     def last(element_id)
-      if last = self.last(element_id, in: self.window.contentView)
+      if self._root == self.window && last = self.last(element_id, in: self.window.contentView)
         last
       elsif self.window.motion_kit_id == element_id
         self.window
       else
-        nil
+        super
       end
     end
 
     def all(element_id)
-      found = self.all(element_id, in: self.window.contentView)
-      if self.window.motion_kit_id == element_id
-        found << self.window
+      if self._root == self.window
+        found = self.all(element_id, in: self.window.contentView)
+        if self.window.motion_kit_id == element_id
+          found << self.window
+        end
+        return found
+      else
+        super
       end
-      return found
-    end
-
-    def nth(element_id, index)
-      self.all(element_id, in: self.window.contentView)[index]
     end
 
     def remove(element_id)
-      self.remove(element_id, from: self.window.contentView)
+      if self._root == self.window
+        self.remove(element_id, from: self.window.contentView)
+      else
+        super
+      end
     end
 
   end

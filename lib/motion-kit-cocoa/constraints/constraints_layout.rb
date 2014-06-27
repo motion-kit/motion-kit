@@ -5,6 +5,11 @@ module MotionKit
   class ConstraintsLayout < BaseLayout
     targets ConstraintsTarget
 
+    # A more sensible name for the constraint that is created.
+    def constraint_target
+      target
+    end
+
     def first(name)
       ConstraintPlaceholder.new(:first, name)
     end
@@ -199,35 +204,35 @@ module MotionKit
     end
 
     def above(view)
-      constraint = Constraint.new(target.view, :bottom, :equal)
+      constraint = Constraint.new(constraint_target.view, :bottom, :equal)
       constraint.equals(view, :top)
 
-      target.add_constraints([constraint])
+      constraint_target.add_constraints([constraint])
       return constraint
     end
 
     def below(view)
-      constraint = Constraint.new(target.view, :top, :equal)
+      constraint = Constraint.new(constraint_target.view, :top, :equal)
       constraint.equals(view, :bottom)
 
-      target.add_constraints([constraint])
+      constraint_target.add_constraints([constraint])
       return constraint
     end
 
     def before(view)
-      constraint = Constraint.new(target.view, :right, :equal)
+      constraint = Constraint.new(constraint_target.view, :right, :equal)
       constraint.equals(view, :left)
 
-      target.add_constraints([constraint])
+      constraint_target.add_constraints([constraint])
       return constraint
     end
     alias left_of before
 
     def after(view)
-      constraint = Constraint.new(target.view, :left, :equal)
+      constraint = Constraint.new(constraint_target.view, :left, :equal)
       constraint.equals(view, :right)
 
-      target.add_constraints([constraint])
+      constraint_target.add_constraints([constraint])
       return constraint
     end
     alias right_of after
@@ -236,9 +241,9 @@ module MotionKit
 
     def target_constraint(attribute, relationship, value=nil, constraint_class=nil)
       constraint_class ||= Constraint
-      constraint = constraint_class.new(target.view, attribute, relationship)
+      constraint = constraint_class.new(constraint_target.view, attribute, relationship)
       constraint.equals(value) if value
-      target.add_constraints([constraint])
+      constraint_target.add_constraints([constraint])
       constraint
     end
 
