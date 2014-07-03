@@ -154,6 +154,7 @@ module MotionKit
     # 'apply', which searches for the method in the delegate
     # (`@layout_delegate`) or using inspection (`respond_to?(:setFoo)`).
     def method_missing(method_name, *args, &block)
+      method_name = method_name.split(':')[0]
       self.apply(method_name, *args, &block)
     end
 
