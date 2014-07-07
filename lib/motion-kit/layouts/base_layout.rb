@@ -157,6 +157,28 @@ module MotionKit
       self.apply(method_name, *args, &block)
     end
 
+    def objc_version(method_name, args)
+      if method_name.count(':') > 1
+        objc_method_name = method_name
+        objc_method_args = [args[0]].concat args[1].values
+      elsif args.length == 2 && args[1].is_a?(Hash) && !args[1].empty?
+        objc_method_name = "#{method_name}:#{args[1].keys.join(':')}:"
+        objc_method_args = [args[0]].concat args[1].values
+      else
+        objc_method_name = nil
+        objc_method_args = nil
+      end
+      return objc_method_name, objc_method_args
+    end
+
+    def ruby_version(method_name)
+      if method_name.count(':') > 1
+        method_name.split(':').first
+      else
+        method_name
+      end
+    end
+
     # Tries to call the setter (`foo 'value'` => `view.setFoo('value')`), or
     # assignment method (`foo 'value'` => `view.foo = 'value'`), or if a block
     # is given, then the object returned by 'method_name' is assigned as the new
@@ -176,19 +198,14 @@ module MotionKit
         raise NoMethodError.new("undefined method `#{method_name}' for #{self}:#{self.class}", method_name)
       end
 
-      if args.length == 2 && args[1].is_a?(Hash) && !args[1].empty?
-        long_method_name = "#{method_name}:#{args[1].keys.join(':')}:"
-        long_method_args = [args[0]].concat args[1].values
-      else
-        long_method_name = nil
-        long_method_args = nil
-      end
+      objc_method_name, objc_method_args = objc_version(method_name, args)
+      ruby_method_name = ruby_version(method_name)
 
       @layout_delegate ||= Layout.layout_for(@layout, target.class)
-      if long_method_name && @layout_delegate.respond_to?(long_method_name)
-        return @layout_delegate.send(long_method_name, *long_method_args, &block)
-      elsif @layout_delegate.respond_to?(method_name)
-        return @layout_delegate.send(method_name, *args, &block)
+      if objc_method_name && @layout_delegate.respond_to?(objc_method_name)
+        return @layout_delegate.send(objc_method_name, *objc_method_args, &block)
+      elsif @layout_delegate.respond_to?(ruby_method_name)
+        return @layout_delegate.send(ruby_method_name, *args, &block)
       end
 
       if block
@@ -199,38 +216,29 @@ module MotionKit
     end
 
     def apply_with_context(method_name, *args, &block)
-      if args.length == 2 && args[1].is_a?(Hash) && !args[1].empty?
-        long_method_name = "#{method_name}:#{args[1].keys.join(':')}:"
-        long_method_args = [args[0]].concat args[1].values
-      else
-        long_method_name = nil
-        long_method_args = nil
-      end
+      objc_method_name, objc_method_args = objc_version(method_name, args)
+      ruby_method_name = ruby_version(method_name)
 
-      if long_method_name && target.respond_to?(long_method_name)
-        new_context = target.send(long_method_name, *long_method_args)
+      if objc_method_name && target.respond_to?(objc_method_name)
+        new_context = target.send(objc_method_name, *objc_method_args)
         self.context(new_context, &block)
-      elsif target.respond_to?(method_name)
-        new_context = target.send(method_name, *args)
+      elsif target.respond_to?(ruby_method_name)
+        new_context = target.send(ruby_method_name, *args)
         self.context(new_context, &block)
-      elsif method_name.include?('_')
-        objc_name = MotionKit.objective_c_method_name(method_name)
+      elsif ruby_method_name.include?('_')
+        objc_name = MotionKit.objective_c_method_name(ruby_method_name)
         self.apply(objc_name, *args, &block)
       else
-        raise ApplyError.new("Cannot apply #{method_name.inspect} to instance of #{target.class.name}")
+        raise ApplyError.new("Cannot apply #{ruby_method_name.inspect} to instance of #{target.class.name}")
       end
     end
 
     def apply_with_target(method_name, *args, &block)
-      setter = MotionKit.setter(method_name)
-      assign = "#{method_name}="
-      if args.length == 2 && args[1].is_a?(Hash) && !args[1].empty?
-        long_method_name = "#{method_name}:#{args[1].keys.join(':')}:"
-        long_method_args = [args[0]].concat args[1].values
-      else
-        long_method_name = nil
-        long_method_args = nil
-      end
+      objc_method_name, objc_method_args = objc_version(method_name, args)
+      ruby_method_name = ruby_version(method_name)
+
+      setter = MotionKit.setter(ruby_method_name)
+      assign = "#{ruby_method_name}="
 
       # The order is important here.
       # - unchanged method name if no args are passed (e.g. `layer`)
@@ -239,16 +247,16 @@ module MotionKit
       # - unchanged method name *again*, because many Ruby classes provide a
       #   combined getter/setter (`layer(val)`)
       # - lastly, try again after converting to camelCase
-      if long_method_name && target.respond_to?(long_method_name)
-        target.send(long_method_name, *long_method_args, &block)
-      elsif args.empty? && target.respond_to?(method_name)
-        target.send(method_name, *args, &block)
+      if objc_method_name && target.respond_to?(objc_method_name)
+        target.send(objc_method_name, *objc_method_args, &block)
+      elsif args.empty? && target.respond_to?(ruby_method_name)
+        target.send(ruby_method_name, *args, &block)
       elsif target.respond_to?(setter)
         target.send(setter, *args, &block)
       elsif target.respond_to?(assign)
         target.send(assign, *args, &block)
-      elsif target.respond_to?(method_name)
-        target.send(method_name, *args, &block)
+      elsif target.respond_to?(ruby_method_name)
+        target.send(ruby_method_name, *args, &block)
       # UIAppearance classes are a whole OTHER thing; they never return 'true'
       elsif target.is_a?(MotionKit.appearance_class)
         target.send(setter, *args, &block)
