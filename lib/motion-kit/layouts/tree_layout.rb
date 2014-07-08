@@ -50,8 +50,8 @@ module MotionKit
 
     # The main view.  This method builds the layout and returns the root view.
     def view
-      if @layout != self
-        return @layout.view
+      unless is_parent_layout?
+        return parent_layout.view
       end
       @view ||= build_view
     end
@@ -142,9 +142,9 @@ module MotionKit
 
     def call_style_method(element, element_id)
       style_method = "#{element_id}_style"
-      if @layout.respond_to?(style_method)
-        @layout.context(element) do
-          @layout.send(style_method)
+      if parent_layout.respond_to?(style_method)
+        parent_layout.context(element) do
+          parent_layout.send(style_method)
         end
       end
       return element
@@ -214,8 +214,8 @@ module MotionKit
     # with this element_id in the tree, where *first* means the view closest to
     # the root view. Aliased to `first` to distinguish it from `last`.
     def get(element_id)
-      if @layout != self
-        return @layout.get(element_id)
+      unless is_parent_layout?
+        return parent_layout.get(element_id)
       end
       self.get(element_id, in: self._root)
     end
@@ -231,8 +231,8 @@ module MotionKit
     # with this element_id, where last means the view deepest and furthest from
     # the root view.
     def last(element_id)
-      if @layout != self
-        return @layout.last(element_id)
+      unless is_parent_layout?
+        return parent_layout.last(element_id)
       end
       self.last(element_id, in: self._root)
     end
@@ -244,8 +244,8 @@ module MotionKit
 
     # Returns all the elements with a given element_id in the view tree.
     def all(element_id)
-      if @layout != self
-        return @layout.all(element_id)
+      unless is_parent_layout?
+        return parent_layout.all(element_id)
       end
       self.all(element_id, in: self._root)
     end
@@ -268,8 +268,8 @@ module MotionKit
     # Removes a view (or several with the same name) from the hierarchy
     # and forgets it entirely.  Returns the views that were removed.
     def remove(element_id)
-      if @layout != self
-        return @layout.remove(element_id)
+      unless is_parent_layout?
+        return parent_layout.remove(element_id)
       end
       self.remove(element_id, from: self._root)
     end
@@ -297,12 +297,6 @@ module MotionKit
 
   protected
 
-    def preset_root
-      # Set in the initializer
-      # TreeLayout.new(root: some_view)
-      @preset_root
-    end
-
     # This method builds the layout and returns the root view.
     def build_view
       # Only in the 'layout' method will we allow default container to be
@@ -314,6 +308,7 @@ module MotionKit
       unless @view
         if @assign_root
           create_default_root_context
+          @view = @context
         else
           NSLog('Warning! No root view was set in TreeLayout#layout. Did you mean to call `root`?')
         end
@@ -325,6 +320,11 @@ module MotionKit
       # may be outside a 'context' block, so make sure to restore context to
       # it's previous value
       @context = nil
+
+      if @preset_root
+        @view = WeakRef.new(@view)
+        @preset_root = nil
+      end
 
       @view
     end
@@ -350,7 +350,7 @@ module MotionKit
     # `ViewLayout`, which returns the root view.
     def initialize_element(elem)
       if elem.is_a?(Class) && elem < TreeLayout
-        elem = elem.new_child(@layout).view
+        elem = elem.new_child(parent_layout).view
       elsif elem.is_a?(Class)
         elem = elem.new
       elsif elem.is_a?(TreeLayout)
