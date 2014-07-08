@@ -267,6 +267,30 @@ end
 ```
 
 
+### Using child-layouts
+
+If you have a very complicated layout that you want to break up into child
+layouts, that is supported as well:
+
+```ruby
+class ParentLayout < MK::Layout
+
+  def layout
+    add ChildLayout, :child_id
+  end
+
+end
+```
+
+The id is optional, but allows you to fetch the layout using `get_layout(id)`.
+
+```ruby
+layout.get_layout(:child_id)  # => ChildLayout
+```
+
+Calling `get(:child_id)` will return the *view* associated with that layout.
+
+
 ### Setting a custom root view
 
 If you need to use a custom root view, you can use the `root` method from within

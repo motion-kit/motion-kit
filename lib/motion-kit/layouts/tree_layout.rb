@@ -48,6 +48,11 @@ module MotionKit
 
     end
 
+    def initialize(args={})
+      super
+      @child_layouts = { by_name: {}, by_list: [] }
+    end
+
     # The main view.  This method builds the layout and returns the root view.
     def view
       unless is_parent_layout?
@@ -104,7 +109,7 @@ module MotionKit
         raise ContextConflictError.new("Already created the root view")
       end
 
-      @view = initialize_element(element)
+      @view = initialize_element(element, element_id)
       if block
         if @context
           raise ContextConflictError.new("Already in a context")
@@ -124,7 +129,7 @@ module MotionKit
 
     # instantiates a view, possibly running a 'layout block' to add child views.
     def create(element, element_id=nil, &block)
-      element = initialize_element(element)
+      element = initialize_element(element, element_id)
 
       if element_id
         # We set the optional id and call the '_style' method, if it's been
@@ -152,10 +157,18 @@ module MotionKit
 
     # Calls the style method of all objects in the view hierarchy
     def reapply!(root=nil)
+      apply_to_children = !root
+
       root ||= self.view
       @layout_state = :reapply
       MotionKit.find_all_views(root) do |view|
         call_style_method(view, view.motion_kit_id) if view.motion_kit_id
+      end
+
+      if apply_to_children
+        @child_layouts[:by_list].each do |child_layout|
+          child_layout.reapply!
+        end
       end
       @layout_state = :initial
 
@@ -196,7 +209,7 @@ module MotionKit
       # make sure we have a target - raises NoContextError if none exists
       self.target
 
-      element = initialize_element(element)
+      element = initialize_element(element, element_id)
       unless @context
         create_default_root_context
       end
@@ -208,6 +221,15 @@ module MotionKit
       end
 
       element
+    end
+
+    def child_layouts
+      @child_layouts[:by_list]
+    end
+
+    # Retrieves a child layout by name
+    def get_layout(element_id)
+      @child_layouts[:by_name][element_id]
     end
 
     # Retrieves a view by its element id.  This will return the *first* view
@@ -348,13 +370,22 @@ module MotionKit
     #
     # Accepts a view instance, a class (which is instantiated with 'new') or a
     # `ViewLayout`, which returns the root view.
-    def initialize_element(elem)
+    def initialize_element(elem, element_id)
       if elem.is_a?(Class) && elem < TreeLayout
-        elem = elem.new_child(parent_layout).view
+        layout = elem.new
+        elem = layout.view
       elsif elem.is_a?(Class)
         elem = elem.new
       elsif elem.is_a?(TreeLayout)
+        layout = elem
         elem = elem.view
+      end
+
+      if layout
+        if element_id
+          @child_layouts[:by_name][element_id] = layout
+        end
+        @child_layouts[:by_list] << layout
       end
 
       return elem
