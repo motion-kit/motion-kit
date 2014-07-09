@@ -289,7 +289,8 @@ The id is (as always) optional, but allows you to fetch the layout using
 layout.get(:child_id)  # => ChildLayout
 ```
 
-Calling `get(:child_id)` will return the *view* associated with that layout.
+Calling `get(:child_id).view` will return the *view* associated with that
+layout.
 
 
 ### Setting a custom root view
