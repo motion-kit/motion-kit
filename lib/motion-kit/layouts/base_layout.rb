@@ -18,7 +18,7 @@ module MotionKit
 
     def initialize(args={})
       # @layout is the object we look in for style methods
-      @layout = self
+      @layout = nil
       # the Layout object that implements custom style methods. Leave this as nil
       # in the initializer.
       @layout_delegate = nil
@@ -27,22 +27,30 @@ module MotionKit
       # Explicit roots will not have a strong reference from
       # MotionKit, so retain one yourself from your controller
       # or other view to prevent deallocation.
-      @preset_root = WeakRef.new(args[:root])
+      @preset_root = args[:root]
     end
 
     def set_layout(layout)
       @layout = WeakRef.new(layout)
     end
 
+    def parent_layout
+      @layout || self
+    end
+
+    def is_parent_layout?
+      @layout.nil? || @layout == self
+    end
+
     def target
-      if @layout.nil? || @layout == self
+      if is_parent_layout?
         # only the "root layout" instance is allowed to change the context.
         # if there isn't a context set, try and create a root instance; this
         # will fail if we're not in a state that allows the root to be created
         @context ||= create_default_root_context
       else
         # child layouts get the context from the root layout
-        @layout.target
+        parent_layout.target
       end
     end
     def v ; target ; end
@@ -76,7 +84,7 @@ module MotionKit
       return target unless block
       # this little line is incredibly important; the context is only set on
       # the top-level Layout object.
-      return @layout.context(target, &block) if @layout != self
+      return parent_layout.context(target, &block) unless is_parent_layout?
 
       if target.is_a?(Symbol)
         target = self.get(target)
@@ -92,7 +100,7 @@ module MotionKit
       end
       @parent = MK::Parent.new(context_was)
       @context = target
-      @context.motion_kit_meta[:delegate] ||= Layout.layout_for(@layout, @context.class)
+      @context.motion_kit_meta[:delegate] ||= Layout.layout_for(parent_layout, @context.class)
       @layout_delegate = @context.motion_kit_meta[:delegate]
       yield
       @layout_delegate, @context, @parent = delegate_was, context_was, parent_was
@@ -108,7 +116,7 @@ module MotionKit
     # after a call to Layout#layout.
     def deferred(context=nil, &block)
       context ||= @context
-      return @layout.add_deferred_block(context, &block)
+      return parent_layout.add_deferred_block(context, &block)
     end
 
     # Only intended for private use
@@ -201,7 +209,7 @@ module MotionKit
       objc_method_name, objc_method_args = objc_version(method_name, args)
       ruby_method_name = ruby_version(method_name)
 
-      @layout_delegate ||= Layout.layout_for(@layout, target.class)
+      @layout_delegate ||= Layout.layout_for(parent_layout, target.class)
       if objc_method_name && @layout_delegate.respond_to?(objc_method_name)
         return @layout_delegate.send(objc_method_name, *objc_method_args, &block)
       elsif @layout_delegate.respond_to?(ruby_method_name)
@@ -269,8 +277,6 @@ module MotionKit
       end
     end
 
-  public
-
     class << self
 
       # Prevents infinite loops when methods that are defined on Object/Kernel
@@ -295,6 +301,13 @@ module MotionKit
 
     end
 
+  protected
+
+    def preset_root
+      # Set in the initializer
+      # TreeLayout.new(root: some_view)
+      @preset_root
+    end
 
   end
 
