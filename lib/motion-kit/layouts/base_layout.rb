@@ -42,6 +42,14 @@ module MotionKit
       @layout.nil? || @layout == self
     end
 
+    def has_context?
+      if is_parent_layout?
+        !!@context
+      else
+        parent_layout.has_context?
+      end
+    end
+
     def target
       if is_parent_layout?
         # only the "root layout" instance is allowed to change the context.

@@ -23,7 +23,7 @@ module MotionKit
     # Ensure we always have a context in this method; makes it easier to define
     # constraints in an `add_constraints` method.
     def constraints(add_to_view=nil, &block)
-      if target
+      if has_context?
         apply(:constraints, add_to_view, &block)
       else
         context(self.view) do
