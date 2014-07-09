@@ -22,9 +22,9 @@ module MotionKit
     end
 
     # Instantiates a new Layout instance using `layout` as the root-level layout
-    def layout_for(layout, klass)
+    def layout_for(klass)
       memoized_klass = memoize(klass)
-      memoized_klass.new_child(layout) if memoized_klass
+      memoized_klass && memoized_klass.new
     end
 
     # Cache registered classes
@@ -40,10 +40,5 @@ module MotionKit
       @memoize[klass]
     end
 
-    def new_child(layout=nil)
-      child = self.new
-      child.set_layout(layout)
-      child
-    end
   end
 end

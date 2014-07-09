@@ -30,7 +30,7 @@ module MotionKit
       @preset_root = args[:root]
     end
 
-    def set_layout(layout)
+    def set_parent_layout(layout)
       @layout = WeakRef.new(layout)
     end
 
@@ -88,14 +88,14 @@ module MotionKit
     #         corner_radius 5
     #       end
     #     end
-    def context(target, &block)
-      return target unless block
+    def context(new_target, &block)
+      return new_target unless block
       # this little line is incredibly important; the context is only set on
       # the top-level Layout object.
-      return parent_layout.context(target, &block) unless is_parent_layout?
+      return parent_layout.context(new_target, &block) unless is_parent_layout?
 
-      if target.is_a?(Symbol)
-        target = self.get_view(target)
+      if new_target.is_a?(Symbol)
+        new_target = self.get_view(new_target)
       end
 
       context_was, parent_was, delegate_was = @context, @parent, @layout_delegate
@@ -107,17 +107,20 @@ module MotionKit
         @should_run_deferred = false
       end
       @parent = MK::Parent.new(context_was)
-      @context = target
-      @context.motion_kit_meta[:delegate] ||= Layout.layout_for(parent_layout, @context.class)
+      @context = new_target
+      @context.motion_kit_meta[:delegate] ||= Layout.layout_for(@context.class)
       @layout_delegate = @context.motion_kit_meta[:delegate]
+      if @layout_delegate
+        @layout_delegate.set_parent_layout(parent_layout)
+      end
       yield
       @layout_delegate, @context, @parent = delegate_was, context_was, parent_was
       if @should_run_deferred
-        run_deferred(target)
+        run_deferred(new_target)
       end
       @should_run_deferred = prev_should_run
 
-      target
+      new_target
     end
 
     # Blocks passed to `deferred` are run at the end of a "session", usually
@@ -217,11 +220,14 @@ module MotionKit
       objc_method_name, objc_method_args = objc_version(method_name, args)
       ruby_method_name = ruby_version(method_name)
 
-      @layout_delegate ||= Layout.layout_for(parent_layout, target.class)
-      if objc_method_name && @layout_delegate.respond_to?(objc_method_name)
-        return @layout_delegate.send(objc_method_name, *objc_method_args, &block)
-      elsif @layout_delegate.respond_to?(ruby_method_name)
-        return @layout_delegate.send(ruby_method_name, *args, &block)
+      @layout_delegate ||= Layout.layout_for(target.class)
+      if @layout_delegate
+        @layout_delegate.set_parent_layout(parent_layout)
+        if objc_method_name && @layout_delegate.respond_to?(objc_method_name)
+          return @layout_delegate.send(objc_method_name, *objc_method_args, &block)
+        elsif @layout_delegate.respond_to?(ruby_method_name)
+          return @layout_delegate.send(ruby_method_name, *args, &block)
+        end
       end
 
       if block
