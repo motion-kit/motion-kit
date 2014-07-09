@@ -20,7 +20,7 @@ describe 'Blocks that are state specific' do
 
   it 'should run the reapply blocks from any method' do
     any_view = @subject.any_view
-    @subject.reapply!(any_view)
+    @subject.reapply!
     any_view.text.should == 'reapply'
   end
 

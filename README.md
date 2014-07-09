@@ -282,10 +282,11 @@ class ParentLayout < MK::Layout
 end
 ```
 
-The id is optional, but allows you to fetch the layout using `get_layout(id)`.
+The id is (as always) optional, but allows you to fetch the layout using
+`get(id)`.
 
 ```ruby
-layout.get_layout(:child_id)  # => ChildLayout
+layout.get(:child_id)  # => ChildLayout
 ```
 
 Calling `get(:child_id)` will return the *view* associated with that layout.

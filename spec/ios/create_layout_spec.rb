@@ -1,4 +1,4 @@
-describe MotionKit::Layout do
+describe 'Create Layout' do
   before do
     @subject = TestCreateLayout.new
   end

@@ -27,55 +27,6 @@ module MotionKit
       subview.removeFromSuperview
     end
 
-    # NSWindow doesn't have immediate children; restyle its contentView.
-    def reapply!(window=nil)
-      window ||= self.window
-      call_style_method(window, window.motion_kit_id) if window.motion_kit_id
-      context(window) do
-        super(window.contentView)
-      end
-    end
-
-    def get(element_id)
-      if self.window.motion_kit_id == element_id
-        return self.window
-      elsif self._root == self.window
-        self.get(element_id, in: self.window.contentView)
-      else
-        super
-      end
-    end
-
-    def last(element_id)
-      if self._root == self.window && last = self.last(element_id, in: self.window.contentView)
-        last
-      elsif self.window.motion_kit_id == element_id
-        self.window
-      else
-        super
-      end
-    end
-
-    def all(element_id)
-      if self._root == self.window
-        found = self.all(element_id, in: self.window.contentView)
-        if self.window.motion_kit_id == element_id
-          found << self.window
-        end
-        return found
-      else
-        super
-      end
-    end
-
-    def remove(element_id)
-      if self._root == self.window
-        self.remove(element_id, from: self.window.contentView)
-      else
-        super
-      end
-    end
-
   end
 
   class NSWindowLayout < WindowLayout

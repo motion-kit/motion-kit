@@ -1,4 +1,4 @@
-describe MotionKit::Layout do
+describe 'Custom Root Layouts' do
   before do
     @view = NSView.new
     @subject = TestCustomRootLayout.new(root: @view)

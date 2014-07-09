@@ -1,6 +1,6 @@
-describe MotionKit::Layout do
+describe 'Relative Layouts' do
   before do
-    @subject = TestRelativeLayout.new
+    @subject = TestRelativeLayout.new.build
   end
 
   it "should have two subviews" do

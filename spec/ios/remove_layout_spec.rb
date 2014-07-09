@@ -1,6 +1,6 @@
-describe MotionKit::Layout do
+describe 'Remove views' do
   before do
-    @subject = TestRemoveLayout.new
+    @subject = TestRemoveLayout.new.build
   end
 
   it 'should remove the #label view' do
@@ -19,7 +19,6 @@ describe MotionKit::Layout do
     @subject.get(:view).should.be.kind_of(UIView)
     @subject.remove_view
     @subject.get(:view).should.be.nil
-    @subject.get(:image).should.be.nil
   end
 
 end

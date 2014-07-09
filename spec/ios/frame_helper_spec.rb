@@ -9,7 +9,7 @@ describe 'Frame helpers' do
     @view_size = CGSize.new(8, 10)
     @view = UIView.alloc.initWithFrame([[0, 0], @view_size])
     @view.backgroundColor = UIColor.whiteColor
-    @view.motion_kit_id = :view
+    @layout.name_element(@view, :view)
 
     @superview_size = CGSize.new(60, 40)
     @superview = UIView.alloc.initWithFrame([[0, 0], @superview_size])
@@ -18,7 +18,7 @@ describe 'Frame helpers' do
 
     @another_view = UIView.alloc.initWithFrame([[10, 100], [120, 48]])
     @another_view.backgroundColor = UIColor.redColor
-    @another_view.motion_kit_id = :another_view
+    @layout.name_element(@another_view, :another_view)
 
     top_view.addSubview(@another_view)
     top_view.addSubview(@superview)

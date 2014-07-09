@@ -13,10 +13,8 @@ describe 'Views frames should remain unchanged' do
   end
 
   it "top should be in the right position before and after reapply" do
-    NSLog("top frame before reapply = #{@subject.get(:top).frame.inspect}")
     @subject.get(:top).frame.should == CGRectMake(@cw/2 - 5, 0, 10, 10)
     @subject.reapply!
-    NSLog("top frame after reapply = #{@subject.get(:top).frame.inspect}")
     @subject.get(:top).frame.should == CGRectMake(@cw/2 - 5, 0, 10, 10)
   end
 
