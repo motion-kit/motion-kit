@@ -279,23 +279,23 @@ module MotionKit
       def axis_lookup(axis)
         case axis
         when :horizontal
-          axis = UILayoutConstraintAxisHorizontal
+          UILayoutConstraintAxisHorizontal
         when :vertical
-          axis = UILayoutConstraintAxisVertical
+          UILayoutConstraintAxisVertical
+        else
+          axis
         end
-
-        return axis
       end
 
       def orientation_lookup(orientation)
         case orientation
         when :horizontal
-          orientation = NSLayoutConstraintOrientationHorizontal
+          NSLayoutConstraintOrientationHorizontal
         when :vertical
-          orientation = NSLayoutConstraintOrientationVertical
+          NSLayoutConstraintOrientationVertical
+        else
+          orientation
         end
-
-        return orientation
       end
 
       def view_lookup(layout, view, target)
