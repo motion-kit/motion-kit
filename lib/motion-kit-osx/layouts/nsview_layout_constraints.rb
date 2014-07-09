@@ -21,7 +21,7 @@ module MotionKit
   class Layout
 
     def constraints(view=nil, &block)
-      if target
+      if has_context?
         apply(:constraints, view, &block)
       else
         context(self.view) do
