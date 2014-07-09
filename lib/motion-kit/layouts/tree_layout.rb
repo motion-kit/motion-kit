@@ -102,50 +102,25 @@ module MotionKit
         raise ContextConflictError.new("Already created the root view")
       end
 
-      @view, element_id = initialize_element(element, element_id)
+      @view = initialize_element(element, element_id)
+
       if block
         if @context
           raise ContextConflictError.new("Already in a context")
         end
-
-        context(@view) do
-          # We're just using the `create` method for its side effects: calling the
-          # style method and calling the block.
-          create(@view, element_id, &block)
-        end
-      elsif element_id
-        create(@view, element_id)
       end
+
+      style_and_context(@view, element_id, &block)
 
       return @view
     end
 
     # instantiates a view, possibly running a 'layout block' to add child views.
     def create(element, element_id=nil, &block)
-      element, element_id = initialize_element(element, element_id)
-
-      if element_id
-        # We set the optional id and call the '_style' method, if it's been
-        # defined.
-        name_element(element, element_id)
-        self.call_style_method(element, element_id)
-      end
-
-      if block
-        context(element, &block)
-      end
+      element = initialize_element(element, element_id)
+      style_and_context(element, element_id, &block)
 
       element
-    end
-
-    def call_style_method(element, element_id)
-      style_method = "#{element_id}_style"
-      if parent_layout.respond_to?(style_method)
-        parent_layout.context(element) do
-          parent_layout.send(style_method)
-        end
-      end
-      return element
     end
 
     # Calls the style method of all objects in the view hierarchy that are
@@ -157,7 +132,7 @@ module MotionKit
 
       @elements.each do |element_id, elements|
         elements.each do |element|
-          call_style_method(element, element_id)
+          style_and_context(element, element_id)
         end
       end
 
@@ -210,16 +185,15 @@ module MotionKit
       # make sure we have a target - raises NoContextError if none exists
       self.target
 
-      element, element_id = initialize_element(element, element_id)
       unless @context
         create_default_root_context
       end
-      self.apply(:add_child, element)
-      create(element, element_id)
 
-      if block
-        context(element, &block)
-      end
+      # We want to be sure that the element has a supeview or superlayer before
+      # the style method is called.
+      element = initialize_element(element, element_id)
+      self.apply(:add_child, element)
+      style_and_context(element, element_id, &block)
 
       element
     end
@@ -384,12 +358,32 @@ module MotionKit
       if layout
         if element_id
           name_element(layout, element_id)
-          element_id = nil
         end
         @child_layouts << layout
+      elsif element_id
+        name_element(elem, element_id)
       end
 
-      return elem, element_id
+      return elem
+    end
+
+    # Calls the `_style` method with the element as the context, and runs the
+    # optional block in that context.  This is usually done immediately after
+    # `initialize_element`, except in the case of `add`, which adds the item to
+    # the tree before styling it.
+    def style_and_context(element, element_id, &block)
+      style_method = "#{element_id}_style"
+      if parent_layout.respond_to?(style_method) || block_given?
+        parent_layout.context(element) do
+          if parent_layout.respond_to?(style_method)
+            parent_layout.send(style_method)
+          end
+
+          if block_given?
+            yield
+          end
+        end
+      end
     end
 
   end
