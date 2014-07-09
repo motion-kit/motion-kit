@@ -218,7 +218,7 @@ module MotionKit
     def get_view(element_id)
       element = get(element_id)
       if element.is_a?(Layout)
-        element = add_to_view.view
+        element = element.view
       end
       element
     end
@@ -238,7 +238,7 @@ module MotionKit
     def last_view(element_id)
       element = last(element_id)
       if element.is_a?(Layout)
-        element = add_to_view.view
+        element = element.view
       end
       element
     end
@@ -256,7 +256,7 @@ module MotionKit
     def all_views(element_id)
       element = all(element_id)
       if element.is_a?(Layout)
-        element = add_to_view.view
+        element = element.view
       end
       element
     end
@@ -271,7 +271,7 @@ module MotionKit
     def nth_view(element_id, index)
       element = nth(element_id)
       if element.is_a?(Layout)
-        element = add_to_view.view
+        element = element.view
       end
       element
     end
