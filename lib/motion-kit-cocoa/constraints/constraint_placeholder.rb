@@ -10,11 +10,11 @@ module MotionKit
     def resolve(layout)
       case @type
       when :first
-        layout.get(@name)
+        layout.get_view(@name)
       when :last
-        layout.last(@name)
+        layout.last_view(@name)
       when :nth
-        layout.nth(@name, @value)
+        layout.nth_view(@name, @value)
       end
     end
 

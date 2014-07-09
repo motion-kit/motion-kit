@@ -306,7 +306,7 @@ module MotionKit
         elsif target == :superview
           view.superview
         else
-          layout.get(target)
+          layout.get_view(target)
         end
       end
 

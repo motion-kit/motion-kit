@@ -32,10 +32,10 @@ module MotionKit
         ivar_name = "@#{name}"
         define_method(name) do
           unless instance_variable_get(ivar_name)
-            view = self.get(name)
+            view = self.get_view(name)
             unless view
               build_view unless @view
-              view = instance_variable_get(ivar_name) || self.get(name)
+              view = instance_variable_get(ivar_name) || self.get_view(name)
             end
             self.send("#{name}=", view)
             return view
@@ -239,6 +239,16 @@ module MotionKit
     end
     def first(element_id) ; get(element_id) ; end
 
+    # Just like `get`, but if `get` returns a Layout, this method returns the
+    # layout's view.
+    def get_view(element_id)
+      element = get(element_id)
+      if element.is_a?(Layout)
+        element = add_to_view.view
+      end
+      element
+    end
+
     # Retrieves a view by its element id.  This will return the *last* view with
     # this element_id in the tree, where *last* means the last object that was
     # added with assigned that name.
@@ -249,6 +259,16 @@ module MotionKit
       @elements[element_id] && @elements[element_id].last
     end
 
+    # Just like `last`, but if `last` returns a Layout, this method returns the
+    # layout's view.
+    def last_view(element_id)
+      element = last(element_id)
+      if element.is_a?(Layout)
+        element = add_to_view.view
+      end
+      element
+    end
+
     # Returns all the elements with a given element_id
     def all(element_id)
       unless is_parent_layout?
@@ -257,9 +277,29 @@ module MotionKit
       @elements[element_id] || []
     end
 
+    # Just like `all`, but if `all` returns a Layout, this method returns the
+    # layout's view.
+    def all_views(element_id)
+      element = all(element_id)
+      if element.is_a?(Layout)
+        element = add_to_view.view
+      end
+      element
+    end
+
     # Returns all the elements with a given element_id
     def nth(element_id, index)
       self.all(element_id)[index]
+    end
+
+    # Just like `nth`, but if `nth` returns a Layout, this method returns the
+    # layout's view.
+    def nth_view(element_id, index)
+      element = nth(element_id)
+      if element.is_a?(Layout)
+        element = add_to_view.view
+      end
+      element
     end
 
     # Removes a view (or several with the same name) from the hierarchy

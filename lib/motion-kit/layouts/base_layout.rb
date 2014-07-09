@@ -87,7 +87,7 @@ module MotionKit
       return parent_layout.context(target, &block) unless is_parent_layout?
 
       if target.is_a?(Symbol)
-        target = self.get(target)
+        target = self.get_view(target)
       end
 
       context_was, parent_was, delegate_was = @context, @parent, @layout_delegate
