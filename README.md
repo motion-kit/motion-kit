@@ -115,6 +115,8 @@ class SimpleLayout < MotionKit::Layout
   def button_style
     # this will call 'setTitle(forState:)' via a UIButton helper
     title 'Press it!'
+    size_to_fit
+
     # this shorthand is much better!  More about frame helpers below.
     center ['50%', '50% + 50']
   end
