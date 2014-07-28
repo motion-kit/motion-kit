@@ -2,17 +2,17 @@
 module MotionKit
   class NSViewLayout
 
-    def constraints(view=nil, &block)
-      view ||= target
-      if view.is_a?(Symbol)
-        view = self.get(view)
+    def constraints(add_to_view=nil, &block)
+      add_to_view ||= target
+      if add_to_view.is_a?(Symbol)
+        add_to_view = self.get_view(add_to_view)
       end
-      view.setTranslatesAutoresizingMaskIntoConstraints(false)
+      add_to_view.setTranslatesAutoresizingMaskIntoConstraints(false)
 
-      constraints_target = ConstraintsTarget.new(view)
+      constraints_target = ConstraintsTarget.new(add_to_view)
       deferred(constraints_target) do
         context(constraints_target, &block)
-        constraints_target.apply_all_constraints(self, view)
+        constraints_target.apply_all_constraints(self, add_to_view)
       end
     end
 
@@ -20,12 +20,12 @@ module MotionKit
 
   class Layout
 
-    def constraints(view=nil, &block)
-      if target
-        apply(:constraints, view, &block)
+    def constraints(add_to_view=nil, &block)
+      if has_context?
+        apply(:constraints, add_to_view, &block)
       else
         context(self.view) do
-          constraints(view, &block)
+          constraints(add_to_view, &block)
         end
       end
     end

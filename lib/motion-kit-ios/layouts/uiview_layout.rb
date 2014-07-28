@@ -19,23 +19,6 @@ module MotionKit
       subview.removeFromSuperview
     end
 
-    # UIViews AND CALayers are updated
-    def reapply!(root=nil)
-      if root.is_a?(CALayer)
-        @layout_state = :reapply
-        MotionKit.find_all_layers(root) do |layer|
-          call_style_method(layer, layer.motion_kit_id) if layer.motion_kit_id
-        end
-        @layout_state = :initial
-      else
-        root ||= self.view
-        reapply!(root.layer)
-        super(root)
-      end
-
-      return self
-    end
-
   end
 
   class UIViewLayout < Layout

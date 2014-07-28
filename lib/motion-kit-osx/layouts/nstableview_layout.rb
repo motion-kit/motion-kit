@@ -13,6 +13,8 @@ module MotionKit
       end
       target.addTableColumn(column)
       context(column, &block)
+
+      column
     end
     alias add_table_column add_column
 

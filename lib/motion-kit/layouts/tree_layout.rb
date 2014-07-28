@@ -32,10 +32,10 @@ module MotionKit
         ivar_name = "@#{name}"
         define_method(name) do
           unless instance_variable_get(ivar_name)
-            view = self.get(name)
+            view = self.get_view(name)
             unless view
               build_view unless @view
-              view = instance_variable_get(ivar_name) || self.get(name)
+              view = instance_variable_get(ivar_name) || self.get_view(name)
             end
             self.send("#{name}=", view)
             return view
@@ -48,20 +48,18 @@ module MotionKit
 
     end
 
-    # The main view.  This method builds the layout and returns the root view.
-    def view
-      if @layout != self
-        return @layout.view
-      end
-      @view ||= build_view
+    def initialize(args={})
+      super
+      @child_layouts = []
+      @elements = {}
     end
 
-    # For private use.  The "root" is context sensitive, whereas the "view" is
-    # constant.  In most cases they are the same object, but when you are
-    # building a hierarchy that is *outside* the view created from the "layout"
-    # method, the top-most view in that hierarchy will be "root".
-    def _root
-      @root || view
+    # The main view.  This method builds the layout and returns the root view.
+    def view
+      unless is_parent_layout?
+        return parent_layout.view
+      end
+      @view ||= build_view
     end
 
     # Builds the layout and then returns self for chaining.
@@ -104,59 +102,44 @@ module MotionKit
         raise ContextConflictError.new("Already created the root view")
       end
 
-      @view = initialize_element(element)
+      @view = initialize_element(element, element_id)
+
       if block
         if @context
           raise ContextConflictError.new("Already in a context")
         end
-
-        context(@view) do
-          # We're just using the `create` method for its side effects: calling the
-          # style method and calling the block.
-          create(@view, element_id, &block)
-        end
-      elsif element_id
-        create(@view, element_id)
       end
+
+      style_and_context(@view, element_id, &block)
 
       return @view
     end
 
     # instantiates a view, possibly running a 'layout block' to add child views.
     def create(element, element_id=nil, &block)
-      element = initialize_element(element)
-
-      if element_id
-        # We set the optional id and call the '_style' method, if it's been
-        # defined.
-        element.motion_kit_id = element_id
-        self.call_style_method(element, element_id)
-      end
-
-      if block
-        context(element, &block)
-      end
+      element = initialize_element(element, element_id)
+      style_and_context(element, element_id, &block)
 
       element
     end
 
-    def call_style_method(element, element_id)
-      style_method = "#{element_id}_style"
-      if @layout.respond_to?(style_method)
-        @layout.context(element) do
-          @layout.send(style_method)
-        end
-      end
-      return element
-    end
-
-    # Calls the style method of all objects in the view hierarchy
-    def reapply!(root=nil)
+    # Calls the style method of all objects in the view hierarchy that are
+    # part of this layout.  The views in a child layout are not styled, but
+    # those layouts will receive a `reapply!` message if no root is specified.
+    def reapply!
       root ||= self.view
       @layout_state = :reapply
-      MotionKit.find_all_views(root) do |view|
-        call_style_method(view, view.motion_kit_id) if view.motion_kit_id
+
+      @elements.each do |element_id, elements|
+        elements.each do |element|
+          style_and_context(element, element_id)
+        end
       end
+
+      @child_layouts.each do |child_layout|
+        child_layout.reapply!
+      end
+
       @layout_state = :initial
 
       return self
@@ -189,70 +172,93 @@ module MotionKit
       return self
     end
 
+    def name_element(element, element_id)
+      @elements[element_id] ||= []
+      @elements[element_id] << element
+    end
+
     # Instantiates a view via `create` and adds the view to the current target.
-    # If no view exists on the stack, a default root view can be created if that
-    # has been enabled.  The block is run in the context of the new view.
+    # If there is no context, a default root view can be created if that has
+    # been enabled (e.g. within the `layout` method).  The block is run in the
+    # context of the new view.
     def add(element, element_id=nil, &block)
       # make sure we have a target - raises NoContextError if none exists
       self.target
 
-      element = initialize_element(element)
       unless @context
         create_default_root_context
       end
-      self.apply(:add_child, element)
-      create(element, element_id)
 
-      if block
-        context(element, &block)
-      end
+      # We want to be sure that the element has a supeview or superlayer before
+      # the style method is called.
+      element = initialize_element(element, element_id)
+      self.apply(:add_child, element)
+      style_and_context(element, element_id, &block)
 
       element
     end
 
+    def child_layouts
+      @child_layouts
+    end
+
     # Retrieves a view by its element id.  This will return the *first* view
-    # with this element_id in the tree, where *first* means the view closest to
-    # the root view. Aliased to `first` to distinguish it from `last`.
+    # with this element_id in the tree, where *first* means the first object
+    # that was added with assigned that name.
     def get(element_id)
-      if @layout != self
-        return @layout.get(element_id)
+      unless is_parent_layout?
+        return parent_layout.get(element_id)
       end
-      self.get(element_id, in: self._root)
+      @elements[element_id] && @elements[element_id].first
     end
     def first(element_id) ; get(element_id) ; end
 
-    # Same as `get`, but with the root view specified.
-    def get(element_id, in: root)
-      MotionKit.find_first_view(root) { |view| view.motion_kit_id == element_id }
+    # Just like `get`, but if `get` returns a Layout, this method returns the
+    # layout's view.
+    def get_view(element_id)
+      element = get(element_id)
+      if element.is_a?(Layout)
+        element = element.view
+      end
+      element
     end
-    def first(element_id, in: root) ; get(element_id, in: root) ; end
 
-    # Retrieves a view by its element id.  This will return the *last* view
-    # with this element_id, where last means the view deepest and furthest from
-    # the root view.
+    # Retrieves a view by its element id.  This will return the *last* view with
+    # this element_id in the tree, where *last* means the last object that was
+    # added with assigned that name.
     def last(element_id)
-      if @layout != self
-        return @layout.last(element_id)
+      unless is_parent_layout?
+        return parent_layout.last(element_id)
       end
-      self.last(element_id, in: self._root)
+      @elements[element_id] && @elements[element_id].last
     end
 
-    # Same as `last`, but with the root view specified.
-    def last(element_id, in: root)
-      MotionKit.find_last_view(root) { |view| view.motion_kit_id == element_id }
+    # Just like `last`, but if `last` returns a Layout, this method returns the
+    # layout's view.
+    def last_view(element_id)
+      element = last(element_id)
+      if element.is_a?(Layout)
+        element = element.view
+      end
+      element
     end
 
-    # Returns all the elements with a given element_id in the view tree.
+    # Returns all the elements with a given element_id
     def all(element_id)
-      if @layout != self
-        return @layout.all(element_id)
+      unless is_parent_layout?
+        return parent_layout.all(element_id)
       end
-      self.all(element_id, in: self._root)
+      @elements[element_id] || []
     end
 
-    # Same as `all`, but with the root view specified.
-    def all(element_id, in: root)
-      MotionKit.find_all_views(root) { |view| view.motion_kit_id == element_id }
+    # Just like `all`, but if `all` returns a Layout, this method returns the
+    # layout's view.
+    def all_views(element_id)
+      element = all(element_id)
+      if element.is_a?(Layout)
+        element = element.view
+      end
+      element
     end
 
     # Returns all the elements with a given element_id
@@ -260,26 +266,27 @@ module MotionKit
       self.all(element_id)[index]
     end
 
-    # Same as `nth`, but with the root view specified.
-    def nth(element_id, at: index, in: root)
-      self.all(element_id, in: root)[index]
+    # Just like `nth`, but if `nth` returns a Layout, this method returns the
+    # layout's view.
+    def nth_view(element_id, index)
+      element = nth(element_id)
+      if element.is_a?(Layout)
+        element = element.view
+      end
+      element
     end
 
     # Removes a view (or several with the same name) from the hierarchy
     # and forgets it entirely.  Returns the views that were removed.
     def remove(element_id)
-      if @layout != self
-        return @layout.remove(element_id)
+      unless is_parent_layout?
+        return parent_layout.remove(element_id)
       end
-      self.remove(element_id, from: self._root)
-    end
-
-    # Same as `remove`, but with the root view specified.
-    def remove(element_id, from: root)
-      context(root) do
-        all(element_id).each do |subview|
-          self.apply(:remove_child, subview)
+      context(self.view) do
+        all(element_id).each do |element|
+          self.apply(:remove_child, element)
         end
+        @elements[element_id] = nil
       end
     end
 
@@ -297,12 +304,6 @@ module MotionKit
 
   protected
 
-    def preset_root
-      # Set in the initializer
-      # TreeLayout.new(root: some_view)
-      @preset_root
-    end
-
     # This method builds the layout and returns the root view.
     def build_view
       # Only in the 'layout' method will we allow default container to be
@@ -314,6 +315,7 @@ module MotionKit
       unless @view
         if @assign_root
           create_default_root_context
+          @view = @context
         else
           NSLog('Warning! No root view was set in TreeLayout#layout. Did you mean to call `root`?')
         end
@@ -326,18 +328,12 @@ module MotionKit
       # it's previous value
       @context = nil
 
+      if @preset_root
+        @view = WeakRef.new(@view)
+        @preset_root = nil
+      end
+
       @view
-    end
-
-    # This method needs to set the @root so that calls to `get(:id)` defer to
-    # the "current root", not the layout root view.
-    def run_deferred(top_level_context)
-      root_was = @root
-      @root = top_level_context
-      retval = super
-      @root = root_was
-
-      return retval
     end
 
     def layout
@@ -348,16 +344,46 @@ module MotionKit
     #
     # Accepts a view instance, a class (which is instantiated with 'new') or a
     # `ViewLayout`, which returns the root view.
-    def initialize_element(elem)
+    def initialize_element(elem, element_id)
       if elem.is_a?(Class) && elem < TreeLayout
-        elem = elem.new_child(@layout).view
+        layout = elem.new
+        elem = layout.view
       elsif elem.is_a?(Class)
         elem = elem.new
       elsif elem.is_a?(TreeLayout)
+        layout = elem
         elem = elem.view
       end
 
+      if layout
+        if element_id
+          name_element(layout, element_id)
+        end
+        @child_layouts << layout
+      elsif element_id
+        name_element(elem, element_id)
+      end
+
       return elem
+    end
+
+    # Calls the `_style` method with the element as the context, and runs the
+    # optional block in that context.  This is usually done immediately after
+    # `initialize_element`, except in the case of `add`, which adds the item to
+    # the tree before styling it.
+    def style_and_context(element, element_id, &block)
+      style_method = "#{element_id}_style"
+      if parent_layout.respond_to?(style_method) || block_given?
+        parent_layout.context(element) do
+          if parent_layout.respond_to?(style_method)
+            parent_layout.send(style_method)
+          end
+
+          if block_given?
+            yield
+          end
+        end
+      end
     end
 
   end

@@ -1,5 +1,8 @@
 # MotionKit
 
+[![Build Status](https://travis-ci.org/motion-kit/motion-kit.svg?branch=master)](https://travis-ci.org/motion-kit/motion-kit)
+[![Version](https://badge.fury.io/rb/motion-kit.svg)](https://rubygems.org/gems/motion-kit)
+
 *The RubyMotion layout and styling gem.*
 
 1. Crossplatform compatibility: iOS, OSX, and planned support for Android
@@ -112,6 +115,8 @@ class SimpleLayout < MotionKit::Layout
   def button_style
     # this will call 'setTitle(forState:)' via a UIButton helper
     title 'Press it!'
+    size_to_fit
+
     # this shorthand is much better!  More about frame helpers below.
     center ['50%', '50% + 50']
   end
@@ -262,6 +267,32 @@ class LoginLayout
 
 end
 ```
+
+
+### Using child-layouts
+
+If you have a very complicated layout that you want to break up into child
+layouts, that is supported as well:
+
+```ruby
+class ParentLayout < MK::Layout
+
+  def layout
+    add ChildLayout, :child_id
+  end
+
+end
+```
+
+The id is (as always) optional, but allows you to fetch the layout using
+`get(id)`.
+
+```ruby
+layout.get(:child_id)  # => ChildLayout
+```
+
+Calling `get(:child_id).view` will return the *view* associated with that
+layout.
 
 
 ### Setting a custom root view
