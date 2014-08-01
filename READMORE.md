@@ -114,7 +114,7 @@ end
 
 ## AutoLayout
 
-Since we don't have Interface Builder to help us create constaints (and since
+Since we don't have Interface Builder to help us create constraints (and since
 the ASCII format leaves much to be desired), many RubyMotion developers never
 bother to start using AutoLayout.  But with the number of resolutions always
 increasing, it's a good idea to start learning them.  They are here to stay!
