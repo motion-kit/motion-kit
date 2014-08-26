@@ -5,11 +5,11 @@
 # @provides MotionKit::ViewCalculator
 module MotionKit
   class ViewCalculator
-    include MotionKit::OriginCalculator
-    include MotionKit::SizeCalculator
-    include MotionKit::FrameCalculator
+    extend MotionKit::OriginCalculator
+    extend MotionKit::SizeCalculator
+    extend MotionKit::FrameCalculator
 
-    def calculate(view, dimension, amount, full_view=nil)
+    def self.calculate(view, dimension, amount, full_view=nil)
       if amount.is_a? Proc
         return view.instance_exec(&amount)
       elsif dimension == :origin || dimension == :center
@@ -35,7 +35,7 @@ module MotionKit
       end
     end
 
-    def intrinsic_size(view)
+    def self.intrinsic_size(view)
       size_that_fits = view.intrinsicContentSize
       if size_that_fits.width == MotionKit.no_intrinsic_metric
         size_that_fits.width = 0
