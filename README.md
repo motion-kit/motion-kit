@@ -621,6 +621,8 @@ constraints do
   # setting the priority:
   (x.is >= 10).priority(:required)
   (x.is == 15).priority(:low)
+  # setting the identifier
+  x.equals(15).identifier('foo')
 end
 ```
 
@@ -629,7 +631,9 @@ the element-id as a placeholder for a view works especially well here.
 
 ```ruby
 constraints do
-  top_left.equals x: 5, y:5
+  top_left.equals x: 5, y: 5     # this sets the origin relative to the superview
+  top_left.equals(:superview).plus([5, 5])  # this will do the same thing!
+
   width.equals(:foo).minus(10)  # searches for a view named :foo
   height.equals(:foo).minus(10)
   # that's repetitive, so just set 'size'
