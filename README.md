@@ -644,7 +644,7 @@ constraints do
   # you can use :scale to have the width or height adjusted according to the
   # other size
   width.equals(:superview)
-  height.equals(:scale)  # scale the height according to the width
+  height(:scale)  # scale the height according to the width
 end
 ```
 
