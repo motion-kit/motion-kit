@@ -20,7 +20,7 @@
 7. Styles and layouts are "just code" (not hash-based like in Teacup)
 8. Written by [the authors][authors] of [ProMotion][] and [Teacup][]
 
-[authors]: CONTRIBUTORS.md
+[authors]: CONTRIBUTORS.yaml
 [Colin]: https://github.com/colinta
 [Jamon]: https://github.com/jamonholmgren
 [ProMotion]: https://github.com/clearsightstudio/ProMotion
