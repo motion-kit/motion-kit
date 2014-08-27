@@ -276,7 +276,18 @@ module MotionKit
     def target_constraint(attribute, relationship, value=nil, constraint_class=nil)
       constraint_class ||= Constraint
       constraint = constraint_class.new(constraint_target.view, attribute, relationship)
-      constraint.equals(value) if value
+      if value == :scale
+        size = ViewCalculator.intrinsic_size(constraint_target.view)
+        if attribute == :width
+          constraint.equals(:self, :height).times(size.width / size.height)
+        elsif attribute == :height
+          constraint.equals(:self, :width).times(size.height / size.width)
+        else
+          raise "Cannot apply :scale relationship to #{attribute}"
+        end
+      elsif value
+        constraint.equals(value)
+      end
       constraint_target.add_constraints([constraint])
       constraint
     end

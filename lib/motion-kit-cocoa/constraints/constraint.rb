@@ -303,6 +303,8 @@ module MotionKit
           target
         elsif target.is_a?(ConstraintPlaceholder)
           target.resolve(layout)
+        elsif target == :self
+          view
         elsif target == :superview
           view.superview
         else
