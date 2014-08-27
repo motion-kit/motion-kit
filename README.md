@@ -738,6 +738,58 @@ class MainController < UIViewController
 end
 ```
 
+#### Animating and Changing constraints
+
+It might feel natural to treat constraints as "frame setters", but they are
+persistent objects that are attached to your views.  This means if you create
+new constraints, like during a screen rotation, your old constraints don't “go
+away”.  For example:
+
+```ruby
+def label_style
+  portrait do
+    left 10
+  end
+
+  landscape do
+    left 15  # adds *another* constraint on the left attribute - in addition to the `left 10` constraint!
+  end
+end
+```
+
+Instead, you should retain the constraint and make changes to it directly:
+
+```ruby
+  initial do
+    constraints do
+      @label_left_constraint = left 10
+    end
+  end
+
+  reapply do
+    portrait do
+      @label_left_constraint.equals 10
+    end
+
+    landscape do
+      @label_left_constraint.equals 15
+    end
+  end
+```
+
+If you want to animate a constraint change, you can use `layoutIfNeeded` from
+within a UIView animation block.  The sample app "Chatty" does this to move a
+text field when the keyboard is displayed.  `kbd_height` is the height of the
+keyboard.
+
+```ruby
+@container_bottom.minus kbd_height  # set @container_bottom.constant = 0 when the keyboard disappears
+
+UIView.animateWithDuration(duration, delay: 0, options: curve, animations: -> do
+  self.view.layoutIfNeeded  # applies the constraint change
+end, completion: nil)
+```
+
 ### MotionKit::Events
 
     gem install motion-kit-events
