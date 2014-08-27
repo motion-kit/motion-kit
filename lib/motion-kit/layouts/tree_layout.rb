@@ -28,22 +28,31 @@ module MotionKit
       #       end
       #
       #     end
-      def view(name)
-        ivar_name = "@#{name}"
-        define_method(name) do
-          unless instance_variable_get(ivar_name)
-            view = self.get_view(name)
-            unless view
-              build_view unless @view
-              view = instance_variable_get(ivar_name) || self.get_view(name)
+      #
+      # You can also set multiple views in a single line.
+      #
+      # @example
+      #     class MyLayout < MK::Layout
+      #       view :label, :login_button
+      #     end
+      def view(*names)
+        names.each do |name|
+          ivar_name = "@#{name}"
+          define_method(name) do
+            unless instance_variable_get(ivar_name)
+              view = self.get_view(name)
+              unless view
+                build_view unless @view
+                view = instance_variable_get(ivar_name) || self.get_view(name)
+              end
+              self.send("#{name}=", view)
+              return view
             end
-            self.send("#{name}=", view)
-            return view
+            return instance_variable_get(ivar_name)
           end
-          return instance_variable_get(ivar_name)
+          # KVO compliance
+          attr_writer name
         end
-        # KVO compliance
-        attr_writer name
       end
 
     end
