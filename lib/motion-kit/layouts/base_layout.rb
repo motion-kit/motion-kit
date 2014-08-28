@@ -306,7 +306,7 @@ module MotionKit
             end
           else
             target.motion_kit_meta[running_name] = true
-            retval = apply(method_name, *args)
+            retval = apply(method_name, *args, &block)
             target.motion_kit_meta[running_name] = false
             return retval
           end
