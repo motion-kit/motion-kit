@@ -639,6 +639,12 @@ constraints do
   # that's repetitive, so just set 'size'
   size.equals(:foo).minus(10)
   size.equals(:foo).minus([10, 15])  # 10pt thinner, 15pt shorter
+
+  # if you are using a view that has a sensible intrinsic size, like an image,
+  # you can use :scale to have the width or height adjusted according to the
+  # other size
+  width.equals(:superview)
+  height(:scale)  # scale the height according to the width
 end
 ```
 

@@ -74,7 +74,6 @@ module MotionKit
     def ==(compare)
       if @compare_flag
         equals(compare)
-        @compare_flag = false
 
         self
       else
@@ -89,7 +88,6 @@ module MotionKit
         end
 
         gte(compare)
-        @compare_flag = false
 
         self
       else
@@ -104,7 +102,6 @@ module MotionKit
         end
 
         lte(compare)
-        @compare_flag = false
 
         self
       else
@@ -303,6 +300,8 @@ module MotionKit
           target
         elsif target.is_a?(ConstraintPlaceholder)
           target.resolve(layout)
+        elsif target == :self
+          view
         elsif target == :superview
           view.superview
         else
