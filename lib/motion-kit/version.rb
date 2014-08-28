@@ -1,3 +1,3 @@
 module MotionKit
-  VERSION = '0.10.11'
+  VERSION = '0.11.0'
 end
