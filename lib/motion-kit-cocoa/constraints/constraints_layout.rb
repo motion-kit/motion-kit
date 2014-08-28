@@ -22,134 +22,134 @@ module MotionKit
       ConstraintPlaceholder.new(:nth, name, value)
     end
 
-    def x(value=nil)
-      target_constraint(:left, :equal, value)
+    def x(value=nil, rel=:equal)
+      target_constraint(:left, rel, value)
     end
     alias left x
 
     def min_x(value=nil)
-      target_constraint(:left, :gte, value)
+      x(value, :gte)
     end
     alias min_left min_x
 
     def max_x(value=nil)
-      target_constraint(:left, :lte, value)
+      x(value, :lte)
     end
     alias max_left max_x
 
-    def leading(value=nil)
-      target_constraint(:leading, :equal, value)
+    def leading(value=nil, rel=:equal)
+      target_constraint(:leading, rel, value)
     end
 
     def min_leading(value=nil)
-      target_constraint(:leading, :gte, value)
+      leading(value, :gte)
     end
 
     def max_leading(value=nil)
-      target_constraint(:leading, :lte, value)
+      leading(value, :lte)
     end
 
-    def center_x(value=nil)
-      target_constraint(:center_x, :equal, value)
+    def center_x(value=nil, rel=:equal)
+      target_constraint(:center_x, rel, value)
     end
 
     def min_center_x(value=nil)
-      target_constraint(:center_x, :gte, value)
+      center_x(value, :gte)
     end
 
     def max_center_x(value=nil)
-      target_constraint(:center_x, :lte, value)
+      center_x(value, :lte)
     end
 
-    def right(value=nil)
-      target_constraint(:right, :equal, value)
+    def right(value=nil, rel=:equal)
+      target_constraint(:right, rel, value)
     end
 
     def min_right(value=nil)
-      target_constraint(:right, :gte, value)
+      right(value, :gte)
     end
 
     def max_right(value=nil)
-      target_constraint(:right, :lte, value)
+      right(value, :lte)
     end
 
-    def trailing(value=nil)
-      target_constraint(:trailing, :equal, value)
+    def trailing(value=nil, rel=:equal)
+      target_constraint(:trailing, rel, value)
     end
 
     def min_trailing(value=nil)
-      target_constraint(:trailing, :gte, value)
+      trailing(value, :gte)
     end
 
     def max_trailing(value=nil)
-      target_constraint(:trailing, :lte, value)
+      trailing(value, :lte)
     end
 
-    def y(value=nil)
-      target_constraint(:top, :equal, value)
+    def y(value=nil, rel=:equal)
+      target_constraint(:top, rel, value)
     end
     alias top y
 
     def min_y(value=nil)
-      target_constraint(:top, :gte, value)
+      y(value, :gte)
     end
     alias min_top min_y
 
     def max_y(value=nil)
-      target_constraint(:top, :lte, value)
+      y(value, :lte)
     end
     alias max_top max_y
 
-    def center_y(value=nil)
-      target_constraint(:center_y, :equal, value)
+    def center_y(value=nil, rel=:equal)
+      target_constraint(:center_y, rel, value)
     end
 
     def min_center_y(value=nil)
-      target_constraint(:center_y, :gte, value)
+      center_y(value, :gte)
     end
 
     def max_center_y(value=nil)
-      target_constraint(:center_y, :lte, value)
+      center_y(value, :lte)
     end
 
-    def bottom(value=nil)
-      target_constraint(:bottom, :equal, value)
+    def bottom(value=nil, rel=:equal)
+      target_constraint(:bottom, rel, value)
     end
 
     def min_bottom(value=nil)
-      target_constraint(:bottom, :gte, value)
+      bottom(value, :gte)
     end
 
     def max_bottom(value=nil)
-      target_constraint(:bottom, :lte, value)
+      bottom(value, :lte)
     end
 
-    def baseline(value=nil)
-      target_constraint(:baseline, :equal, value)
+    def baseline(value=nil, rel=:equal)
+      target_constraint(:baseline, rel, value)
     end
 
     def min_baseline(value=nil)
-      target_constraint(:baseline, :gte, value)
+      baseline(value, :gte)
     end
 
     def max_baseline(value=nil)
-      target_constraint(:baseline, :lte, value)
+      baseline(value, :lte)
     end
 
-    def width(value=nil)
-      target_constraint(:width, :equal, value)
+    def width(value=nil, rel=:equal)
+      target_constraint(:width, rel, value)
     end
     alias w width
 
     def min_width(value=nil)
-      target_constraint(:width, :gte, value)
+      width(value, :gte)
     end
 
     def max_width(value=nil)
-      target_constraint(:width, :lte, value)
+      width(value, :lte)
     end
 
-    def height(value=nil)
+    def height(value=nil, rel=:equal)
       target_constraint(:height, :equal, value)
     end
     alias h height
@@ -162,45 +162,79 @@ module MotionKit
       target_constraint(:height, :lte, value)
     end
 
-    def size(value=nil)
-      target_constraint(:size, :equal, value, SizeConstraint)
+    def size(value=nil, rel=:equal)
+      target_constraint(:size, rel, value, SizeConstraint)
     end
 
     def min_size(value=nil)
-      target_constraint(:size, :gte, value, SizeConstraint)
+      size(value, :gte)
     end
 
     def max_size(value=nil)
-      target_constraint(:size, :lte, value, SizeConstraint)
+      size(value, :lte)
     end
 
-    def center(value=nil)
-      target_constraint([:center_x, :center_y], :equal, value, PointConstraint)
+    def center(value=nil, rel=:equal)
+      target_constraint([:center_x, :center_y], rel, value, PointConstraint)
     end
 
     def min_center(value=nil)
-      target_constraint([:center_x, :center_y], :gte, value, PointConstraint)
+      center(value, :gte)
     end
 
     def max_center(value=nil)
-      target_constraint([:center_x, :center_y], :lte, value, PointConstraint)
+      center(value, :lte)
     end
 
-    def top_left(value=nil)
-      target_constraint([:left, :top], :equal, value, PointConstraint)
+    def top_left(value=nil, rel=:equal)
+      target_constraint([:left, :top], rel, value, PointConstraint)
     end
     alias origin top_left
 
-    def top_right(value=nil)
-      target_constraint([:right, :top], :equal, value, PointConstraint)
+    def min_top_left(value=nil)
+      top_left(value, :gte)
+    end
+    alias min_origin min_top_left
+
+    def max_top_left(value=nil)
+      top_left(value, :lte)
+    end
+    alias max_origin max_top_left
+
+    def top_right(value=nil, rel=:equal)
+      target_constraint([:right, :top], rel, value, PointConstraint)
     end
 
-    def bottom_left(value=nil)
-      target_constraint([:left, :bottom], :equal, value, PointConstraint)
+    def min_top_right(value=nil)
+      top_right(value, :gte)
     end
 
-    def bottom_right(value=nil)
-      target_constraint([:right, :bottom], :equal, value, PointConstraint)
+    def max_top_right(value=nil)
+      top_right(value, :lte)
+    end
+
+    def bottom_left(value=nil, rel=:equal)
+      target_constraint([:left, :bottom], rel, value, PointConstraint)
+    end
+
+    def min_bottom_left(value=nil)
+      bottom_left(value, :gte)
+    end
+
+    def max_bottom_left(value=nil)
+      bottom_left(value, :lte)
+    end
+
+    def bottom_right(value=nil, rel=:equal)
+      target_constraint([:right, :bottom], rel, value, PointConstraint)
+    end
+
+    def min_bottom_right(value=nil)
+      bottom_right(value, :gte)
+    end
+
+    def max_bottom_right(value=nil)
+      bottom_right(value, :lte)
     end
 
     def above(view)
