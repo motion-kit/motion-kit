@@ -422,9 +422,17 @@ module MotionKit
 end
 ```
 
-For your own custom classes, or built-in classes that don't already have a
-`Layout` class defined, you can provide a Layout class by calling the `targets`
-method in your class body.
+### Adding your own helper methods
+
+For your own custom classes, or when you want to write
+helper methods for a built-in class, you will need to write a class that
+"`targets`" that class.  This will be a subclass of `MK::UIViewLayout`; it looks
+and *feels* like a `MK::Layout` subclass, but these classes are used to extend
+the MotionKit DSL, and should not be instantiated or used to build layouts.
+
+Again, to be clear: you should be subclassing `MK::Layout` when you build your
+controller layouts, and you should write a subclass of `MK::UIViewLayout` *only*
+when you are adding extensions to the MotionKit DSL.
 
 ```ruby
 # Be sure to extend an existing Layout class, otherwise you'll lose a lot of
