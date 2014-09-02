@@ -179,13 +179,16 @@ module MotionKit
     def objc_version(method_name, args)
       if method_name.count(':') > 1
         objc_method_name = method_name
-        objc_method_args = [args[0]].concat args[1].values
       elsif args.length == 2 && args[1].is_a?(Hash) && !args[1].empty?
         objc_method_name = "#{method_name}:#{args[1].keys.join(':')}:"
+      else
+        return nil, nil
+      end
+
+      if args[1].is_a?(Hash)
         objc_method_args = [args[0]].concat args[1].values
       else
-        objc_method_name = nil
-        objc_method_args = nil
+        objc_method_args = args
       end
       return objc_method_name, objc_method_args
     end
