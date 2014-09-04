@@ -13,7 +13,7 @@ describe 'Relative Layouts' do
       @subject.get(:test).frame.origin.y.should == 0
     end
     it "with frame w = h = 100" do
-      @subject.get(:test).frame.size.width.should == 320 # how do I best set this to 100% of the screen, in case future simulators have higher resolution?
+      @subject.get(:test).frame.size.width.should == UIScreen.mainScreen.bounds.size.width
       @subject.get(:test).frame.size.height.should == 100
     end
   end
@@ -24,7 +24,7 @@ describe 'Relative Layouts' do
       @subject.get(:test2).frame.origin.y.should == 100
     end
     it "with frame w = 100, h = 50" do
-      @subject.get(:test2).frame.size.width.should == 320 # how do I best set this to 100% of the screen, in case future simulators have higher resolution?
+      @subject.get(:test2).frame.size.width.should == UIScreen.mainScreen.bounds.size.width
       @subject.get(:test2).frame.size.height.should == 50
     end
   end

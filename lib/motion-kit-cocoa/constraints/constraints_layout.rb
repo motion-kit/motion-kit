@@ -22,7 +22,7 @@ module MotionKit
       ConstraintPlaceholder.new(:nth, name, value)
     end
 
-    def x(value=nil, rel=:equal)
+    def x(value=nil, rel=nil)
       target_constraint(:left, rel, value)
     end
     alias left x
@@ -37,7 +37,7 @@ module MotionKit
     end
     alias max_left max_x
 
-    def leading(value=nil, rel=:equal)
+    def leading(value=nil, rel=nil)
       target_constraint(:leading, rel, value)
     end
 
@@ -49,7 +49,7 @@ module MotionKit
       leading(value, :lte)
     end
 
-    def center_x(value=nil, rel=:equal)
+    def center_x(value=nil, rel=nil)
       target_constraint(:center_x, rel, value)
     end
 
@@ -61,7 +61,7 @@ module MotionKit
       center_x(value, :lte)
     end
 
-    def right(value=nil, rel=:equal)
+    def right(value=nil, rel=nil)
       target_constraint(:right, rel, value)
     end
 
@@ -73,7 +73,7 @@ module MotionKit
       right(value, :lte)
     end
 
-    def trailing(value=nil, rel=:equal)
+    def trailing(value=nil, rel=nil)
       target_constraint(:trailing, rel, value)
     end
 
@@ -85,7 +85,7 @@ module MotionKit
       trailing(value, :lte)
     end
 
-    def y(value=nil, rel=:equal)
+    def y(value=nil, rel=nil)
       target_constraint(:top, rel, value)
     end
     alias top y
@@ -100,7 +100,7 @@ module MotionKit
     end
     alias max_top max_y
 
-    def center_y(value=nil, rel=:equal)
+    def center_y(value=nil, rel=nil)
       target_constraint(:center_y, rel, value)
     end
 
@@ -112,7 +112,7 @@ module MotionKit
       center_y(value, :lte)
     end
 
-    def bottom(value=nil, rel=:equal)
+    def bottom(value=nil, rel=nil)
       target_constraint(:bottom, rel, value)
     end
 
@@ -124,7 +124,7 @@ module MotionKit
       bottom(value, :lte)
     end
 
-    def baseline(value=nil, rel=:equal)
+    def baseline(value=nil, rel=nil)
       target_constraint(:baseline, rel, value)
     end
 
@@ -136,7 +136,7 @@ module MotionKit
       baseline(value, :lte)
     end
 
-    def width(value=nil, rel=:equal)
+    def width(value=nil, rel=nil)
       target_constraint(:width, rel, value)
     end
     alias w width
@@ -149,7 +149,7 @@ module MotionKit
       width(value, :lte)
     end
 
-    def height(value=nil, rel=:equal)
+    def height(value=nil, rel=nil)
       target_constraint(:height, :equal, value)
     end
     alias h height
@@ -162,7 +162,7 @@ module MotionKit
       target_constraint(:height, :lte, value)
     end
 
-    def size(value=nil, rel=:equal)
+    def size(value=nil, rel=nil)
       target_constraint(:size, rel, value, SizeConstraint)
     end
 
@@ -174,7 +174,7 @@ module MotionKit
       size(value, :lte)
     end
 
-    def center(value=nil, rel=:equal)
+    def center(value=nil, rel=nil)
       target_constraint([:center_x, :center_y], rel, value, PointConstraint)
     end
 
@@ -186,7 +186,7 @@ module MotionKit
       center(value, :lte)
     end
 
-    def top_left(value=nil, rel=:equal)
+    def top_left(value=nil, rel=nil)
       target_constraint([:left, :top], rel, value, PointConstraint)
     end
     alias origin top_left
@@ -201,7 +201,7 @@ module MotionKit
     end
     alias max_origin max_top_left
 
-    def top_right(value=nil, rel=:equal)
+    def top_right(value=nil, rel=nil)
       target_constraint([:right, :top], rel, value, PointConstraint)
     end
 
@@ -213,7 +213,7 @@ module MotionKit
       top_right(value, :lte)
     end
 
-    def bottom_left(value=nil, rel=:equal)
+    def bottom_left(value=nil, rel=nil)
       target_constraint([:left, :bottom], rel, value, PointConstraint)
     end
 
@@ -225,7 +225,7 @@ module MotionKit
       bottom_left(value, :lte)
     end
 
-    def bottom_right(value=nil, rel=:equal)
+    def bottom_right(value=nil, rel=nil)
       target_constraint([:right, :bottom], rel, value, PointConstraint)
     end
 

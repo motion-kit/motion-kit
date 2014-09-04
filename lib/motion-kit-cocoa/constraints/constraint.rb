@@ -59,6 +59,8 @@ module MotionKit
     # <=, and >=
     #
     # @example
+    #     x.is(10)
+    #     x.is(10).priority(:required)
     #     x.is == 10
     #     (x.is == 10).priority :required
     #     width.is >= 100
@@ -83,7 +85,7 @@ module MotionKit
 
     def >=(compare)
       if @compare_flag
-        if @relationship && Constraint.relationship_lookup(@relationship) != NSLayoutRelationEqual
+        if @relationship && Constraint.relationship_lookup(@relationship) != NSLayoutRelationGreaterThanOrEqual
           raise InvalidRelationshipError.new("You cannot use `.is >=` on a constraint that is already defined as #{@relationship}")
         end
 
@@ -97,7 +99,7 @@ module MotionKit
 
     def <=(compare)
       if @compare_flag
-        if @relationship && Constraint.relationship_lookup(@relationship) != NSLayoutRelationEqual
+        if @relationship && Constraint.relationship_lookup(@relationship) != NSLayoutRelationLessThanOrEqual
           raise InvalidRelationshipError.new("You cannot use `.is <=` on a constraint that is already defined as #{@relationship}")
         end
 
@@ -249,12 +251,15 @@ module MotionKit
       @resolved ||= begin
         item = Constraint.view_lookup(layout, view, self.target)
         rel_item = Constraint.view_lookup(layout, view, self.relative_to)
+        relationship = Constraint.relationship_lookup(self.relationship)
+        attribute1 = Constraint.attribute_lookup(self.attribute)
+        attribute2 = Constraint.attribute_lookup(self.attribute2)
 
         nsconstraint = NSLayoutConstraint.constraintWithItem(item,
-          attribute: Constraint.attribute_lookup(self.attribute),
-          relatedBy: Constraint.relationship_lookup(self.relationship),
+          attribute: attribute1,
+          relatedBy: relationship,
           toItem: rel_item,
-          attribute: Constraint.attribute_lookup(self.attribute2),
+          attribute: attribute2,
           multiplier: self.multiplier,
           constant: self.constant
           )
@@ -552,13 +557,15 @@ module MotionKit
       @resolved ||= begin
         item = Constraint.view_lookup(layout, view, self.target)
         rel_item = Constraint.view_lookup(layout, view, self.relative_to)
+        relationship = Constraint.relationship_lookup(self.relationship)
 
-        [[:width, 0], [:height, 1]].map do |attribute, index|
+        [[:width, 0], [:height, 1]].map do |attr_name, index|
+          attribute = Constraint.attribute_lookup(attr_name)
           nsconstraint = NSLayoutConstraint.constraintWithItem(item,
-            attribute: Constraint.attribute_lookup(attribute),
-            relatedBy: Constraint.relationship_lookup(self.relationship),
+            attribute: attribute,
+            relatedBy: relationship,
             toItem: rel_item,
-            attribute: Constraint.attribute_lookup(attribute),
+            attribute: attribute,
             multiplier: self.multiplier[index],
             constant: self.constant[index]
             )
@@ -732,17 +739,20 @@ module MotionKit
       @resolved ||= begin
         item = Constraint.view_lookup(layout, view, self.target)
         rel_item = Constraint.view_lookup(layout, view, self.relative_to)
+        relationship = Constraint.relationship_lookup(self.relationship)
 
         [0, 1].map do |index|
           attribute = Constraint.attribute_lookup(self.attribute[index])
+          mul = self.multiplier[index]
+          const = self.constant[index]
 
           nsconstraint = NSLayoutConstraint.constraintWithItem(item,
             attribute: attribute,
-            relatedBy: Constraint.relationship_lookup(self.relationship),
+            relatedBy: relationship,
             toItem: rel_item,
             attribute: attribute,
-            multiplier: self.multiplier[index],
-            constant: self.constant[index]
+            multiplier: mul,
+            constant: const
             )
 
           if self.priority
