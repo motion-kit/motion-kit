@@ -730,7 +730,9 @@ module MotionKit
 
     def update_constraint
       if @resolved
-        @resolved.each do
+        [0, 1].each do |index|
+          constraint = @resolved[index]
+          constraint.constant = self.constant[index]
         end
       end
     end
