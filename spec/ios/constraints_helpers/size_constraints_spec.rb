@@ -3,13 +3,14 @@ describe 'Constraints - Size helpers' do
   before do
     @layout = MK::Layout.new
     @constraint = nil
-    @superview = nil
-    @view = nil
+    @view = UIView.new
+    @parent_view = UIView.new
+    @parent_view.addSubview(@view)
     @another_view = nil
   end
 
   it 'should support `size 10`' do
-    @view = @layout.context(UIView.new) do
+    @layout.context(@view) do
       @layout.constraints do
         @constraint = @layout.size(10)
       end
@@ -317,7 +318,7 @@ describe 'Constraints - Size helpers' do
     @constraint.attribute2.should == [:width, :height]
   end
   it 'should support `max_size("50%")`' do
-    @superview = @layout.context(UIView.new) do
+    @layout.context(@parent_view) do
       @view = @layout.add(UIView.new) do
         @layout.constraints do
           @constraint = @layout.max_size('50%')
@@ -333,7 +334,7 @@ describe 'Constraints - Size helpers' do
     @constraint.attribute2.should == [:width, :height]
   end
   it 'should support `max_size("50% + 1").of(:another_view)`' do
-    @superview = @layout.context(UIView.new) do
+    @layout.context(@parent_view) do
       @view = @layout.add(UIView.new) do
         @layout.constraints do
           @constraint = @layout.max_size('50% + 1').of(:another_view)
