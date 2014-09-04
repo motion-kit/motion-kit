@@ -1,5 +1,5 @@
 # @provides MotionKit::MenuLayout
-# @provides MotionKit::NSMenuLayout
+# @provides MotionKit::NSMenuHelpers
 # @requires MotionKit::TreeLayout
 module MotionKit
   class MenuLayout < TreeLayout
@@ -103,7 +103,7 @@ module MotionKit
 
   end
 
-  class NSMenuLayout < MenuLayout
+  class NSMenuHelpers < MenuLayout
     targets NSMenu
   end
 end

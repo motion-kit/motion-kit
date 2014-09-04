@@ -1,6 +1,6 @@
-describe TestLayerLayout do
+describe TestLayerHelpers do
   before do
-    @subject = TestLayerLayout.new
+    @subject = TestLayerHelpers.new
   end
 
   it 'should create a CALayer root' do
@@ -13,7 +13,7 @@ describe TestLayerLayout do
 
   describe 'should have styled sublayers' do
     before do
-      @subject = TestLayerLayout.new
+      @subject = TestLayerHelpers.new
     end
 
     it 'should have a CALayer' do

@@ -1,5 +1,5 @@
 # @provides MotionKit::Layout
-# @provides MotionKit::UIViewLayout
+# @provides MotionKit::UIViewHelpers
 # @requires MotionKit::TreeLayout
 module MotionKit
   class Layout < TreeLayout
@@ -21,7 +21,7 @@ module MotionKit
 
   end
 
-  class UIViewLayout < Layout
+  class UIViewHelpers < Layout
     targets UIView
   end
 

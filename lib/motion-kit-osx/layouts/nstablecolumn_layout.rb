@@ -1,7 +1,7 @@
-# @provides MotionKit::NSTableColumnLayout
+# @provides MotionKit::NSTableColumnHelpers
 # @requires MotionKit::BaseLayout
 module MotionKit
-  class NSTableColumnLayout < BaseLayout
+  class NSTableColumnHelpers < BaseLayout
     targets NSTableColumn
 
     def title(value)

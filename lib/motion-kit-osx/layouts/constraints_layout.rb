@@ -1,6 +1,6 @@
-# @requires MotionKit::NSViewLayout
+# @requires MotionKit::NSViewHelpers
 module MotionKit
-  class NSViewLayout
+  class NSViewHelpers
 
     def content_compression_resistance_priority(value, for_orientation: orientation)
       orientation = Constraint.orientation_lookup(orientation)

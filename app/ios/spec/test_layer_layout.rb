@@ -1,4 +1,4 @@
-class TestLayerLayout < MK::CALayerLayout
+class TestLayerHelpers < MK::CALayerHelpers
 
   def layout
     add CALayer, do

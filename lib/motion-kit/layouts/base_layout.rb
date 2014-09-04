@@ -84,7 +84,7 @@ module MotionKit
     #       # passing a block to a method that returns an object. That object becomes
     #       # the new context.
     #       layer do
-    #         # self is now a CALayerLayout instance
+    #         # target is now a CALayer, and methods are delegated to CALayerHelpers
     #         corner_radius 5
     #       end
     #     end

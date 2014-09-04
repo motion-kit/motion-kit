@@ -1,6 +1,6 @@
-# @requires MotionKit::UIViewLayout
+# @requires MotionKit::UIViewHelpers
 module MotionKit
-  class UIViewLayout
+  class UIViewHelpers
 
     def constraints(add_to_view=nil, &block)
       add_to_view ||= target

@@ -1,6 +1,6 @@
-# @requires MotionKit::NSViewLayout
+# @requires MotionKit::NSViewHelpers
 module MotionKit
-  class NSViewLayout
+  class NSViewHelpers
 
     def autoresizing_mask(*values)
       value = 0

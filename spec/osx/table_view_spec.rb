@@ -1,4 +1,4 @@
-describe MotionKit::NSTableViewLayout do
+describe MotionKit::NSTableViewHelpers do
 
   before do
     @layout = TestTableColumnLayout.new.build

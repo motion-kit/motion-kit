@@ -1,8 +1,8 @@
-# @provides MotionKit::ConstraintsLayout
+# @provides MotionKit::ConstraintsHelpers
 # @requires MotionKit::BaseLayout
 # @requires MotionKit::ConstraintsTarget
 module MotionKit
-  class ConstraintsLayout < BaseLayout
+  class ConstraintsHelpers < BaseLayout
     targets ConstraintsTarget
 
     # A more sensible name for the constraint that is created.

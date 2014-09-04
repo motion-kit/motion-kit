@@ -1,7 +1,7 @@
-# @provides MotionKit::NSTableViewLayout
-# @requires MotionKit::NSViewLayout
+# @provides MotionKit::NSTableViewHelpers
+# @requires MotionKit::NSViewHelpers
 module MotionKit
-  class NSTableViewLayout < NSViewLayout
+  class NSTableViewHelpers < NSViewHelpers
     targets NSTableView
 
     def add_column(column_or_identifier, &block)

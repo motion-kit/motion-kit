@@ -1,6 +1,6 @@
-# @requires MotionKit::NSViewLayout
+# @requires MotionKit::NSViewHelpers
 module MotionKit
-  class NSViewLayout
+  class NSViewHelpers
 
     def _fix_frame_value(value)
       if value.is_a?(Hash) && value[:relative]

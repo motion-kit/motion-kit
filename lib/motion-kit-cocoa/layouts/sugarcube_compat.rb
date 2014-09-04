@@ -1,5 +1,5 @@
 # These methods are defined in SugarCube's REPL helpers, but we want them to be
-# delegated to either `UIViewLayout#frame` or `CALayer#setFrame`
+# delegated to either `UIViewHelpers#frame` or `CALayer#setFrame`
 #
 # @requires MotionKit::BaseLayout
 module MotionKit

@@ -1,6 +1,6 @@
-# @requires MotionKit::NSMenuLayout
+# @requires MotionKit::NSMenuHelpers
 module MotionKit
-  class NSMenuLayout
+  class NSMenuHelpers
 
     ##|
     ##|  These methods are meant to be called on the parent menu item, but

@@ -1,8 +1,8 @@
-# @provides MotionKit::CAGradientLayerLayout
-# @requires MotionKit::CALayerLayout
+# @provides MotionKit::CAGradientLayerHelpers
+# @requires MotionKit::CALayerHelpers
 # @requires MotionKit::TreeLayout
 module MotionKit
-  class CAGradientLayerLayout < CALayerLayout
+  class CAGradientLayerHelpers < CALayerHelpers
     targets CAGradientLayer
 
     def colors(values)

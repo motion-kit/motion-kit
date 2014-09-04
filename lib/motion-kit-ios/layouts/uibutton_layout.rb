@@ -1,7 +1,7 @@
-# @provides MotionKit::UIButtonLayout
-# @requires MotionKit::UIViewLayout
+# @provides MotionKit::UIButtonHelpers
+# @requires MotionKit::UIViewHelpers
 module MotionKit
-  class UIButtonLayout < UIViewLayout
+  class UIButtonHelpers < UIViewHelpers
     targets UIButton
 
     def title(value)

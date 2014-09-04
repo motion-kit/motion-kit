@@ -1,6 +1,6 @@
-# @requires MotionKit::UIViewLayout
+# @requires MotionKit::UIViewHelpers
 module MotionKit
-  class UIViewLayout
+  class UIViewHelpers
 
     def content_compression_resistance_priority(value, for_axis: axis)
       axis = Constraint.axis_lookup(axis)

@@ -1,4 +1,4 @@
-class TestConstraintsLayout < MK::Layout
+class TestConstraintsHelpers < MK::Layout
 
   def layout
     add UIView, :a

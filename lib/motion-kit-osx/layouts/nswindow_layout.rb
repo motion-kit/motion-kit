@@ -1,5 +1,5 @@
 # @provides MotionKit::WindowLayout
-# @provides MotionKit::NSWindowLayout
+# @provides MotionKit::NSWindowHelpers
 # @requires MotionKit::TreeLayout
 module MotionKit
   class WindowLayout < TreeLayout
@@ -29,7 +29,7 @@ module MotionKit
 
   end
 
-  class NSWindowLayout < WindowLayout
+  class NSWindowHelpers < WindowLayout
     targets NSWindow
   end
 

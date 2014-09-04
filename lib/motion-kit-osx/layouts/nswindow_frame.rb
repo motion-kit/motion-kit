@@ -1,6 +1,6 @@
-# @requires MotionKit::NSWindowLayout
+# @requires MotionKit::NSWindowHelpers
 module MotionKit
-  class NSWindowLayout
+  class NSWindowHelpers
 
     def frame(value, autosave_name=nil)
       retval = target.setFrame(value, display: true)

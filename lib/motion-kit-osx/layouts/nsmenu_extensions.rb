@@ -1,6 +1,6 @@
-# @requires MotionKit::NSMenuLayout
+# @requires MotionKit::NSMenuHelpers
 module MotionKit
-  class NSMenuLayout
+  class NSMenuHelpers
 
     # useful when writing menus
     def app_name

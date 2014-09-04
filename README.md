@@ -354,7 +354,7 @@ that take multiple arguments.  Those can get "helper" methods.
   # title on a UIButton
   def login_button_style
     title 'Press me'
-    # this gets delegated to UIButtonLayout#title(title), which in turn calls
+    # this gets delegated to UIButtonHelpers#title(title), which in turn calls
     # button.setTitle(title, forState: UIControlStateNormal)
   end
 ```
@@ -383,15 +383,18 @@ Introspection and method_missing add a little overhead to your code, but in our
 benchmarking it is insignificant and undetectable. Let us know if you find any
 performance issues.
 
-You can easily add your own helpers to MotionKit's existing Layout classes. They
-are all named consistenly, e.g. `MotionKit::UIViewLayout`, e.g.
-`MotionKit::UILabelLayout`.  Just open up these classes and hack away.
+You can easily add your own helpers to MotionKit. They
+are all named consistenly, e.g. `MotionKit::UIViewHelpers`, e.g.
+`MotionKit::UILabelHelpers`.  You just need to specify the "target class" that
+your helper class is meant to work with.  Each class can only have *one helper
+class*.
 
 ```ruby
 module MotionKit
   # these helpers will only be applied to instances of UILabel and UILabel
   # subclasses
-  class UILabelLayout
+  class UILabelHelpers < UIViewHelpers
+    targets UILabel
 
     # style methods can accept any number of arguments, and a block. The current
     # view should be referred to via the method `target`
@@ -426,19 +429,19 @@ end
 
 For your own custom classes, or when you want to write
 helper methods for a built-in class, you will need to write a class that
-"`targets`" that class.  This will be a subclass of `MK::UIViewLayout`; it looks
+"`targets`" that class.  This will be a subclass of `MK::UIViewHelpers`; it looks
 and *feels* like a `MK::Layout` subclass, but these classes are used to extend
 the MotionKit DSL, and should not be instantiated or used to build layouts.
 
 Again, to be clear: you should be subclassing `MK::Layout` when you build your
-controller layouts, and you should write a subclass of `MK::UIViewLayout` *only*
+controller layouts, and you should write a subclass of `MK::UIViewHelpers` *only*
 when you are adding extensions to the MotionKit DSL.
 
 ```ruby
-# Be sure to extend an existing Layout class, otherwise you'll lose a lot of
-# functionality.  Often this will be `MK::UIViewLayout` on iOS and
-# `MK::NSViewLayout` on OS X.
-class CustomLayout < MK::UIViewLayout
+# Be sure to extend an existing Helpers class, otherwise you'll lose a lot of
+# functionality.  Often this will be `MK::UIViewHelpers` on iOS and
+# `MK::NSViewHelpers` on OS X.
+class CustomViewHelpers < MK::UIViewHelpers
   targets CustomView
 
   def fore_color(value)
@@ -707,7 +710,7 @@ view, you need to use a separate method that is called after the view hierarchy
 is created.
 
 ```ruby
-class MainLayout < UIViewLayout
+class MainLayout < MK::Layout
 
   def layout
     add UILabel, :label do
