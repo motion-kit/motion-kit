@@ -12,6 +12,14 @@ module MotionKit
       @constraints.concat(constraints)
     end
 
+    def ==(value)
+      if value.is_a?(ConstraintsTarget)
+        super
+      else
+        @view == value
+      end
+    end
+
     def apply_all_constraints(layout, target)
       @constraints.map do |mk_constraint|
         mk_constraint.resolve_all(layout, target).map do |constraint|
