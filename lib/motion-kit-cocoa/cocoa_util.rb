@@ -1,6 +1,33 @@
 module MotionKit
   module_function
 
+  def siblings(view)
+    case view
+    when CALayer
+      view.superlayer ? view.superlayer.sublayers : []
+    else
+      view.superview ? view.superview.subviews : []
+    end
+  end
+
+  def children(view)
+    case view
+    when CALayer
+      view.sublayers
+    else
+      view.subviews
+    end
+  end
+
+  def parent(view)
+    case view
+    when CALayer
+      view.superlayer
+    else
+      view.superview
+    end
+  end
+
   # - check view
   # - check subviews (unless 'skip' is provided)
   # - check siblings (skipping 'view')
@@ -9,19 +36,14 @@ module MotionKit
     if view.nil?
       return nil
     end
+
     if test.call(view)
       return view
     end
 
-    if view.is_a?(CALayer)
-      children = view.sublayers
-      siblings = view.superlayer ? view.superlayer.sublayers : []
-      parent = view.superlayer
-    else
-      children = view.subviews
-      siblings = view.superview ? view.superview.subviews : []
-      parent = view.superview
-    end
+    children = MotionKit.children(view)
+    siblings = MotionKit.siblings(view)
+    parent = MotionKit.parent(view)
 
     found = nil
 

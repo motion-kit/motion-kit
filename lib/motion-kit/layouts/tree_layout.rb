@@ -287,6 +287,52 @@ module MotionKit
       element
     end
 
+    # Search for a sibling: the next sibling that has the given id
+    def next(element_id)
+      unless is_parent_layout?
+        return parent_layout.all(element_id)
+      end
+      search = @elements[element_id]
+      if search.nil? || search.empty?
+        return nil
+      end
+      searching = false
+      found = nil
+      MotionKit.siblings(target).each do |sibling|
+        if sibling == target
+          searching = true
+        elsif searching && search.include?(sibling)
+          found = sibling
+          break
+        end
+      end
+      return found
+    end
+
+    # Search for a sibling: the previous sibling that has the given id
+    def prev(element_id)
+      unless is_parent_layout?
+        return parent_layout.all(element_id)
+      end
+
+      search = @elements[element_id]
+      if search.nil? || search.empty?
+        return nil
+      end
+
+      found = nil
+      MotionKit.siblings(target).each do |sibling|
+        if sibling == target
+          break
+        elsif search.include?(sibling)
+          # keep searching; prev should find the *closest* matching view
+          found = sibling
+        end
+      end
+      return found
+    end
+    alias previous prev
+
     # This searches for the "nearest" view with a given id.  First, all child
     # views are checked.  Then the search goes up to the parent view, and its
     # child views are checked.  This means *any* view that is in the parent
@@ -302,10 +348,12 @@ module MotionKit
       unless is_parent_layout?
         return parent_layout.nearest(element_id)
       end
+
       search = @elements[element_id]
       if search.nil? || search.empty?
         return nil
       end
+
       MotionKit.nearest(target) { |view| search.include?(view) }
     end
 

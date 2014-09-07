@@ -705,7 +705,23 @@ One common use case is to use a child layout to create many instances of the
 same layout that repeat, for instance a "row" of content.  In this case you will
 probably have many views with the same id, and you will not know the index of
 the container view that you want to add constraints to.  In this situation, use
-the `nearest` method to find a container, sibling, or child view.
+the `nearest`, `previous` or `next` method to find a container, sibling, or
+child view.
+
+`previous` and `next` are easy; they just search for a sibling view.  No
+superviews or subviews are searched.
+
+`nearest` will search child views, siblings, and superviews, in that order.  The
+"distance" is calculated as such:
+
+- the current view
+- subviews
+- siblings
+- superview
+- superview's siblings, or a child of the sibling (depth-first search)
+- continue up the tree
+
+See the AutoLayout sample app for an example of this usage.
 
 ```ruby
 items.each do |item|
