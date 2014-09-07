@@ -292,11 +292,13 @@ module MotionKit
         return parent_layout.remove(element_id)
       end
       context(self.view) do
-        all(element_id).each do |element|
+        removed = all(element_id)
+        removed.each do |element|
           self.apply(:remove_child, element)
         end
         @elements[element_id] = nil
       end
+      removed
     end
 
     def create_default_root_context
