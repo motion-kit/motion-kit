@@ -701,6 +701,31 @@ add UIView, :bar do
 end
 ```
 
+One common use case is to use a child layout to create many instances of the
+same layout that repeat, for instance a "row" of content.  In this case you will
+probably have many views with the same id, and you will not know the index of
+the container view that you want to add constraints to.  In this situation, use
+the `nearest` method to find a container, sibling, or child view.
+
+```ruby
+items.each do |item|
+  add UIView, :row do
+    add UIImageView, :avatar
+    add UILabel, :title
+  end
+end
+
+def title_style
+  constraints do
+    # center the view vertically
+    center.equals(nearest(:row))
+    # and place it to the right of the :avatar
+    left.equals(nearest(:avatar), :right).plus(8)
+    right.equals(nearest(:row)).minus(8)
+  end
+end
+```
+
 One pain point in working with constraints is determining when to add them to
 your views.  We tried really hard to figure out a way to automatically add them,
 but it's just an untenable problem (Teacup suffers from a similar conundrum).
@@ -726,8 +751,10 @@ class MainLayout < MK::Layout
     end
   end
 
-  # this method will be called from `UIViewController#updateViewConstraints`
+  # You should call this method from `UIViewController#updateViewConstraints`
+  # and pass in your controller
   def add_constraints(controller)
+    # guard against adding these constraints more than once
     unless @layout_constraints_added
       @layout_constraints_added = true
       constraints(:label) do
