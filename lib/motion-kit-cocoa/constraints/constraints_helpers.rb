@@ -10,22 +10,6 @@ module MotionKit
       target
     end
 
-    def first(name)
-      ConstraintPlaceholder.new(:first, name)
-    end
-
-    def last(name)
-      ConstraintPlaceholder.new(:last, name)
-    end
-
-    def nth(name, value)
-      ConstraintPlaceholder.new(:nth, name, value)
-    end
-
-    def nearest(name, value)
-      ConstraintPlaceholder.new(:nearest, name, value)
-    end
-
     def x(value=nil, rel=nil)
       target_constraint(:left, rel, value)
     end
