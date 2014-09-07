@@ -213,7 +213,7 @@ module MotionKit
 
     # Retrieves a view by its element id.  This will return the *first* view
     # with this element_id in the tree, where *first* means the first object
-    # that was added with assigned that name.
+    # that was added with that name.
     def get(element_id)
       unless is_parent_layout?
         return parent_layout.get(element_id)
@@ -234,7 +234,7 @@ module MotionKit
 
     # Retrieves a view by its element id.  This will return the *last* view with
     # this element_id in the tree, where *last* means the last object that was
-    # added with assigned that name.
+    # added with that name.
     def last(element_id)
       unless is_parent_layout?
         return parent_layout.last(element_id)

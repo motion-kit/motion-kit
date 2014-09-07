@@ -1,4 +1,7 @@
 class TestLayout < MotionKit::Layout
+  attr :first_view
+  attr :last_view
+  attr :nth_view
 
   def layout
     add UIView, :basic_view do
@@ -8,9 +11,11 @@ class TestLayout < MotionKit::Layout
     end
 
     add UIView, :multiple_views do
+      @first_view = add UIView, :repeated_label_3
       add UIView, :repeated_label_3
-      add UIButton, :repeated_label_3
-      add UILabel, :repeated_label_3
+      add UIView, :repeated_label_3
+      @nth_view = add UIButton, :repeated_label_3
+      @last_view = add UILabel, :repeated_label_3
     end
   end
 

@@ -35,17 +35,17 @@ describe 'Simple Layout' do
   end
 
   it "should allow getting the subviews by first, last and nth child" do
-    @subject.first(:repeated_label_3).should.be.kind_of UIView
-    @subject.nth(:repeated_label_3, 1).should.be.kind_of UIButton
-    @subject.last(:repeated_label_3).should.be.kind_of UILabel
+    @subject.first(:repeated_label_3).should == @subject.first_view
+    @subject.nth(:repeated_label_3, 3).should == @subject.nth_view
+    @subject.last(:repeated_label_3).should == @subject.last_view
   end
 
   it "should allow getting all the subviews by name" do
     views = @subject.all(:repeated_label_3)
-    views.length.should == 3
+    views.length.should > 1
     views[0].should.be.kind_of UIView
-    views[1].should.be.kind_of UIButton
-    views[2].should.be.kind_of UILabel
+    views[3].should.be.kind_of UIButton
+    views[-1].should.be.kind_of UILabel
   end
 
   it "should support missing methods" do
