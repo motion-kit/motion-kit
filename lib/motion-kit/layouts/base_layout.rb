@@ -276,6 +276,7 @@ module MotionKit
       objc_method_name, objc_method_args = objc_version(method_name, args)
       ruby_method_name, ruby_method_args = ruby_version(method_name, args)
 
+      objc_setter = objc_method_name && MotionKit.setter(objc_method_name)
       setter = MotionKit.setter(ruby_method_name)
       assign = "#{ruby_method_name}="
 
@@ -290,6 +291,8 @@ module MotionKit
         target.send(objc_method_name, *objc_method_args, &block)
       elsif args.empty? && target.respond_to?(ruby_method_name)
         target.send(ruby_method_name, *ruby_method_args, &block)
+      elsif objc_setter && target.respond_to?(objc_setter)
+        target.send(objc_setter, *objc_method_args, &block)
       elsif target.respond_to?(setter)
         target.send(setter, *args, &block)
       elsif target.respond_to?(assign)
