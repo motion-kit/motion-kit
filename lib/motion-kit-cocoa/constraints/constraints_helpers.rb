@@ -226,6 +226,9 @@ module MotionKit
     end
 
     def above(view)
+      unless view
+        raise ArgumentError.new("`#{view.inspect}` is not a valid target for making a `above` constraint.")
+      end
       constraint = Constraint.new(constraint_target.view, :bottom, :equal)
       constraint.equals(view, :top)
 
@@ -234,6 +237,9 @@ module MotionKit
     end
 
     def below(view)
+      unless view
+        raise ArgumentError.new("`#{view.inspect}` is not a valid target for making a `below` constraint.")
+      end
       constraint = Constraint.new(constraint_target.view, :top, :equal)
       constraint.equals(view, :bottom)
 
@@ -242,6 +248,9 @@ module MotionKit
     end
 
     def before(view)
+      unless view
+        raise ArgumentError.new("`#{view.inspect}` is not a valid target for making a `before` constraint.")
+      end
       constraint = Constraint.new(constraint_target.view, :right, :equal)
       constraint.equals(view, :left)
 
@@ -251,6 +260,9 @@ module MotionKit
     alias left_of before
 
     def after(view)
+      unless view
+        raise ArgumentError.new("`#{view.inspect}` is not a valid target for making a `after` constraint.")
+      end
       constraint = Constraint.new(constraint_target.view, :left, :equal)
       constraint.equals(view, :right)
 
