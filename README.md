@@ -188,7 +188,7 @@ class LoginLayout < MotionKit::Layout
         frame [[10, 10], ['100% - 10', :auto]]
       end
       add UITextField, :password_input do
-        frame below(:username_input, margin: 8)
+        frame below(:username_input, down: 8)
       end
     end
   end
@@ -241,10 +241,11 @@ include multiple stylesheets this way, just be careful around name collisions.
 module LoginStyles
 
   def login_button_style
+    # this example uses SugarCube to create UIColor and CGColor objects.
     background_color '#51A8E7'.uicolor
     title 'Log In'
     # `layer` returns a CALayer, which in turn becomes the new context inside
-    # this block!
+    # this block
     layer do
       corner_radius 7.0
       shadow_color '#000000'.cgcolor
@@ -342,8 +343,11 @@ root view, so retain one yourself to prevent it from being deallocated.
 If you've used RMQ's Stylers, you'll recognize a very similar pattern here. In
 RMQ the 'style' methods are handed a 'Styler' instance, which wraps access to
 the view.  In MotionKit we make use of `method_missing` to call these methods
-indirectly.  That takes care of most methods related to styling, except those
-that take multiple arguments.  Those can get "helper" methods.
+indirectly.  That takes care of most methods related to styling, but you might
+want to write some "helper" methods so that your styling code is more concise.
+Some examples are included in the MotionKit core, but the [SweetKit][] gem has
+many more.  If you are writing helpers for UIKit or AppKit, please consider
+adding them to SweetKit, so we can all share in the productivity boost! :smiley:
 
 ```ruby
   def login_label_style
@@ -356,6 +360,7 @@ that take multiple arguments.  Those can get "helper" methods.
     title 'Press me'
     # this gets delegated to UIButtonHelpers#title(title), which in turn calls
     # button.setTitle(title, forState: UIControlStateNormal)
+    # See uibutton_helpers.rb for implementation.
   end
 ```
 
@@ -384,8 +389,8 @@ benchmarking it is insignificant and undetectable. Let us know if you find any
 performance issues.
 
 You can easily add your own helpers to MotionKit. They
-are all named consistenly, e.g. `MotionKit::UIViewHelpers`, e.g.
-`MotionKit::UILabelHelpers`.  You just need to specify the "target class" that
+should all be named consistenly, e.g. `MotionKit::UIViewHelpers`,
+`MotionKit::UILabelHelpers`, etc.  You just need to specify the "target class" that
 your helper class is meant to work with.  Each class can only have *one helper
 class*.
 
