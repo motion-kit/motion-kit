@@ -270,7 +270,8 @@ module MotionKit
       element
     end
 
-    # Returns all the elements with a given element_id
+    # Returns the ‘N’th element with a given element_id, where "‘N’th" is passed
+    # in as `index`
     def nth(element_id, index)
       self.all(element_id)[index]
     end
