@@ -104,7 +104,7 @@ class SimpleLayout < MotionKit::Layout
 
     # note: there are better ways to set the center, see the frame helpers below
     center [CGRectGetMidX(superview.bounds), CGRectGetMidY(superview.bounds)]
-    text_alignment UITextAlignmentCenter
+    text_alignment NSTextAlignmentCenter
     text_color UIColor.whiteColor
 
     # if you prefer to use shorthands from another gem, you certainly can!
