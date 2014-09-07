@@ -9,16 +9,20 @@ describe 'Remove views' do
     @subject.get(:label).should.be.nil
   end
 
-  it 'should remove the #image view' do
-    @subject.get(:image).should.be.kind_of(UIImageView)
-    @subject.remove_image
+  it 'should forget the #image view' do
+    image = @subject.get(:image)
+    image.should.be.kind_of(UIImageView)
+    @subject.forget_image
     @subject.get(:image).should.be.nil
+    image.superview.should.not.be.nil
   end
 
-  it 'should remove the #view view' do
-    @subject.get(:view).should.be.kind_of(UIView)
+  it 'should remove the #view from the hierarchy' do
+    view = @subject.get(:view)
+    view.should.be.kind_of(UIView)
     @subject.remove_view
     @subject.get(:view).should.be.nil
+    view.superview.should.be.nil
   end
 
 end
