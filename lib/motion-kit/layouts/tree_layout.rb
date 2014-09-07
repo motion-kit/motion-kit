@@ -182,6 +182,7 @@ module MotionKit
     end
 
     def name_element(element, element_id)
+      element.motion_kit_id = element_id
       @elements[element_id] ||= []
       @elements[element_id] << element
     end
