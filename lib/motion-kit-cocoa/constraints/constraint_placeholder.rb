@@ -15,6 +15,8 @@ module MotionKit
         layout.last_view(@name)
       when :nth
         layout.nth_view(@name, @value)
+      when :nearest
+        layout.nearest(@name)
       end
     end
 

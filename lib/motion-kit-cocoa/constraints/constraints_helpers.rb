@@ -22,6 +22,10 @@ module MotionKit
       ConstraintPlaceholder.new(:nth, name, value)
     end
 
+    def nearest(name, value)
+      ConstraintPlaceholder.new(:nearest, name, value)
+    end
+
     def x(value=nil, rel=nil)
       target_constraint(:left, rel, value)
     end

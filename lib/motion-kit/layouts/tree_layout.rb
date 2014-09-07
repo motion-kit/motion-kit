@@ -287,6 +287,38 @@ module MotionKit
       element
     end
 
+    # This searches for the "nearest" view with a given id.  First, all child
+    # views are checked.  Then the search goes up to the parent view, and its
+    # child views are checked.  This means *any* view that is in the parent
+    # view's hierarchy is considered closer than a view in a grandparent's
+    # hierarchy.  This is a "depth-first" search, so any subview that contains
+    # a view with the element id
+    #
+    # A--B--C--D*   Starting at D, E is closer than F, because D&E are siblings.
+    #  \  \  \-E    But F, G and H are closer than A or I, because they share a
+    #   \  \-F--G   closer *parent* (B).  The logic is, "B" is a container, and
+    #    \-I  \-H   all views in that container are in a closer family.
+    def nearest(element_id)
+      unless is_parent_layout?
+        return parent_layout.nearest(element_id)
+      end
+      search = @elements[element_id]
+      if search.nil? || search.empty?
+        return nil
+      end
+      MotionKit.nearest(target) { |view| search.include?(view) }
+    end
+
+    # Just like `nearest`, but if `nearest` returns a Layout, this method returns the
+    # layout's view.
+    def nearest_view(element_id)
+      element = nearest(element_id)
+      if element.is_a?(Layout)
+        element = element.view
+      end
+      element
+    end
+
     # Removes a view (or several with the same name) from the hierarchy
     # and forgets it entirely.  Returns the views that were removed.
     def remove(element_id)
