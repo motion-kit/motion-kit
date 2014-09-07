@@ -296,10 +296,17 @@ module MotionKit
       if search.nil? || search.empty?
         return nil
       end
+
+      if target.is_a?(ConstraintsTarget)
+        view = target.view
+      else
+        view = target
+      end
+
       searching = false
       found = nil
-      MotionKit.siblings(target).each do |sibling|
-        if sibling == target
+      MotionKit.siblings(view).each do |sibling|
+        if sibling == view
           searching = true
         elsif searching && search.include?(sibling)
           found = sibling
@@ -320,9 +327,15 @@ module MotionKit
         return nil
       end
 
+      if target.is_a?(ConstraintsTarget)
+        view = target.view
+      else
+        view = target
+      end
+
       found = nil
-      MotionKit.siblings(target).each do |sibling|
-        if sibling == target
+      MotionKit.siblings(view).each do |sibling|
+        if sibling == view
           break
         elsif search.include?(sibling)
           # keep searching; prev should find the *closest* matching view
@@ -354,7 +367,12 @@ module MotionKit
         return nil
       end
 
-      MotionKit.nearest(target) { |view| search.include?(view) }
+      if target.is_a?(ConstraintsTarget)
+        view = target.view
+      else
+        view = target
+      end
+      MotionKit.nearest(view) { |test_view| search.include?(test_view) }
     end
 
     # Just like `nearest`, but if `nearest` returns a Layout, this method returns the
