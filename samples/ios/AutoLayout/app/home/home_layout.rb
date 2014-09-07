@@ -16,6 +16,22 @@ class HomeLayout < MK::Layout
     @button = add(UIButton, :button)
     @switch = add(UISwitch, :switch)
 
+    emoticons = [
+      { name: 'Happy',       icon: UIImage.imageNamed('icon_happy'),       },
+      { name: 'Sad',         icon: UIImage.imageNamed('icon_sad'),         },
+      { name: 'Indifferent', icon: UIImage.imageNamed('icon_indifferent'), },
+    ]
+    emoticons.each do |info|
+      add UIView, :avatar_row do
+        add UIImageView, :avatar_icon do
+          image info[:icon]
+        end
+        add UILabel, :avatar_label do
+          text info[:name]
+        end
+      end
+    end
+
     items = ['One', 'Two', 'Three']
     @segmented = UISegmentedControl.alloc.initWithItems(items)
     add(@segmented, :segmented)
@@ -26,9 +42,6 @@ class HomeLayout < MK::Layout
       origin [0, 0]
       width.equals(:superview)
       height.equals(:superview)
-    end
-
-    constraints(:label) do
     end
   end
 
@@ -94,6 +107,46 @@ class HomeLayout < MK::Layout
   def selected_segment
     index = @segmented.selectedSegmentIndex
     NSLog('Selected index %@', index)
+  end
+
+  def avatar_row_style
+    initial do
+      constraints do
+        left.equals(:superview)
+        right.equals(:superview)
+        height.equals(48)
+
+        if target == first(:avatar_row)
+          below(:switch).plus(20)
+        else
+          below(previous(:avatar_row))
+        end
+      end
+    end
+  end
+
+  def avatar_icon_style
+    initial do
+      contentHuggingPriority(1000, forAxis: UILayoutConstraintAxisHorizontal)
+      contentHuggingPriority(1000, forAxis: UILayoutConstraintAxisVertical)
+      constraints do
+        row = nearest(:avatar_row)
+        center_y.equals(row)
+        left.equals(row).plus(8)
+      end
+    end
+  end
+
+  def avatar_label_style
+    initial do
+      text_color UIColor.whiteColor
+      constraints do
+        row = nearest(:avatar_row)
+        center_y.equals(row)
+        left.equals(nearest(:avatar_icon), :right).plus(8)
+        right.equals(row)
+      end
+    end
   end
 
 end
