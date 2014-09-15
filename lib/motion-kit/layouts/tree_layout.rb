@@ -182,6 +182,7 @@ module MotionKit
     end
 
     def name_element(element, element_id)
+      element.motion_kit_id = element_id
       @elements[element_id] ||= []
       @elements[element_id] << element
     end
@@ -292,11 +293,24 @@ module MotionKit
       unless is_parent_layout?
         return parent_layout.remove(element_id)
       end
+      removed = forget(element_id)
       context(self.view) do
-        removed = all(element_id)
         removed.each do |element|
           self.apply(:remove_child, element)
         end
+      end
+      removed
+    end
+
+    # Removes a view from the list of elements this layout is "tracking", but
+    # leaves it in the view hierarchy.  Returns the views that were removed.
+    def forget(element_id)
+      unless is_parent_layout?
+        return parent_layout.remove(element_id)
+      end
+      removed = nil
+      context(self.view) do
+        removed = all(element_id)
         @elements[element_id] = nil
       end
       removed

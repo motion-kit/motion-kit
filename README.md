@@ -931,6 +931,16 @@ annoying subtletees of the NSCell/NSControl dichotomy.
     gem install sweet-kit
 
 
+# Gotchas
+
+### A Note on `add` and `remove`
+
+When you use the `add` method to add a subview, that view will be retained by
+the Layout *even if you remove it from the view hierarchy*.  If you want the
+Layout to forget all about the view, call `remove(view)` (which also calls
+`removeFromSuperview`) or `forget(element_id)` (which only removes it from the
+Layout) on the Layout.
+
 # Contributing
 
 We welcome your contributions! Please be sure to run the specs before you do,
