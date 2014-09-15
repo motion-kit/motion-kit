@@ -33,9 +33,7 @@ module MotionKit
   # - check siblings (skipping 'view')
   # - go up to parent and repeat, skipping children
   def nearest(view, skip=nil, &test)
-    if view.nil?
-      return nil
-    end
+    return nil if view.nil?
 
     if test.call(view)
       return view
