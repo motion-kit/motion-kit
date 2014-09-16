@@ -53,6 +53,153 @@ end
 --------------------------------------------------------------------------------
 
 
+## Migrating from Teacup
+
+MotionKit is meant to replace Teacup, so you’ll find a lot of familiar features.
+ First and foremost, both MotionKit and Teacup are supposed to help you build
+ view hierarchies and style views.  Some differences are:
+
+- Teacup implemented its own logic for extending styles and importing
+  stylesheets.  With MotionKit, it’s plain ol’ Ruby classes.
+- Teacup focused on just two things: adding and styling views.  MotionKit adds
+  to that the *management* of views, ie animation and user interaction.
+- Teacup added methods to `UIView` and `UIViewController` to assist in creating
+  the view hierarchy.  MotionKit is opt-in only, and so is non-polluting.
+- Constraints in Teacup were a little awkward.  They are similar-yet-nicer in MotionKit.
+
+As an example we will convert a simple "Login" screen from Teacup to MotionKit.
+
+```ruby
+class LoginController < UIViewController
+  stylesheet :login_controller
+
+  layout do
+    add UILabel, :username_label
+    add UITextField, :username_field
+
+    add UILabel, :password_label
+    add UITextField, :password_field
+
+    add UIButton, :submit
+  end
+
+end
+
+
+Teacup::Stylesheet.new(:app_styles) do
+  style :label,
+    font: UIFont.fontWithName('Helvetica Neue', size: 30),
+    textAlignment: NSTextAlignmentLeft
+end
+
+
+Teacup::Stylesheet.new(:login_controller) do
+  import :app_styles
+
+  style :username_label, extends: :label,
+    text: 'Username',
+    constraints: [
+      constrain_top.equals(:superview).plus(10),
+      constrain_left.equals(:superview),
+      constrain_width.equals(80),
+      constrain_height.equals(40),
+    ]
+
+  style :password_label, extends: :label,
+    text: 'Password',
+    constraints: [
+      constrain_top.equals(:username_label, :bottom).plus(10),
+      constrain_left.equals(:superview),
+      constrain_width.equals(80),
+      constrain_height.equals(40),
+    ]
+
+  style :submit,
+    title: 'Submit',
+    constraints: [
+      constraint_bottom.equals(:superview),
+      constraint_right.equals(:superview).minus(8)
+    ]
+end
+```
+
+###### Here’s a straightforward port to MotionKit
+
+```ruby
+class LoginController < UIViewController
+
+  def viewDidLoad
+    super
+
+    @layout = LoginLayout.new(root: self.view)
+    @layout.build
+  end
+
+end
+
+
+module AppStyles
+
+  def apply_label_styles
+    font UIFont.fontWithName('Helvetica Neue', size: 30)
+    text_alignment NSTextAlignmentLeft
+  end
+
+end
+
+
+class LoginLayout < MK::Layout
+  include AppStyles
+
+  def layout
+    add UILabel, :username_label
+    add UITextField, :username_field
+
+    add UILabel, :password_label
+    add UITextField, :password_field
+
+    add UIButton, :submit
+  end
+
+  def username_label_style
+    apply_label_styles
+
+    text 'Username'
+    constraints do
+      top.equals(:superview).plus(10)
+      left.equals(:superview)
+      width.equals(80)
+      height.equals(40)
+    end
+  end
+
+  def password_label_style
+    apply_label_styles
+
+    text 'Password'
+    constraints do
+      top.equals(:username_label, :bottom).plus(10)
+      left.equals(:superview)
+      width.equals(80)
+      height.equals(40)
+    end
+  end
+
+  def submit_style
+    title 'Submit'
+    constraints do
+      bottom.equals(:superview)
+      right.equals(:superview).minus(8)
+    end
+  end
+
+end
+```
+
+
+--------------------------------------------------------------------------------
+
+
 ## UIKit
 
 Most of the [README][] is dedicated to examples for iOS/UIKit, so please read

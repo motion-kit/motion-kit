@@ -29,6 +29,7 @@
 [SweetKit]: https://github.com/rubymotion/sweet-kit
 
 [READMORE]: https://github.com/rubymotion/motion-kit/blob/master/READMORE.md
+[readmore-migrating]:      https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#migrating-from-teacup
 [readmore-uikit]:          https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#uikit
 [readmore-applicationkit]: https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#applicationkit
 [readmore-coreanimation]:  https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#coreanimation
@@ -41,6 +42,10 @@
 
 You can [read all about](#goodbye-teacup) why Colin decided that Teacup needed to
 be replaced with a new project, rather than upgraded or refactored.
+
+If you need to update your app to use MotionKit, see
+[READMORE.md][readmore-migrating] for an example of migrating stylesheets,
+styles, and constraints.
 
 
 ## Usage
