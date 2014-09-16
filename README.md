@@ -9,7 +9,7 @@
 2. Simple, easy to learn DSL
 3. Crossframework compatibility:
    - [UIKit][readmore-uikit]
-   - [ApplicationKit][readmore-applicationkit]
+   - [AppKit][readmore-appkit]
    - [AutoLayout][readmore-autolayout]
    - [Frame geometry][readmore-frames]
    - [CoreAnimation][readmore-coreanimation]
@@ -31,7 +31,7 @@
 [READMORE]: https://github.com/rubymotion/motion-kit/blob/master/READMORE.md
 [readmore-migrating]:      https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#migrating-from-teacup
 [readmore-uikit]:          https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#uikit
-[readmore-applicationkit]: https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#applicationkit
+[readmore-appkit]: https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#appkit
 [readmore-coreanimation]:  https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#coreanimation
 [readmore-frames]:         https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#frames
 [readmore-autolayout]:     https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#autolayout

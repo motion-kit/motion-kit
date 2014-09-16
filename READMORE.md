@@ -234,7 +234,7 @@ background_image UIImage.new, state: UIControlStateDisabled
 --------------------------------------------------------------------------------
 
 
-## ApplicationKit
+## AppKit
 
 MotionKit can create view hierarchies inside a window (`MK::WindowLayout`) or a
 view (`MK::Layout`).  You'll get a lot of mileage out of the `MK::WindowLayout`,
