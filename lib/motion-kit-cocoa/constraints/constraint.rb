@@ -303,8 +303,6 @@ module MotionKit
       def view_lookup(layout, view, target)
         if ! target || target.is_a?(MotionKit.base_view_class)
           target
-        elsif target.is_a?(ConstraintPlaceholder)
-          target.resolve(layout)
         elsif target == :self
           view
         elsif target == :superview
