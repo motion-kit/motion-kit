@@ -11,7 +11,10 @@ class TrackWindowLayout < MotionKit::WindowLayout
   def window_style
     initial do
       title = NSBundle.mainBundle.infoDictionary['CFBundleName']
-      frame [[240, 180], [280, 380]]
+      width 280
+      height 380
+      frame from_center
+      frame_autosave_name('main window')
     end
   end
 
