@@ -10,20 +10,20 @@ module MotionKit
       target
     end
 
-    def x(value=nil, rel=nil)
+    def left(value=nil, rel=nil)
       target_constraint(:left, rel, value)
     end
-    alias left x
+    alias x left
 
-    def min_x(value=nil)
-      x(value, :gte)
+    def min_left(value=nil)
+      left(value, :gte)
     end
-    alias min_left min_x
+    alias min_x min_left
 
-    def max_x(value=nil)
-      x(value, :lte)
+    def max_left(value=nil)
+      left(value, :lte)
     end
-    alias max_left max_x
+    alias max_x max_left
 
     def leading(value=nil, rel=nil)
       target_constraint(:leading, rel, value)
@@ -73,20 +73,20 @@ module MotionKit
       trailing(value, :lte)
     end
 
-    def y(value=nil, rel=nil)
+    def top(value=nil, rel=nil)
       target_constraint(:top, rel, value)
     end
-    alias top y
+    alias y top
 
-    def min_y(value=nil)
-      y(value, :gte)
+    def min_top(value=nil)
+      top(value, :gte)
     end
-    alias min_top min_y
+    alias min_y min_top
 
-    def max_y(value=nil)
-      y(value, :lte)
+    def max_top(value=nil)
+      top(value, :lte)
     end
-    alias max_top max_y
+    alias max_y max_top
 
     def center_y(value=nil, rel=nil)
       target_constraint(:center_y, rel, value)
