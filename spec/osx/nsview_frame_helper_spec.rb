@@ -349,14 +349,14 @@ describe 'Frame helpers' do
     @view.frame = [[0, 0], [2, 2]]
     @layout.context(@view) do
       retval = @layout.center [1, 2]
-      retval.x.should == @view.frame.origin.x + @view.frame.size.width / 2
-      retval.y.should == @view.frame.origin.y + @view.frame.size.height / 2
+      retval.x.should == CGRectGetMidX(@view.frame)
+      retval.y.should == CGRectGetMidY(@view.frame)
       @view.frame.origin.x.should == 0
       @view.frame.origin.y.should == 1
 
       retval = @layout.center ['100% - 1', '100% - 2']
-      retval.x.should == @view.frame.origin.x + @view.frame.size.width / 2
-      retval.y.should == @view.frame.origin.y + @view.frame.size.height / 2
+      retval.x.should == CGRectGetMidX(@view.frame)
+      retval.y.should == CGRectGetMidY(@view.frame)
       @view.frame.origin.x.should == @superview_size.width - 2
       @view.frame.origin.y.should == @superview_size.height - 3
     end
@@ -366,14 +366,14 @@ describe 'Frame helpers' do
     @view.frame = [[0, 0], [2, 2]]
     @layout.context(@view) do
       retval = @layout.center x: 1, y: 2
-      retval.x.should == @view.frame.origin.x + @view.frame.size.width / 2
-      retval.y.should == @view.frame.origin.y + @view.frame.size.height / 2
+      retval.x.should == CGRectGetMidX(@view.frame)
+      retval.y.should == CGRectGetMidY(@view.frame)
       @view.frame.origin.x.should == 0
       @view.frame.origin.y.should == 1
 
       retval = @layout.center x: '100% - 1', y: '100% - 2'
-      retval.x.should == @view.frame.origin.x + @view.frame.size.width / 2
-      retval.y.should == @view.frame.origin.y + @view.frame.size.height / 2
+      retval.x.should == CGRectGetMidX(@view.frame)
+      retval.y.should == CGRectGetMidY(@view.frame)
       @view.frame.origin.x.should == @superview_size.width - 2
       @view.frame.origin.y.should == @superview_size.height - 3
     end
@@ -383,14 +383,14 @@ describe 'Frame helpers' do
     @view.frame = [[0, 0], [2, 2]]
     @layout.context(@view) do
       retval = @layout.center x: 1, y: 1, right: 1, up: 2, relative: true
-      retval.x.should == @view.frame.origin.x + @view.frame.size.width / 2
-      retval.y.should == @view.frame.origin.y + @view.frame.size.height / 2
+      retval.x.should == CGRectGetMidX(@view.frame)
+      retval.y.should == CGRectGetMidY(@view.frame)
       @view.frame.origin.x.should == 1
       @view.frame.origin.y.should == 2
 
       retval = @layout.center x: '100%', y: '100%', left: 1, down: 2, relative: true
-      retval.x.should == @view.frame.origin.x + @view.frame.size.width / 2
-      retval.y.should == @view.frame.origin.y + @view.frame.size.height / 2
+      retval.x.should == CGRectGetMidX(@view.frame)
+      retval.y.should == CGRectGetMidY(@view.frame)
       @view.frame.origin.x.should == @superview_size.width - 2
       @view.frame.origin.y.should == @superview_size.height - 3
     end
@@ -1447,8 +1447,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.above(@another_view)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 148
+    @view.frame.origin.x.should == @another_view.frame.origin.x
+    @view.frame.origin.y.should == @another_view.frame.origin.y + @another_view.frame.size.height
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1458,7 +1458,7 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.above(@another_view)
       retval.should == @flipped_view.frame
     end
-    @flipped_view.frame.origin.x.should == 10
+    @flipped_view.frame.origin.x.should == @another_view.frame.origin.x
     @flipped_view.frame.origin.y.should == -78
     @flipped_view.frame.size.width.should == @view_size.width
     @flipped_view.frame.size.height.should == @view_size.height
@@ -1474,8 +1474,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.above(@another_view)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 148
+    @view.frame.origin.x.should == @another_view.frame.origin.x
+    @view.frame.origin.y.should == @another_view.frame.origin.y + @another_view.frame.size.height
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1485,8 +1485,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.above(@another_view, down: 8)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 140
+    @view.frame.origin.x.should == @another_view.frame.origin.x
+    @view.frame.origin.y.should == @another_view.frame.origin.y + @another_view.frame.size.height - 8
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1496,8 +1496,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.above(@another_view, width: 10, height: 20)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 148
+    @view.frame.origin.x.should == @another_view.frame.origin.x
+    @view.frame.origin.y.should == @another_view.frame.origin.y + @another_view.frame.size.height
     @view.frame.size.width.should == 10
     @view.frame.size.height.should == 20
   end
@@ -1507,8 +1507,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.above(@another_view, x: 10, y: 20, width: 22, height: 12)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 20
-    @view.frame.origin.y.should == 168
+    @view.frame.origin.x.should == @another_view.frame.origin.x + 10
+    @view.frame.origin.y.should == @another_view.frame.origin.y + @another_view.frame.size.height + 20
     @view.frame.size.width.should == 22
     @view.frame.size.height.should == 12
   end
@@ -1518,8 +1518,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.above(@another_view, right: 10, up: 20, width: 22, height: 12)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 20
-    @view.frame.origin.y.should == 168
+    @view.frame.origin.x.should == @another_view.frame.origin.x + 10
+    @view.frame.origin.y.should == @another_view.frame.origin.y + @another_view.frame.size.height + 20
     @view.frame.size.width.should == 22
     @view.frame.size.height.should == 12
   end
@@ -1529,8 +1529,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.above(@another_view, left: 10, down: 20, width: 22, height: 12)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 0
-    @view.frame.origin.y.should == 128
+    @view.frame.origin.x.should == @another_view.frame.origin.x - 10
+    @view.frame.origin.y.should == @another_view.frame.origin.y + @another_view.frame.size.height - 20
     @view.frame.size.width.should == 22
     @view.frame.size.height.should == 12
   end
@@ -1562,8 +1562,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.below(@another_view)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 90
+    @view.frame.origin.x.should == @another_view.frame.origin.x
+    @view.frame.origin.y.should == @another_view.frame.origin.y - @view.frame.size.height
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1589,8 +1589,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.below(@another_view)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 90
+    @view.frame.origin.x.should == @another_view.frame.origin.x
+    @view.frame.origin.y.should == @another_view.frame.origin.y - @view.frame.size.height
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1600,8 +1600,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.below(@another_view, up: 8)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 98
+    @view.frame.origin.x.should == @another_view.frame.origin.x
+    @view.frame.origin.y.should == @another_view.frame.origin.y - @view.frame.size.height + 8
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1611,8 +1611,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.below(@another_view, width: 10, height: 20)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 80
+    @view.frame.origin.x.should == @another_view.frame.origin.x
+    @view.frame.origin.y.should == @another_view.frame.origin.y - @view.frame.size.height
     @view.frame.size.width.should == 10
     @view.frame.size.height.should == 20
   end
@@ -1622,8 +1622,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.below(@another_view, x: 10, y: 20, width: 22, height: 12)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 20
-    @view.frame.origin.y.should == 108
+    @view.frame.origin.x.should == @another_view.frame.origin.x + 10
+    @view.frame.origin.y.should == @another_view.frame.origin.y - @view.frame.size.height + 20
     @view.frame.size.width.should == 22
     @view.frame.size.height.should == 12
   end
@@ -1633,8 +1633,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.below(@another_view, right: 10, up: 20, width: 22, height: 12)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 20
-    @view.frame.origin.y.should == 108
+    @view.frame.origin.x.should == @another_view.frame.origin.x + 10
+    @view.frame.origin.y.should == @another_view.frame.origin.y - @view.frame.size.height + 20
     @view.frame.size.width.should == 22
     @view.frame.size.height.should == 12
   end
@@ -1644,8 +1644,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.below(@another_view, left: 10, down: 20, width: 22, height: 12)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 0
-    @view.frame.origin.y.should == 68
+    @view.frame.origin.x.should == @another_view.frame.origin.x - 10
+    @view.frame.origin.y.should == @another_view.frame.origin.y - @view.frame.size.height - 20
     @view.frame.size.width.should == 22
     @view.frame.size.height.should == 12
   end
@@ -1677,8 +1677,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.before(@another_view)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 2
-    @view.frame.origin.y.should == 100
+    @view.frame.origin.x.should == @another_view.frame.origin.x - @view_size.width
+    @view.frame.origin.y.should == @another_view.frame.origin.y
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1693,8 +1693,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.before(@another_view)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 2
-    @view.frame.origin.y.should == 100
+    @view.frame.origin.x.should == @another_view.frame.origin.x - @view_size.width
+    @view.frame.origin.y.should == @another_view.frame.origin.y
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1704,8 +1704,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.before(@another_view, left: 8)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == -6
-    @view.frame.origin.y.should == 100
+    @view.frame.origin.x.should == @another_view.frame.origin.x - @view.frame.size.width - 8
+    @view.frame.origin.y.should == @another_view.frame.origin.y
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1715,8 +1715,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.before(@another_view, width: 10, height: 20)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 0
-    @view.frame.origin.y.should == 100
+    @view.frame.origin.x.should == @another_view.frame.origin.x - @view.frame.size.width
+    @view.frame.origin.y.should == @another_view.frame.origin.y
     @view.frame.size.width.should == 10
     @view.frame.size.height.should == 20
   end
@@ -1726,8 +1726,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.before(@another_view, x: 10, y: 20, width: 22, height: 12)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == -2
-    @view.frame.origin.y.should == 120
+    @view.frame.origin.x.should == @another_view.frame.origin.x - @view.frame.size.width + 10
+    @view.frame.origin.y.should == @another_view.frame.origin.y + 20
     @view.frame.size.width.should == 22
     @view.frame.size.height.should == 12
   end
@@ -1750,8 +1750,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.after(@another_view)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 130
-    @view.frame.origin.y.should == 100
+    @view.frame.origin.x.should == @another_view.frame.origin.x + @another_view.frame.size.width
+    @view.frame.origin.y.should == @another_view.frame.origin.y
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1766,8 +1766,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.after(@another_view)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 130
-    @view.frame.origin.y.should == 100
+    @view.frame.origin.x.should == @another_view.frame.origin.x + @another_view.frame.size.width
+    @view.frame.origin.y.should == @another_view.frame.origin.y
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1777,8 +1777,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.after(@another_view, right: 8)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 138
-    @view.frame.origin.y.should == 100
+    @view.frame.origin.x.should == @another_view.frame.origin.x + @another_view.frame.size.width + 8
+    @view.frame.origin.y.should == @another_view.frame.origin.y
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1788,8 +1788,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.after(@another_view, width: 10, height: 20)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 130
-    @view.frame.origin.y.should == 100
+    @view.frame.origin.x.should == @another_view.frame.origin.x + @another_view.frame.size.width
+    @view.frame.origin.y.should == @another_view.frame.origin.y
     @view.frame.size.width.should == 10
     @view.frame.size.height.should == 20
   end
@@ -1799,8 +1799,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.after(@another_view, x: 10, y: 20, width: 22, height: 12)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 140
-    @view.frame.origin.y.should == 120
+    @view.frame.origin.x.should == @another_view.frame.origin.x + @another_view.frame.size.width + 10
+    @view.frame.origin.y.should == @another_view.frame.origin.y + 20
     @view.frame.size.width.should == 22
     @view.frame.size.height.should == 12
   end
@@ -1823,8 +1823,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.relative_to(@another_view, {})
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 100
+    @view.frame.origin.x.should == @another_view.frame.origin.x
+    @view.frame.origin.y.should == @another_view.frame.origin.y
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1850,8 +1850,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.relative_to(@another_view, {})
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 100
+    @view.frame.origin.x.should == @another_view.frame.origin.x
+    @view.frame.origin.y.should == @another_view.frame.origin.y
     @view.frame.size.width.should == @view_size.width
     @view.frame.size.height.should == @view_size.height
   end
@@ -1861,8 +1861,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.relative_to(@another_view, width: 10, height: 20)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 10
-    @view.frame.origin.y.should == 100
+    @view.frame.origin.x.should == @another_view.frame.origin.x
+    @view.frame.origin.y.should == @another_view.frame.origin.y
     @view.frame.size.width.should == 10
     @view.frame.size.height.should == 20
   end
@@ -1872,8 +1872,8 @@ describe 'Frame helpers' do
       retval = @layout.frame @layout.relative_to(@another_view, x: 10, y: 20, width: 22, height: 12)
       retval.should == @view.frame
     end
-    @view.frame.origin.x.should == 20
-    @view.frame.origin.y.should == 120
+    @view.frame.origin.x.should == @another_view.frame.origin.x + 10
+    @view.frame.origin.y.should == @another_view.frame.origin.y + 20
     @view.frame.size.width.should == 22
     @view.frame.size.height.should == 12
   end
