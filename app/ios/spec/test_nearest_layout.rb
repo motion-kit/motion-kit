@@ -80,4 +80,24 @@ class TestNearestLayout < MK::Layout
     end
   end
 
+  def nearest_from_search
+    create(UIView) do
+      add UIView do
+        add UIView do
+          @start_here = add UIView
+          add UIView
+        end
+        add UIView
+      end
+      add UIView do
+        add(UIView, :nearest_from_search) do
+          add UIView, :nearest_from_search
+        end
+        add UIView, :from_here do
+          @expected_to_find = add(UIView, :nearest_from_search)
+        end
+      end
+    end
+  end
+
 end

@@ -58,4 +58,23 @@ describe 'MotionKit nearest element logic' do
     found.should == @subject.expected_to_find
   end
 
+  it 'should support nearest(id, from: view)' do
+    found = nil
+    @subject.nearest_from_search
+    @subject.context(@subject.start_here) do
+      from_here = @subject.get(:from_here)
+      found = @subject.nearest(:nearest_from_search, from: from_here)
+    end
+    found.should == @subject.expected_to_find
+  end
+
+  it 'should support nearest(id, from: id)' do
+    found = nil
+    @subject.nearest_from_search
+    @subject.context(@subject.start_here) do
+      found = @subject.nearest(:nearest_from_search, from: :from_here)
+    end
+    found.should == @subject.expected_to_find
+  end
+
 end

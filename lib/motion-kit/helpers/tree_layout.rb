@@ -289,24 +289,30 @@ module MotionKit
 
     # Search for a sibling: the next sibling that has the given id
     def next(element_id)
+      self.next(element_id, from: target)
+    end
+
+    def next(element_id, from: from_view)
       unless is_parent_layout?
-        return parent_layout.all(element_id)
+        return parent_layout.next(element_id, from: from_view)
       end
       search = @elements[element_id]
       if search.nil? || search.empty?
         return nil
       end
 
-      if target.is_a?(ConstraintsTarget)
-        view = target.view
-      else
-        view = target
+      if from_view.is_a?(NSString)
+        from_view = self.get(from_view)
+      end
+
+      if from_view.is_a?(ConstraintsTarget)
+        from_view = from_view.view
       end
 
       searching = false
       found = nil
-      MotionKit.siblings(view).each do |sibling|
-        if sibling == view
+      MotionKit.siblings(from_view).each do |sibling|
+        if sibling == from_view
           searching = true
         elsif searching && search.include?(sibling)
           found = sibling
@@ -318,8 +324,12 @@ module MotionKit
 
     # Search for a sibling: the previous sibling that has the given id
     def prev(element_id)
+      prev(element_id, from: target)
+    end
+
+    def prev(element_id, from: from_view)
       unless is_parent_layout?
-        return parent_layout.all(element_id)
+        return parent_layout.prev(element_id, from: from_view)
       end
 
       search = @elements[element_id]
@@ -327,15 +337,17 @@ module MotionKit
         return nil
       end
 
-      if target.is_a?(ConstraintsTarget)
-        view = target.view
-      else
-        view = target
+      if from_view.is_a?(NSString)
+        from_view = self.get(from_view)
+      end
+
+      if from_view.is_a?(ConstraintsTarget)
+        from_view = from_view.view
       end
 
       found = nil
-      MotionKit.siblings(view).each do |sibling|
-        if sibling == view
+      MotionKit.siblings(from_view).each do |sibling|
+        if sibling == from_view
           break
         elsif search.include?(sibling)
           # keep searching; prev should find the *closest* matching view
@@ -344,7 +356,6 @@ module MotionKit
       end
       return found
     end
-    alias previous prev
 
     # This searches for the "nearest" view with a given id.  First, all child
     # views are checked.  Then the search goes up to the parent view, and its
@@ -358,8 +369,12 @@ module MotionKit
     #   \  \-F--G   closer *parent* (B).  The logic is, "B" is a container, and
     #    \-I  \-H   all views in that container are in a closer family.
     def nearest(element_id)
+      nearest(element_id, from: target)
+    end
+
+    def nearest(element_id, from: from_view)
       unless is_parent_layout?
-        return parent_layout.nearest(element_id)
+        return parent_layout.nearest(element_id, from: from_view)
       end
 
       search = @elements[element_id]
@@ -367,22 +382,15 @@ module MotionKit
         return nil
       end
 
-      if target.is_a?(ConstraintsTarget)
-        view = target.view
-      else
-        view = target
+      if from_view.is_a?(NSString)
+        from_view = self.get(from_view)
       end
-      MotionKit.nearest(view) { |test_view| search.include?(test_view) }
-    end
 
-    # Just like `nearest`, but if `nearest` returns a Layout, this method returns the
-    # layout's view.
-    def nearest_view(element_id)
-      element = nearest(element_id)
-      if element.is_a?(Layout)
-        element = element.view
+      if from_view.is_a?(ConstraintsTarget)
+        from_view = from_view.view
       end
-      element
+
+      MotionKit.nearest(from_view) { |test_view| search.include?(test_view) }
     end
 
     # Removes a view (or several with the same name) from the hierarchy
