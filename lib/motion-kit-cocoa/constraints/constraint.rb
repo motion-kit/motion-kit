@@ -85,10 +85,6 @@ module MotionKit
 
     def >=(compare)
       if @compare_flag
-        if @relationship && Constraint.relationship_lookup(@relationship) != NSLayoutRelationGreaterThanOrEqual
-          raise InvalidRelationshipError.new("You cannot use `.is >=` on a constraint that is already defined as #{@relationship}")
-        end
-
         gte(compare)
 
         self
@@ -99,10 +95,6 @@ module MotionKit
 
     def <=(compare)
       if @compare_flag
-        if @relationship && Constraint.relationship_lookup(@relationship) != NSLayoutRelationLessThanOrEqual
-          raise InvalidRelationshipError.new("You cannot use `.is <=` on a constraint that is already defined as #{@relationship}")
-        end
-
         lte(compare)
 
         self
