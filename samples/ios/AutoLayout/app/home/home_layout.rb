@@ -119,7 +119,7 @@ class HomeLayout < MK::Layout
         if target == first(:avatar_row)
           below(:switch).plus(20)
         else
-          below(previous(:avatar_row))
+          below(prev(:avatar_row))
         end
       end
     end
