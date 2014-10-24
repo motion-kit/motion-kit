@@ -10,6 +10,10 @@ module MotionKit
       @element = element
     end
 
+    def frame
+      try(:frame)
+    end
+
     def origin
       try(:frame, :origin)
     end
