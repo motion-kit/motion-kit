@@ -125,6 +125,14 @@ describe 'Autoresize helpers' do
     mask.should == NSViewWidthSizable | NSViewMaxYMargin
   end
 
+  it 'should support :fill_width' do
+    mask = nil
+    @layout.context(@view) do
+      mask = @layout.autoresizing_mask :fill_width
+    end
+    mask.should == NSViewWidthSizable | NSViewMinYMargin | NSViewMaxYMargin
+  end
+
   it 'should support :fill_left' do
     mask = nil
     @layout.context(@view) do
@@ -139,6 +147,14 @@ describe 'Autoresize helpers' do
       mask = @layout.autoresizing_mask :fill_right
     end
     mask.should == NSViewHeightSizable | NSViewMinXMargin
+  end
+
+  it 'should support :fill_height' do
+    mask = nil
+    @layout.context(@view) do
+      mask = @layout.autoresizing_mask :fill_height
+    end
+    mask.should == NSViewHeightSizable | NSViewMinXMargin | NSViewMaxXMargin
   end
 
   it 'should support :pin_to_top_left' do
