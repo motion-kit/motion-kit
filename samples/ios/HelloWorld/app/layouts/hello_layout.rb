@@ -20,9 +20,7 @@ class HelloLayout < MotionKit::Layout
 
   def gradient_layer_style
     frame superlayer.bounds
-    initial do
-      opacity 0.5
-    end
+    opacity 0.5
     portrait do
       colors [
         UIColor.blackColor.CGColor,
@@ -38,11 +36,9 @@ class HelloLayout < MotionKit::Layout
   end
 
   def label_style
-    initial do
-      default_label_style
-      text 'Hello World!'
-      background_color UIColor.whiteColor
-    end
+    default_label_style
+    text 'Hello World!'
+    background_color UIColor.whiteColor
 
     portrait do
       frame [[100, 30], [100, 20]]
@@ -61,11 +57,9 @@ class HelloLayout < MotionKit::Layout
   end
 
   def footer_style
-    initial do
-      self.default_label_style
-      text 'brought to you by MotionKit'
-      background_color UIColor.lightGrayColor
-    end
+    self.default_label_style
+    text 'brought to you by MotionKit'
+    background_color UIColor.lightGrayColor
 
     size_to_fit
     portrait do
