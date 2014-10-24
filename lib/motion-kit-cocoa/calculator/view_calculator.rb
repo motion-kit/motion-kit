@@ -23,8 +23,16 @@ module MotionKit
       elsif amount == :auto
         return intrinsic_size(view).send(dimension) # :left or :right
       elsif amount.is_a?(String) && amount.include?('%')
-        full_view ||= view.superview || begin
-          raise NoSuperviewError.new("Cannot calculate #{amount}% of #{dimension.inspect} because view #{view} has no superview.")
+        if not full_view
+          if view.is_a?(MotionKit.base_view_class)
+            full_view = view.superview
+          elsif view.is_a?(CALayer)
+            full_view = view.superlayer
+          end
+
+          if not full_view
+            raise NoSuperviewError.new("Cannot calculate #{amount.inspect} of #{dimension.inspect} because view #{view} has no superview.")
+          end
         end
         calc = Calculator.scan(amount)
 
