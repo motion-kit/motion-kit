@@ -38,10 +38,14 @@ module MotionKit
           value |= UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin
         when :fill_bottom
           value |= UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin
+        when :fill_width
+          value |= UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin
         when :fill_left
           value |= UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin
         when :fill_right
           value |= UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin
+        when :fill_height
+          value |= UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin
 
         when :pin_to_top_left
           value |= UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin

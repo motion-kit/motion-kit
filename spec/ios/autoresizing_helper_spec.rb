@@ -125,6 +125,14 @@ describe 'Autoresize helpers' do
     mask.should == UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin
   end
 
+  it 'should support :fill_width' do
+    mask = nil
+    @layout.context(@view) do
+      mask = @layout.autoresizing_mask :fill_width
+    end
+    mask.should == UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin
+  end
+
   it 'should support :fill_left' do
     mask = nil
     @layout.context(@view) do
@@ -139,6 +147,14 @@ describe 'Autoresize helpers' do
       mask = @layout.autoresizing_mask :fill_right
     end
     mask.should == UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin
+  end
+
+  it 'should support :fill_height' do
+    mask = nil
+    @layout.context(@view) do
+      mask = @layout.autoresizing_mask :fill_height
+    end
+    mask.should == UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin
   end
 
   it 'should support :pin_to_top_left' do
