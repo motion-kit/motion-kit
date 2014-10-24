@@ -127,7 +127,8 @@ module MotionKit
     # after a call to Layout#layout.
     def deferred(context=nil, &block)
       context ||= @context
-      return parent_layout.add_deferred_block(context, &block)
+      parent_layout.add_deferred_block(context, &block)
+      return self
     end
 
     # Only intended for private use
@@ -140,8 +141,6 @@ module MotionKit
       raise ArgumentError.new('Block required') unless block
 
       self.deferred_blocks << [context, block]
-
-      self
     end
 
     # Only intended for private use
