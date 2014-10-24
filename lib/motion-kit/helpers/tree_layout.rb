@@ -60,6 +60,7 @@ module MotionKit
     def initialize(args={})
       super
       @child_layouts = []
+      @reapply_blocks = []
       @elements = {}
     end
 
@@ -138,12 +139,7 @@ module MotionKit
     def reapply!
       root ||= self.view
       @layout_state = :reapply
-
-      @elements.each do |element_id, elements|
-        elements.each do |element|
-          style_and_context(element, element_id)
-        end
-      end
+      run_reapply_blocks
 
       @child_layouts.each do |child_layout|
         child_layout.reapply!
@@ -158,22 +154,50 @@ module MotionKit
       @layout_state == :reapply
     end
 
-    # Calls the style method of all objects in the view hierarchy
+    # Only intended for private use
+    def reapply_blocks
+      @reapply_blocks ||= []
+    end
+
+    # Blocks passed to `reapply` are only run when `reapply!` is called.
     def reapply(&block)
       raise ArgumentError.new('Block required') unless block
+      raise InvalidDeferredError.new('reapply must be run inside of a context') unless @context
 
       if reapply?
         yield
       end
+
+      block = block.weak!
+      parent_layout.reapply_blocks << [@context, block]
       return self
+    end
+
+    # Only intended for private use
+    def run_reapply_blocks
+      self.reapply_blocks.each do |target, block|
+        context(target, &block)
+      end
     end
 
     def initial?
       @layout_state == :initial
     end
 
+    def always(&block)
+      raise ArgumentError.new('Block required') unless block
+
+      if initial?
+        yield
+      end
+      reapply(&block)
+
+      return self
+    end
+
     def initial(&block)
       raise ArgumentError.new('Block required') unless block
+      puts('this method is no longer necessary!  all code that *isn\'t in a `reapply` block is now only applied')
 
       if initial?
         yield

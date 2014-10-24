@@ -824,12 +824,11 @@ end
 Instead, you should retain the constraint and make changes to it directly:
 
 ```ruby
-  initial do
-    constraints do
-      @label_left_constraint = left 10
-    end
+  constraints do
+    @label_left_constraint = left 10
   end
 
+  # reapply blocks are called via the Layout#reapply! method.
   reapply do
     portrait do
       @label_left_constraint.equals 10
@@ -893,29 +892,34 @@ add UIView, :container do
 end
 ```
 
-### Update views via 'initial', 'reapply', and 'deferred'
+### Update views via 'always', 'reapply', and 'deferred'
 
-If you call 'layout.reapply!', your style methods will be called again (but
-NOT the `layout` method). You very well might want to control what methods get
-called on later invocations, or only on the *initial* layout.
+In your style methods, you can register blocks that get called during
+"restyling", which is usually triggered by a rotation change (though, if you're
+making good use of autoresizingMask or AutoLayout constraints, you should not
+have to do this, right?).
 
-This is more for being able to initialize values, or to handle orientation, than
-anything else.  There is not much performance increase/decrease if you just
-reapply styles every time, but you might not want to have your frame or colors
-reset, if you've done some animation.
+It's important to note that the style methods are not actually called again. The
+blocks are retained on the view, along with the "context", and calling
+`reapply!` calls all those blocks with the context set as you'd expect.
+
+If you have code that you want to be called during initialization *and* during
+reapply, use the `always` helper:
 
 ```ruby
 def login_button_style
-  # only once, when the `layout` is created
-  initial do
-  end
+  # only once, when the layout is first being created
+  title 'initial title'
 
-  # on later invocations
+  # only during reapply
   reapply do
+    title 'something happened!'
   end
 
-  # style every time
-  title 'Press Me'
+  # applied every time
+  always do
+    title 'You win!'
+  end
 end
 ```
 
