@@ -92,15 +92,6 @@ describe 'Constraints - Simple helpers' do
       @constraint.attribute.should == :left
       @constraint.attribute2.should == :left
     end
-    it 'should NOT support `min_x.is >= 10`' do
-      -> do
-        @layout.context(@view) do
-          @layout.constraints do
-              p @layout.min_x.is <= 10
-          end
-        end
-      end.should.raise(MotionKit::InvalidRelationshipError)
-    end
     it 'should support `(x.is >= 10).priority(:low)`' do
       @layout.context(@view) do
         @layout.constraints do
