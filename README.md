@@ -598,7 +598,7 @@ pin_to_center:       View stays centered, size does not change.
 pin_to_right:        View stays centered on the right, size does not change.
 pin_to_bottom_left:  View stays in bottom-left corner, size does not change.
 pin_to_bottom:       View stays in bottom-center, size does not change.
-pin_to_bottom_right: View stays in bottom-left corner, size does not change.
+pin_to_bottom_right: View stays in bottom-right corner, size does not change.
 ```
 
 
