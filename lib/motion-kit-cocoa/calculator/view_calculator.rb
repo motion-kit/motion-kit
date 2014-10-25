@@ -24,10 +24,10 @@ module MotionKit
         return intrinsic_size(view).send(dimension) # :left or :right
       elsif amount.is_a?(String) && amount.include?('%')
         if not full_view
-          if view.is_a?(MotionKit.base_view_class)
-            full_view = view.superview
-          elsif view.is_a?(CALayer)
+          if view.is_a?(CALayer)
             full_view = view.superlayer
+          elsif view.respond_to?(:superview)
+            full_view = view.superview
           end
 
           if not full_view
