@@ -24,6 +24,14 @@ describe 'Child Layouts' do
     @layout.get(:child_image).get(:image).should.be.kind_of(UIImageView)
   end
 
+    it 'should have initial styles on :label' do
+      @layout.get(:label).text.should == 'root foo'
+    end
+
+    it 'should apply tag on :label' do
+      @layout.get(:label).tag.should == 100
+    end
+
   describe 'Calling reapply! on parent layout' do
 
     before do
@@ -32,6 +40,10 @@ describe 'Child Layouts' do
 
     it 'should reapply :label on root' do
       @layout.get(:label).text.should == 'root reapplied'
+    end
+
+    it 'should apply tag on :label' do
+      @layout.get(:label).tag.should == 100
     end
 
     it 'should reapply :label on child layout' do

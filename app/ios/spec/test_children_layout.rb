@@ -8,11 +8,13 @@ class TestChildrenLayout < MK::Layout
   end
 
   def label_style
-    initial do
-      text 'root foo'
-    end
+    text 'root foo'
+
     reapply do
       text 'root reapplied'
+    end
+    always do
+      tag 100
     end
   end
 
@@ -26,9 +28,8 @@ class ChildLabelLayout < MK::Layout
   end
 
   def label_style
-    initial do
-      text 'foo'
-    end
+    text 'foo'
+
     reapply do
       text 'reapplied'
     end
@@ -44,9 +45,8 @@ class ChildButtonLayout < MK::Layout
   end
 
   def button_style
-    initial do
-      title 'foo'
-    end
+    title 'foo'
+
     reapply do
       title 'reapplied'
     end
@@ -80,9 +80,8 @@ class ChildImageLayout < MK::Layout
   end
 
   def image_style
-    initial do
-      image blank_image
-    end
+    image blank_image
+
     reapply do
       image reapplied_image
     end

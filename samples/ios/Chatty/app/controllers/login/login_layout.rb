@@ -34,48 +34,42 @@ class LoginLayout < MK::Layout
   end
 
   def login_container_style
-    initial do
-      layer do
-        corner_radius 10
-      end
-      background_color UIColor.whiteColor
+    layer do
+      corner_radius 10
+    end
+    background_color UIColor.whiteColor
 
-      constraints do
-        x 10
-        right -10
-        height 100
-        @bg_bottom = bottom -10
-      end
+    constraints do
+      x 10
+      right -10
+      height 100
+      @bg_bottom = bottom -10
     end
   end
 
   def username_field_style
-    initial do
-      placeholder 'username'
+    placeholder 'username'
 
-      autocorrectionType UITextAutocorrectionTypeNo
-      spellCheckingType UITextSpellCheckingTypeNo
-      autocapitalizationType UITextAutocapitalizationTypeNone
+    autocorrectionType UITextAutocorrectionTypeNo
+    spellCheckingType UITextSpellCheckingTypeNo
+    autocapitalizationType UITextAutocapitalizationTypeNone
 
-      constraints do
-        left 10
-        right -10
-        top 10
-      end
-
-      delegate self
+    constraints do
+      left 10
+      right -10
+      top 10
     end
+
+    delegate self
   end
 
   def submit_button_style
-    initial do
-      title 'Submit'
-      title_color UIColor.blackColor
+    title 'Submit'
+    title_color UIColor.blackColor
 
-      constraints do
-        right -8
-        bottom -8
-      end
+    constraints do
+      right -8
+      bottom -8
     end
   end
 

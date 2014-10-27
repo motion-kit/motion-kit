@@ -55,44 +55,38 @@ class ChatLayout < MK::Layout
   end
 
   def chat_style
-    initial do
-      delegate self
-      dataSource self
-      backgroundColor :clear.uicolor
-      separatorStyle UITableViewCellSeparatorStyleNone
+    delegate self
+    dataSource self
+    backgroundColor :clear.uicolor
+    separatorStyle UITableViewCellSeparatorStyleNone
 
-      registerClass(ChatCell, forCellReuseIdentifier: ChatCell::ID)
+    registerClass(ChatCell, forCellReuseIdentifier: ChatCell::ID)
 
-      constraints do
-        top.equals(:superview)
-        left.equals(:superview)
-        right.equals(:superview)
-        above :text_container
-      end
+    constraints do
+      top.equals(:superview)
+      left.equals(:superview)
+      right.equals(:superview)
+      above :text_container
     end
   end
 
   def text_container_style
-    initial do
-      constraints do
-        below :chat
-        height 40
-        left.equals(:superview)
-        right.equals(:superview)
-        @container_bottom = bottom.equals(:superview)
-      end
+    constraints do
+      below :chat
+      height 40
+      left.equals(:superview)
+      right.equals(:superview)
+      @container_bottom = bottom.equals(:superview)
     end
   end
 
   def input_field_style
-    initial do
-      placeholder '…'
-      constraints do
-        left.equals(:superview)
-        left_of :submit
-        top.equals(:superview)
-        bottom.equals(:superview)
-      end
+    placeholder '…'
+    constraints do
+      left.equals(:superview)
+      left_of :submit
+      top.equals(:superview)
+      bottom.equals(:superview)
     end
   end
 
@@ -102,18 +96,16 @@ class ChatLayout < MK::Layout
   end
 
   def submit_style
-    initial do
-      title 'Submit'
-      title_color UIColor.blackColor
+    title 'Submit'
+    title_color UIColor.blackColor
 
-      constraints do
-        right.equals(:superview)
-        center_y.equals(:superview)
-      end
+    constraints do
+      right.equals(:superview)
+      center_y.equals(:superview)
+    end
 
-      target.on :touch do
-        @submit_handler.call if @submit_handler
-      end
+    target.on :touch do
+      @submit_handler.call if @submit_handler
     end
   end
 
