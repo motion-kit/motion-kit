@@ -33,4 +33,25 @@ describe 'Custom Root Layouts' do
     @subject.view.subviews.first.subviews.first.backgroundColor.should == NSColor.blackColor
   end
 
+  it "shouldn't build if `build` or `view` aren't called" do
+    @subject.built?.should == false
+  end
+
+  it "should build when `build` is called" do
+    @subject.build
+    @subject.built?.should == true
+  end
+
+  it "should build when `view` is called" do
+    @subject.view
+    @subject.built?.should == true
+  end
+
+  it "should allow bare styles in layout when root is specified in initializer" do
+    @subject = TestNoRootLayout.new(root: @view).build
+    @subject.view.should == @view
+    @subject.view.backgroundColor.should == UIColor.redColor
+    @subject.view.subviews.first.should.be.kind_of?(UILabel)
+  end
+
 end
