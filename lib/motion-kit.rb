@@ -10,9 +10,14 @@ Motion::Project::App.setup do |app|
   core_lib = File.join(File.dirname(__FILE__), 'motion-kit')
   cocoa_lib = File.join(File.dirname(__FILE__), 'motion-kit-cocoa')
   platform = app.respond_to?(:template) ? app.template : :ios
-  platform_lib = File.join(File.dirname(__FILE__), "motion-kit-#{platform}")
+  if platform.to_s.start_with?('ios')
+    platform_name = 'ios'
+  elsif platform.to_s.start_with?('osx')
+    platform_name = 'osx'
+  end
+  platform_lib = File.join(File.dirname(__FILE__), "motion-kit-#{platform_name}")
   unless File.exists? platform_lib
-    raise "Sorry, the platform #{platform.inspect} is not supported by MotionKit"
+    raise "Sorry, the platform #{platform.inspect} (aka #{platform_name}) is not supported by MotionKit"
   end
 
   # scans app.files until it finds app/ (the default)
