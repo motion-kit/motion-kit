@@ -5,6 +5,9 @@ class HelloLayout < MotionKit::Layout
     layer do
       add CAGradientLayer, :gradient_layer
     end
+    always do
+      get(:gradient_layer).frame = target.bounds
+    end
 
     add(UILabel, :label)
     add(UILabel, :footer)
