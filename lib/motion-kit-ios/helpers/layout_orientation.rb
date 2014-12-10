@@ -37,8 +37,15 @@ module MotionKit
         return orientation?(orientation)
       end
       define_method(orientation) do |&block|
+        orientation_block(orientation, block)
+      end
+    end
+
+    def orientation_block(orientation, block)
+      block = block.weak!
+      always do
         if orientation?(orientation)
-          yield
+          block.call
         end
       end
     end
