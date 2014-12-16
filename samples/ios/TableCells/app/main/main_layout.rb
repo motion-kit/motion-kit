@@ -12,7 +12,7 @@ class MainLayout < MK::Layout
   def table_style
     delegate self
     dataSource self
-    registerClass(Cell, forCellReuseIdentifier: 'identifier')
+    registerClass(CustomTableCell, forCellReuseIdentifier: 'identifier')
 
     constraints do
       left.equals(self.view)
@@ -28,45 +28,41 @@ class MainLayout < MK::Layout
 
   def tableView(table_view, cellForRowAtIndexPath: index_path)
     cell = table_view.dequeueReusableCellWithIdentifier('identifier')
-    cell.text = "#{index_path.row + 1}"
+    cell.headline = "#{index_path.row + 1}"
     cell
   end
 
 end
 
 
-class Cell < UITableViewCell
+class CustomTableCell < UITableViewCell
+  attr_accessor :headline
+  attr_accessor :sub_headline
+  attr_accessor :price
 
-  def initWithStyle(style, reuseIdentifier: identifier)
+  def initWithStyle(style, reuseIdentifier:identifier)
     super
-    @layout = CellLayout.new(root: self).build
+    @layout = CustomTableCellLayout.new(root: self)
+    @layout.build
     self
   end
 
-  def dealloc
-    NSLog("=============== main_layout.rb line #{__LINE__} ===============")
-    super
+  def headline=(new_text)
+    p layout: "0x#{@layout.object_id.to_s(16)}"
+    headline = @layout.get(:headline)
+    headline.text = new_text
   end
-
-  def text=(value)
-    @layout.get(:label).text = value
-  end
-
 end
 
-
-class CellLayout < MK::Layout
+class CustomTableCellLayout < MK::Layout
 
   def layout
-    add UILabel, :label
+    content_view do
+      add UILabel, :headline
+    end
   end
 
-  def dealloc
-    NSLog("=============== main_layout.rb line #{__LINE__} ===============")
-    super
-  end
-
-  def label_style
+  def headline_style
     background_color UIColor.blueColor
     constraints do
       left.equals(:superview)
