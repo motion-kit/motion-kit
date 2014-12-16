@@ -112,12 +112,11 @@ module MotionKit
         raise ContextConflictError.new("Already created the root view")
       end
 
+      @preset_root = nil
       @view = initialize_element(element, element_id)
 
-      if block
-        if @context
-          raise ContextConflictError.new("Already in a context")
-        end
+      if block && @context
+        raise ContextConflictError.new("Already in a context")
       end
 
       style_and_context(@view, element_id, &block)
@@ -483,11 +482,6 @@ module MotionKit
       # may be outside a 'context' block, so make sure to restore context to
       # it's previous value
       @context = nil
-
-      if @preset_root
-        @view = WeakRef.new(@view)
-        @preset_root = nil
-      end
 
       @view
     end
