@@ -46,9 +46,7 @@ class WindowLayout < MK::WindowLayout
       scrollable false
     end
 
-    initial do
-      string_value 'Peter Piper picked a peck of pickled peppers.'
-    end
+    string_value 'Peter Piper picked a peck of pickled peppers.'
   end
 
 end

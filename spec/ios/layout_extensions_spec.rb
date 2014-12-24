@@ -1,7 +1,7 @@
 describe "Layout extensions - iOS" do
 
   before do
-    @subject = MK::UIViewLayout.new
+    @subject = MK::UIViewHelpers.new
     @subject.instance_variable_set(:@context, "don't matter what i be, as long as i be.")
   end
 

@@ -3,13 +3,15 @@ describe 'Constraints - view_lookup method' do
   before do
     @layout = MK::Layout.new
     @constraint = nil
-    @view = nil
+    @view = UIView.new
+    @parent_view = UIView.new
+    @parent_view.addSubview(@view)
     @another_view = nil
   end
 
   it 'should support :superview' do
-    @superview = @layout.context(UIView.new) do
-      @view = @layout.add(UIView.new) do
+    @layout.context(@parent_view) do
+      @layout.context(@view) do
         @layout.constraints do
           @constraint = @layout.left.equals(:superview).plus(10)
         end
@@ -28,15 +30,15 @@ describe 'Constraints - view_lookup method' do
     resolved[0].firstItem.should.be.kind_of(UIView)
     resolved[0].firstAttribute.should == NSLayoutAttributeLeft
     resolved[0].relation.should == NSLayoutRelationEqual
-    resolved[0].secondItem.should == @superview
+    resolved[0].secondItem.should == @parent_view
     resolved[0].secondAttribute.should == NSLayoutAttributeLeft
     resolved[0].multiplier.should == 1
     resolved[0].constant.should == 10
   end
 
   it 'should support :another_view' do
-    @superview = @layout.context(UIView.new) do
-      @view = @layout.add(UIView.new) do
+    @layout.context(@parent_view) do
+      @layout.context(@view) do
         @layout.constraints do
           @constraint = @layout.left.equals(:another_view).plus(10)
         end
@@ -63,9 +65,9 @@ describe 'Constraints - view_lookup method' do
   end
 
   it 'should support @another_view' do
-    @superview = @layout.context(UIView.new) do
+    @layout.context(@parent_view) do
       @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
-      @view = @layout.add(UIView.new) do
+      @layout.context(@view) do
         @layout.constraints do
           @constraint = @layout.left.equals(@another_view).plus(10)
         end

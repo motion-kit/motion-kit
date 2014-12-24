@@ -1,7 +1,7 @@
-describe 'NSMenuLayout extensions' do
+describe 'NSMenuHelpers extensions' do
 
   before do
-    @subject = MK::NSMenuLayout.new
+    @subject = MK::NSMenuHelpers.new
   end
 
   it 'should have an `app_name` method' do

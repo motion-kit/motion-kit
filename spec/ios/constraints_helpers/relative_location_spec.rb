@@ -3,12 +3,14 @@ describe 'Constraints - Relative location helpers' do
   before do
     @layout = MK::Layout.new
     @constraint = nil
-    @view = nil
+    @view = UIView.new
+    @parent_view = UIView.new
+    @parent_view.addSubview(@view)
     @another_view = nil
   end
 
   it 'should support `above(:another_view)`' do
-    @view = @layout.context(UIView.new) do
+    @layout.context(@view) do
       @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       @layout.constraints do
         @constraint = @layout.above(:another_view)
@@ -33,7 +35,7 @@ describe 'Constraints - Relative location helpers' do
     resolved[0].constant.should == 0
   end
   it 'should support `below(:another_view)`' do
-    @view = @layout.context(UIView.new) do
+    @layout.context(@view) do
       @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       @layout.constraints do
         @constraint = @layout.below(:another_view)
@@ -58,7 +60,7 @@ describe 'Constraints - Relative location helpers' do
     resolved[0].constant.should == 0
   end
   it 'should support `before(:another_view)`' do
-    @view = @layout.context(UIView.new) do
+    @layout.context(@view) do
       @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       @layout.constraints do
         @constraint = @layout.before(:another_view)
@@ -83,7 +85,7 @@ describe 'Constraints - Relative location helpers' do
     resolved[0].constant.should == 0
   end
   it 'should support `after(:another_view)`' do
-    @view = @layout.context(UIView.new) do
+    @layout.context(@view) do
       @another_view = @layout.add UIView.alloc.initWithFrame([[1, 1], [2, 2]]), :another_view
       @layout.constraints do
         @constraint = @layout.after(:another_view)

@@ -10,7 +10,11 @@ module MotionKit
   end
 
   def setter(method_name)
-    "set#{method_name[0].capitalize}#{method_name[1..-1]}:"
+    setter = "set#{method_name[0].capitalize}#{method_name[1..-1]}"
+    unless setter.end_with?(':')
+      setter << ':'
+    end
+    setter
   end
 
   def appearance_class

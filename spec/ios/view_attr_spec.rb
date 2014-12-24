@@ -22,4 +22,11 @@ describe 'View attr' do
     label.should == @layout.label
   end
 
+  it 'should handle multiple views' do
+    @layout.view
+    text_field = @layout.text_field
+    text_field.should.be.kind_of(UITextField)
+    text_view = @layout.text_view
+    text_view.should.be.kind_of(UITextView)
+  end
 end

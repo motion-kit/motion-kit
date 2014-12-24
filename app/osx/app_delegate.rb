@@ -1,6 +1,7 @@
 class AppDelegate
   def applicationDidFinishLaunching(notification)
     buildMenu
+    return if RUBYMOTION_ENV == 'test'
     buildWindow
   end
 

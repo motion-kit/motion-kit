@@ -13,8 +13,8 @@ class TestRemoveLayout < MotionKit::Layout
     remove :label
   end
 
-  def remove_image
-    remove :image
+  def forget_image
+    forget :image
   end
 
   def remove_view

@@ -42,9 +42,7 @@ class WindowLayout < MK::WindowLayout
       drawsBackground false
     end
 
-    initial do
-      stringValue 'Press Generate'
-    end
+    stringValue 'Press Generate'
   end
 
 end

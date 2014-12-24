@@ -9,7 +9,7 @@
 2. Simple, easy to learn DSL
 3. Crossframework compatibility:
    - [UIKit][readmore-uikit]
-   - [ApplicationKit][readmore-applicationkit]
+   - [AppKit][readmore-appkit]
    - [AutoLayout][readmore-autolayout]
    - [Frame geometry][readmore-frames]
    - [CoreAnimation][readmore-coreanimation]
@@ -20,7 +20,7 @@
 7. Styles and layouts are "just code" (not hash-based like in Teacup)
 8. Written by [the authors][authors] of [ProMotion][] and [Teacup][]
 
-[authors]: CONTRIBUTORS.md
+[authors]: CONTRIBUTORS.yaml
 [Colin]: https://github.com/colinta
 [Jamon]: https://github.com/jamonholmgren
 [ProMotion]: https://github.com/clearsightstudio/ProMotion
@@ -29,8 +29,9 @@
 [SweetKit]: https://github.com/rubymotion/sweet-kit
 
 [READMORE]: https://github.com/rubymotion/motion-kit/blob/master/READMORE.md
+[readmore-migrating]:      https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#migrating-from-teacup
 [readmore-uikit]:          https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#uikit
-[readmore-applicationkit]: https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#applicationkit
+[readmore-appkit]: https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#appkit
 [readmore-coreanimation]:  https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#coreanimation
 [readmore-frames]:         https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#frames
 [readmore-autolayout]:     https://github.com/rubymotion/motion-kit/blob/master/READMORE.md#autolayout
@@ -41,6 +42,10 @@
 
 You can [read all about](#goodbye-teacup) why Colin decided that Teacup needed to
 be replaced with a new project, rather than upgraded or refactored.
+
+If you need to update your app to use MotionKit, see
+[READMORE.md][readmore-migrating] for an example of migrating stylesheets,
+styles, and constraints.
 
 
 ## Usage
@@ -104,7 +109,7 @@ class SimpleLayout < MotionKit::Layout
 
     # note: there are better ways to set the center, see the frame helpers below
     center [CGRectGetMidX(superview.bounds), CGRectGetMidY(superview.bounds)]
-    text_alignment UITextAlignmentCenter
+    text_alignment NSTextAlignmentCenter
     text_color UIColor.whiteColor
 
     # if you prefer to use shorthands from another gem, you certainly can!
@@ -188,7 +193,7 @@ class LoginLayout < MotionKit::Layout
         frame [[10, 10], ['100% - 10', :auto]]
       end
       add UITextField, :password_input do
-        frame below(:username_input, margin: 8)
+        frame below(:username_input, down: 8)
       end
     end
   end
@@ -241,10 +246,11 @@ include multiple stylesheets this way, just be careful around name collisions.
 module LoginStyles
 
   def login_button_style
+    # this example uses SugarCube to create UIColor and CGColor objects.
     background_color '#51A8E7'.uicolor
     title 'Log In'
     # `layer` returns a CALayer, which in turn becomes the new context inside
-    # this block!
+    # this block
     layer do
       corner_radius 7.0
       shadow_color '#000000'.cgcolor
@@ -333,17 +339,27 @@ def my_root_view_style
 end
 ```
 
-This is especially useful with collection views, table views, and table cells.
-Keep in mind that MotionKit will **not** retain a strong reference to your provided
-root view, so retain one yourself to prevent it from being deallocated.
+This is especially useful with collection views, table views, and table cells,
+where you can assign a root view explicitly:
+
+```ruby
+return MyCellLayout.new(root: cell).build
+```
+
+Keep in mind that MotionKit will **not** retain a strong reference when you
+provide a root view, so retain it yourself to prevent it from being
+deallocated.
 
 ### How do styles get applied?
 
 If you've used RMQ's Stylers, you'll recognize a very similar pattern here. In
 RMQ the 'style' methods are handed a 'Styler' instance, which wraps access to
 the view.  In MotionKit we make use of `method_missing` to call these methods
-indirectly.  That takes care of most methods related to styling, except those
-that take multiple arguments.  Those can get "helper" methods.
+indirectly.  That takes care of most methods related to styling, but you might
+want to write some "helper" methods so that your styling code is more concise.
+Some examples are included in the MotionKit core, but the [SweetKit][] gem has
+many more.  If you are writing helpers for UIKit or AppKit, please consider
+adding them to SweetKit, so we can all share in the productivity boost! :smiley:
 
 ```ruby
   def login_label_style
@@ -354,8 +370,9 @@ that take multiple arguments.  Those can get "helper" methods.
   # title on a UIButton
   def login_button_style
     title 'Press me'
-    # this gets delegated to UIButtonLayout#title(title), which in turn calls
+    # this gets delegated to UIButtonHelpers#title(title), which in turn calls
     # button.setTitle(title, forState: UIControlStateNormal)
+    # See uibutton_helpers.rb for implementation.
   end
 ```
 
@@ -383,15 +400,18 @@ Introspection and method_missing add a little overhead to your code, but in our
 benchmarking it is insignificant and undetectable. Let us know if you find any
 performance issues.
 
-You can easily add your own helpers to MotionKit's existing Layout classes. They
-are all named consistenly, e.g. `MotionKit::UIViewLayout`, e.g.
-`MotionKit::UILabelLayout`.  Just open up these classes and hack away.
+You can easily add your own helpers to MotionKit. They
+should all be named consistenly, e.g. `MotionKit::UIViewHelpers`,
+`MotionKit::UILabelHelpers`, etc.  You just need to specify the "target class" that
+your helper class is meant to work with.  Each class can only have *one helper
+class*.
 
 ```ruby
 module MotionKit
   # these helpers will only be applied to instances of UILabel and UILabel
   # subclasses
-  class UILabelLayout
+  class UILabelHelpers < UIViewHelpers
+    targets UILabel
 
     # style methods can accept any number of arguments, and a block. The current
     # view should be referred to via the method `target`
@@ -422,15 +442,23 @@ module MotionKit
 end
 ```
 
-For your own custom classes, or built-in classes that don't already have a
-`Layout` class defined, you can provide a Layout class by calling the `targets`
-method in your class body.
+### Adding your own helper methods
+
+For your own custom classes, or when you want to write
+helper methods for a built-in class, you will need to write a class that
+"`targets`" that class.  This will be a subclass of `MK::UIViewHelpers`; it looks
+and *feels* like a `MK::Layout` subclass, but these classes are used to extend
+the MotionKit DSL, and should not be instantiated or used to build layouts.
+
+Again, to be clear: you should be subclassing `MK::Layout` when you build your
+controller layouts, and you should write a subclass of `MK::UIViewHelpers` *only*
+when you are adding extensions to the MotionKit DSL.
 
 ```ruby
-# Be sure to extend an existing Layout class, otherwise you'll lose a lot of
-# functionality.  Often this will be `MK::UIViewLayout` on iOS and
-# `MK::NSViewLayout` on OS X.
-class CustomLayout < MK::UIViewLayout
+# Be sure to extend an existing Helpers class, otherwise you'll lose a lot of
+# functionality.  Often this will be `MK::UIViewHelpers` on iOS and
+# `MK::NSViewHelpers` on OS X.
+class CustomViewHelpers < MK::UIViewHelpers
   targets CustomView
 
   def fore_color(value)
@@ -577,7 +605,7 @@ pin_to_center:       View stays centered, size does not change.
 pin_to_right:        View stays centered on the right, size does not change.
 pin_to_bottom_left:  View stays in bottom-left corner, size does not change.
 pin_to_bottom:       View stays in bottom-center, size does not change.
-pin_to_bottom_right: View stays in bottom-left corner, size does not change.
+pin_to_bottom_right: View stays in bottom-right corner, size does not change.
 ```
 
 
@@ -621,6 +649,8 @@ constraints do
   # setting the priority:
   (x.is >= 10).priority(:required)
   (x.is == 15).priority(:low)
+  # setting the identifier
+  x.equals(15).identifier('foo')
 end
 ```
 
@@ -629,12 +659,20 @@ the element-id as a placeholder for a view works especially well here.
 
 ```ruby
 constraints do
-  top_left.equals x: 5, y:5
+  top_left.equals x: 5, y: 5     # this sets the origin relative to the superview
+  top_left.equals(:superview).plus([5, 5])  # this will do the same thing!
+
   width.equals(:foo).minus(10)  # searches for a view named :foo
   height.equals(:foo).minus(10)
   # that's repetitive, so just set 'size'
   size.equals(:foo).minus(10)
   size.equals(:foo).minus([10, 15])  # 10pt thinner, 15pt shorter
+
+  # if you are using a view that has a sensible intrinsic size, like an image,
+  # you can use :scale to have the width or height adjusted according to the
+  # other size
+  width.equals(:superview)
+  height(:scale)  # scale the height according to the width
 end
 ```
 
@@ -675,6 +713,47 @@ add UIView, :bar do
 end
 ```
 
+One common use case is to use a child layout to create many instances of the
+same layout that repeat, for instance a "row" of content.  In this case you will
+probably have many views with the same id, and you will not know the index of
+the container view that you want to add constraints to.  In this situation, use
+the `nearest`, `previous` or `next` method to find a container, sibling, or
+child view.
+
+`previous` and `next` are easy; they just search for a sibling view.  No
+superviews or subviews are searched.
+
+`nearest` will search child views, siblings, and superviews, in that order.  The
+"distance" is calculated as such:
+
+- the current view
+- subviews
+- siblings
+- superview
+- superview's siblings, or a child of the sibling (depth-first search)
+- continue up the tree
+
+See the AutoLayout sample app for an example of this usage.
+
+```ruby
+items.each do |item|
+  add UIView, :row do
+    add UIImageView, :avatar
+    add UILabel, :title
+  end
+end
+
+def title_style
+  constraints do
+    # center the view vertically
+    center.equals(nearest(:row))
+    # and place it to the right of the :avatar
+    left.equals(nearest(:avatar), :right).plus(8)
+    right.equals(nearest(:row)).minus(8)
+  end
+end
+```
+
 One pain point in working with constraints is determining when to add them to
 your views.  We tried really hard to figure out a way to automatically add them,
 but it's just an untenable problem (Teacup suffers from a similar conundrum).
@@ -689,7 +768,7 @@ view, you need to use a separate method that is called after the view hierarchy
 is created.
 
 ```ruby
-class MainLayout < UIViewLayout
+class MainLayout < MK::Layout
 
   def layout
     add UILabel, :label do
@@ -700,8 +779,10 @@ class MainLayout < UIViewLayout
     end
   end
 
-  # this method will be called from `UIViewController#updateViewConstraints`
+  # You should call this method from `UIViewController#updateViewConstraints`
+  # and pass in your controller
   def add_constraints(controller)
+    # guard against adding these constraints more than once
     unless @layout_constraints_added
       @layout_constraints_added = true
       constraints(:label) do
@@ -726,6 +807,57 @@ class MainController < UIViewController
   end
 
 end
+```
+
+#### Animating and Changing constraints
+
+It might feel natural to treat constraints as "frame setters", but they are
+persistent objects that are attached to your views.  This means if you create
+new constraints, like during a screen rotation, your old constraints don't “go
+away”.  For example:
+
+```ruby
+def label_style
+  portrait do
+    left 10
+  end
+
+  landscape do
+    left 15  # adds *another* constraint on the left attribute - in addition to the `left 10` constraint!
+  end
+end
+```
+
+Instead, you should retain the constraint and make changes to it directly:
+
+```ruby
+  constraints do
+    @label_left_constraint = left 10
+  end
+
+  # reapply blocks are called via the Layout#reapply! method.
+  reapply do
+    portrait do
+      @label_left_constraint.equals 10
+    end
+
+    landscape do
+      @label_left_constraint.equals 15
+    end
+  end
+```
+
+If you want to animate a constraint change, you can use `layoutIfNeeded` from
+within a UIView animation block.  The sample app "Chatty" does this to move a
+text field when the keyboard is displayed.  `kbd_height` is the height of the
+keyboard.
+
+```ruby
+@container_bottom.minus kbd_height  # set @container_bottom.constant = 0 when the keyboard disappears
+
+UIView.animateWithDuration(duration, delay: 0, options: curve, animations: -> do
+  self.view.layoutIfNeeded  # applies the constraint change
+end, completion: nil)
 ```
 
 ### MotionKit::Events
@@ -767,29 +899,34 @@ add UIView, :container do
 end
 ```
 
-### Update views via 'initial', 'reapply', and 'deferred'
+### Update views via 'always', 'reapply', and 'deferred'
 
-If you call 'layout.reapply!', your style methods will be called again (but
-NOT the `layout` method). You very well might want to control what methods get
-called on later invocations, or only on the *initial* layout.
+In your style methods, you can register blocks that get called during
+"restyling", which is usually triggered by a rotation change (though, if you're
+making good use of autoresizingMask or AutoLayout constraints, you should not
+have to do this, right?).
 
-This is more for being able to initialize values, or to handle orientation, than
-anything else.  There is not much performance increase/decrease if you just
-reapply styles every time, but you might not want to have your frame or colors
-reset, if you've done some animation.
+It's important to note that the style methods are not actually called again. The
+blocks are retained on the view, along with the "context", and calling
+`reapply!` calls all those blocks with the context set as you'd expect.
+
+If you have code that you want to be called during initialization *and* during
+reapply, use the `always` helper:
 
 ```ruby
 def login_button_style
-  # only once, when the `layout` is created
-  initial do
-  end
+  # only once, when the layout is first being created
+  title 'initial title'
 
-  # on later invocations
+  # only during reapply
   reapply do
+    title 'something happened!'
   end
 
-  # style every time
-  title 'Press Me'
+  # applied every time
+  always do
+    title 'You win!'
+  end
 end
 ```
 
@@ -852,6 +989,16 @@ annoying subtletees of the NSCell/NSControl dichotomy.
 
     gem install sweet-kit
 
+
+# Gotchas
+
+### A Note on `add` and `remove`
+
+When you use the `add` method to add a subview, that view will be retained by
+the Layout *even if you remove it from the view hierarchy*.  If you want the
+Layout to forget all about the view, call `remove(view)` (which also calls
+`removeFromSuperview`) or `forget(element_id)` (which only removes it from the
+Layout) on the Layout.
 
 # Contributing
 

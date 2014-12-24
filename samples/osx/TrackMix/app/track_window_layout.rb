@@ -1,7 +1,11 @@
 class TrackWindowLayout < MotionKit::WindowLayout
+  view :text_field
+  view :slider
+  view :mute_button
 
   def layout
     root(:window) do
+      # add(QuartzView, :bg_view)
       add(NSTextField, :text_field)
       add(NSSlider, :slider)
       add(NSButton, :mute_button)
@@ -9,39 +13,57 @@ class TrackWindowLayout < MotionKit::WindowLayout
   end
 
   def window_style
-    initial do
-      title = NSBundle.mainBundle.infoDictionary['CFBundleName']
-      frame [[240, 180], [280, 380]]
+    title NSBundle.mainBundle.infoDictionary['CFBundleName']
+    width 280
+    height 380
+    frame from_center
+    min_size [180, 250]
+    # frame_autosave_name('main window')
+  end
+
+  def bg_view_style
+    constraints do
+      top_left.equals(:superview)
+      size.equals(:superview)
     end
   end
 
   def text_field_style
-    initial do
-      stringValue '5'
-      alignment NSCenterTextAlignment
-      bezelStyle NSTextFieldRoundedBezel
+    intValue 5
+    alignment NSCenterTextAlignment
+    bezelStyle NSTextFieldRoundedBezel
+
+    constraints do
+      height 22
+      top.equals(:superview).plus(20)
+      left.equals(:superview).plus(20)
+      right.equals(:superview).minus(20)
     end
-    # todo: make these all relative to 'window.frame'
-    frame([[90, 318], [100, 22]])
   end
 
   def slider_style
-    initial do
-      minValue 0
-      maxValue 11
-      intValue 5
+    minValue 0
+    maxValue 11
+    intValue 5
+
+    constraints do
+      center_x(:superview)
+      top.equals(:text_field, :bottom).plus(20)
+      bottom.equals(:mute_button, :top).minus(20)
     end
-    # todo: make these all relative to 'window.frame'
-    frame([[129, 62], [22, 236]])
+    # frame([[129, 62], [22, 236]])
   end
 
   def mute_button_style
-    initial do
-      title 'Mute'
-      bezelStyle NSTexturedRoundedBezelStyle
+    title 'Mute'
+    bezelStyle NSTexturedRoundedBezelStyle
+
+    constraints do
+      bottom.equals(:superview).minus(20)
+      width 100
+      height 22
+      center_x.equals(:superview)
     end
-    # todo: make these all relative to 'window.frame'
-    frame([[90, 20], [100, 22]])
   end
 
 end

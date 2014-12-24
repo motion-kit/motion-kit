@@ -3,7 +3,7 @@ class CustomLabel < UILabel
 end
 
 
-class CustomLabelLayout < MK::UIViewLayout
+class CustomLabelHelpers < MK::UIViewHelpers
   targets CustomLabel
 
   def text(value)
@@ -18,11 +18,13 @@ class CustomLabelLayout < MK::UIViewLayout
 end
 
 
-class TestCustomLayout < CustomLabelLayout
+class TestCustomLayout < MK::Layout
 
   def layout
-    attributes NSFontAttributeName => UIFont.fontWithName('Avenir-Roman', size: 10)
-    text 'custom text'
+    root CustomLabel do
+      attributes NSFontAttributeName => UIFont.fontWithName('Avenir-Roman', size: 10)
+      text 'custom text'
+    end
   end
 
 end

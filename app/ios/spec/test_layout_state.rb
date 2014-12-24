@@ -5,9 +5,8 @@ class TestLayoutState < MK::Layout
   end
 
   def root_style
-    initial do
-      text 'initial'
-    end
+    text 'initial'
+
     reapply do
       text 'reapply'
     end
@@ -18,9 +17,8 @@ class TestLayoutState < MK::Layout
   end
 
   def any_view_style
-    initial do
-      text 'initial'
-    end
+    text 'initial'
+
     reapply do
       text 'reapply'
     end
