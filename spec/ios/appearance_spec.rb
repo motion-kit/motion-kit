@@ -10,6 +10,23 @@ describe MotionKit::Appearance do
     end
   end
 
+  describe MotionKit::UILabelAppearance do
+    it "sets UILabel font" do
+      UILabel.appearance.font.should == UIFont.systemFontOfSize(15.0)
+    end
+
+    context "when nested" do
+      it "sets UILabel font" do
+        UILabel.appearanceWhenContainedIn(UIView, nil).font.should == UIFont.systemFontOfSize(19.0)
+      end
+
+      it "sets a deeply nested UIView bg color" do
+        UIView.appearanceWhenContainedIn(UIView, UILabel, nil).backgroundColor.should == UIColor.magentaColor
+        UIView.appearanceWhenContainedIn(UIView, UIImageView, nil).backgroundColor.should == UIColor.magentaColor
+      end
+    end
+  end
+
   describe MotionKit::UIToolbarAppearance do
     it "sets UIToolbar barTintColor" do
       UIToolbar.appearance.barTintColor.should == UIColor.blueColor

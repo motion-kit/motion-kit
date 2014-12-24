@@ -3,6 +3,20 @@ class TestAppearance < MK::Appearance
   def build
     style UIView do
       background_color UIColor.orangeColor
+
+      style UILabel do
+        font UIFont.systemFontOfSize(19.0)
+      end
+
+      style UILabel, UIImageView do
+        style UIView do
+          background_color UIColor.magentaColor
+        end
+      end
+    end
+
+    style UILabel do
+      font UIFont.systemFontOfSize(15)
     end
 
     style UIToolbar do

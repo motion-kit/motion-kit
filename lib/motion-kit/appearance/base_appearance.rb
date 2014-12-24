@@ -21,7 +21,7 @@ module MotionKit
       if context_stack.length == 1
         context_stack.last.appearance
       else
-        context_stack.last.appearanceWhenContainedIn(context_stack[0..-2])
+        context_stack.last.appearanceWhenContainedIn(*context_stack[0..-2], nil)
       end
     end
 

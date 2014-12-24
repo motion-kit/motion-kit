@@ -4,6 +4,7 @@
 # @requires module:MotionKit::UIToolbarAppearance
 # @requires module:MotionKit::UITableViewCellAppearance
 # @requires module:MotionKit::UITableViewAppearance
+# @requires module:MotionKit::UILabelAppearance
 module MotionKit
   class Appearance < MotionKit::BaseAppearance
 
@@ -11,6 +12,7 @@ module MotionKit
     include UIToolbarAppearance
     include UITableViewCellAppearance
     include UITableViewAppearance
+    include UILabelAppearance
 
   end
 end
