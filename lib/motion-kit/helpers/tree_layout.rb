@@ -197,7 +197,7 @@ module MotionKit
 
     def initial(&block)
       raise ArgumentError.new('Block required') unless block
-      puts('this method is no longer necessary!  all code that *isn\'t in a `reapply` block is now only applied during initial setup.')
+      puts('the `initial` method is no longer necessary!  all code that *isn\'t in a `reapply` block is now only applied during initial setup.')
 
       if initial?
         yield
