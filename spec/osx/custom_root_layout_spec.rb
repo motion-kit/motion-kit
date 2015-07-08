@@ -50,8 +50,8 @@ describe 'Custom Root Layouts' do
   it "should allow bare styles in layout when root is specified in initializer" do
     @subject = TestNoRootLayout.new(root: @view).build
     @subject.view.should == @view
-    @subject.view.backgroundColor.should == UIColor.redColor
-    @subject.view.subviews.first.should.be.kind_of?(UILabel)
+    @subject.view.backgroundColor.should == NSColor.redColor
+    @subject.view.subviews.first.should.be.kind_of?(NSTextField)
   end
 
 end
