@@ -39,7 +39,7 @@ module MotionKit
         when :fill_bottom
           value |= NSViewWidthSizable | NSViewMaxYMargin
         when :fill_width
-          value |= NSViewMinYMargin | NSViewWidthSizable | NSViewMaxXMargin
+          value |= NSViewMinYMargin | NSViewWidthSizable | NSViewMaxYMargin
         when :fill_left
           value |= NSViewHeightSizable | NSViewMaxXMargin
         when :fill_right
