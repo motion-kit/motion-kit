@@ -860,6 +860,42 @@ UIView.animateWithDuration(duration, delay: 0, options: curve, animations: -> do
 end, completion: nil)
 ```
 
+You can also activate/deactivate constraints selectively, and animate the
+transitions between them.
+
+```ruby
+class MyLayout < MK::Layout
+
+  def layout
+    add UIButton, :my_button do
+      constraints do
+        @top_constraint = top.equals(:superview, :bottom)
+        @bottom_constraint = bottom.equals(:superview).deactivate
+        left.equals(:superview)
+        right.equals(:superview)
+        height 48
+      end
+  end
+
+  def show_button
+    @top_constraint.deactivate
+    @bottom_constraint.activate
+    UIView.animateWithDuration(0.3, animations: -> do
+      self.view.layoutIfNeeded
+    end)
+  end
+
+  def hide_button
+    @bottom_constraint.deactivate
+    @top_constraint.activate
+    UIView.animateWithDuration(0.3, animations: -> do
+      self.view.layoutIfNeeded
+    end)
+  end
+
+end
+```
+
 ### MotionKit::Events
 
     gem install motion-kit-events
