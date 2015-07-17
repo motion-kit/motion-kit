@@ -278,9 +278,13 @@ module MotionKit
     def active=(active)
       if @resolved
         if active
-          common_ancestor.addConstraint(@resolved[0])
+          @resolved.each do |constraint|
+            common_ancestor.addConstraint(constraint)
+          end
         else
-          common_ancestor.removeConstraint(@resolved[0])
+          @resolved.each do |constraint|
+            common_ancestor.removeConstraint(constraint)
+          end
         end
       else
         @active = active
