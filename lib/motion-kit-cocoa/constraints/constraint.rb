@@ -55,6 +55,7 @@ module MotionKit
       @constant = 0
       @priority = nil
       @compare_flag = false
+      @active = true
     end
 
     # like `equals`, but also sets `compare_flag` to true, so you can use ==,
@@ -267,6 +268,72 @@ module MotionKit
         end
 
         [nsconstraint]
+      end
+    end
+
+    def active
+      @active
+    end
+
+    def active=(active)
+      if @resolved
+        if active
+          @resolved.each do |constraint|
+            common_ancestor.addConstraint(constraint)
+          end
+        else
+          @resolved.each do |constraint|
+            common_ancestor.removeConstraint(constraint)
+          end
+        end
+      else
+        @active = active
+      end
+    end
+
+    def activate
+      self.active = true
+      self
+    end
+
+    def deactivate
+      self.active = false
+      self
+    end
+
+    def common_ancestor
+      if @resolved
+        @common_ancestor ||= begin
+          constraint = @resolved[0]
+          base_view_class = MotionKit.base_view_class
+
+          if constraint.firstItem.is_a?(base_view_class) && constraint.secondItem.is_a?(base_view_class)
+            common_ancestor = nil
+
+            ancestors = [constraint.firstItem]
+            parent_view = constraint.firstItem
+            while parent_view = parent_view.superview
+              ancestors << parent_view
+            end
+
+            current_view = constraint.secondItem
+            while current_view
+              if ancestors.include? current_view
+                common_ancestor = current_view
+                break
+              end
+              current_view = current_view.superview
+            end
+
+            unless common_ancestor
+              raise NoCommonAncestorError.new("No common ancestors between #{constraint.firstItem} and #{constraint.secondItem}")
+            end
+          else
+            common_ancestor = constraint.firstItem
+          end
+
+          common_ancestor
+        end
       end
     end
 
