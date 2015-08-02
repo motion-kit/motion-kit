@@ -14,6 +14,7 @@ MotionKit, for RubyMotion, is a DSL for creating and styling views in iOS and OS
 DESC
 
   gem.homepage    = 'https://github.com/rubymotion/motion-kit'
+  gem.license     = ['MIT']
 
   gem.files       = Dir.glob('lib/**/*.rb')
   gem.files      << 'README.md'
