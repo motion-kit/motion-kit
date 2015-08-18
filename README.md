@@ -1,5 +1,7 @@
 # MotionKit
 
+[![Join the chat at https://gitter.im/motion-kit/motion-kit](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/motion-kit/motion-kit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/motion-kit/motion-kit.svg?branch=master)](https://travis-ci.org/motion-kit/motion-kit)
 [![Version](https://badge.fury.io/rb/motion-kit.svg)](https://rubygems.org/gems/motion-kit)
 
