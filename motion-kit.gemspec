@@ -4,7 +4,7 @@ require File.expand_path('../lib/motion-kit/version.rb', __FILE__)
 Gem::Specification.new do |gem|
   gem.name          = 'motion-kit'
   gem.version       = MotionKit::VERSION
-  gem.licenses      = ['BSD']
+  gem.licenses      = ['MIT']
 
   gem.authors = ['Colin T.A. Gray', 'Jamon Holmgren']
   gem.email   = ['colinta@gmail.com', 'jamon@clearsightstudio.com']
@@ -14,7 +14,6 @@ MotionKit, for RubyMotion, is a DSL for creating and styling views in iOS and OS
 DESC
 
   gem.homepage    = 'https://github.com/rubymotion/motion-kit'
-  gem.license     = ['MIT']
 
   gem.files       = Dir.glob('lib/**/*.rb')
   gem.files      << 'README.md'
