@@ -6,6 +6,8 @@ if platform == 'ios'
   require 'motion/project/template/ios'
 elsif platform == 'osx'
   require 'motion/project/template/osx'
+elsif platform == 'tvos'
+  require 'motion/project/template/tvos'
 end
 
 begin

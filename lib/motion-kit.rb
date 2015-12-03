@@ -14,6 +14,8 @@ Motion::Project::App.setup do |app|
     platform_name = 'ios'
   elsif platform.to_s.start_with?('osx')
     platform_name = 'osx'
+  elsif platform.to_s.start_with?('tvos')
+    platform_name = 'tvos'
   end
   platform_lib = File.join(File.dirname(__FILE__), "motion-kit-#{platform_name}")
   unless File.exists? platform_lib
