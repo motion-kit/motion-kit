@@ -2,6 +2,10 @@
 module MotionKit
   class BaseLayout
 
+    def tv?
+      UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomTV
+    end
+
     def iphone?
       UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone
     end
@@ -22,7 +26,7 @@ module MotionKit
       UIScreen.mainScreen.respond_to?(:scale) && UIScreen.mainScreen.scale == 2
     end
 
-    [:iphone, :iphone4, :iphone35, :ipad, :retina].each do |method_name|
+    [:tv, :iphone, :iphone4, :iphone35, :ipad, :retina].each do |method_name|
       define_method(method_name) do |&block|
         block.call if self.send("#{method_name}?")
       end

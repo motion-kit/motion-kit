@@ -6,27 +6,34 @@ describe 'Device helpers' do
 
   it 'should have device helpers' do
     @layout.context({}) do
-      @layout.iphone?.should == true
-      @layout.iphone4?.should == true
+      @layout.tv?.should == true
+      @layout.iphone?.should == false
+      @layout.iphone4?.should == false
       @layout.iphone35?.should == false
       @layout.ipad?.should == false
-      @layout.retina?.should == true
+      @layout.retina?.should == false
     end
   end
 
   it 'should have device (iphone do end) helpers' do
     @layout.context({}) do
       @check = false
-      @layout.iphone do
+      @layout.tv do
         @check = true
       end
       @check.should == true
 
       @check = false
+      @layout.iphone do
+        @check = true
+      end
+      @check.should == false
+
+      @check = false
       @layout.iphone4 do
         @check = true
       end
-      @check.should == true
+      @check.should == false
 
       @check = false
       @layout.iphone35 do
@@ -44,7 +51,7 @@ describe 'Device helpers' do
       @layout.retina do
         @check = true
       end
-      @check.should == true
+      @check.should == false
     end
   end
 
