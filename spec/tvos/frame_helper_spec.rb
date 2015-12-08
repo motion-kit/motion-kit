@@ -1,9 +1,8 @@
 describe 'Frame helpers' do
-  tests UIViewController
 
   before do
     @layout = TestEmptyLayout.new
-    top_view = @controller.view
+    top_view = UIView.new
     @layout.root = top_view
 
     @view_size = CGSize.new(8, 10)
