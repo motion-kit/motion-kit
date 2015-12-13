@@ -7,7 +7,7 @@
 
 *The RubyMotion layout and styling gem.*
 
-1. Crossplatform compatibility: iOS, OSX, and planned support for Android
+1. Crossplatform compatibility: iOS, OSX, tvOS and planned support for Android
 2. Simple, easy to learn DSL
 3. Crossframework compatibility:
    - [UIKit][readmore-uikit]
