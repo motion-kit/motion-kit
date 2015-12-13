@@ -11,3 +11,4 @@ script:
     - bundle exec rake clean
     - bundle exec rake spec
     - bundle exec rake spec platform=osx
+	- bundle exec rake spec platform=tvos
