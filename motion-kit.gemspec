@@ -1,9 +1,10 @@
 # -*- encoding: utf-8 -*-
 # stub: motion-kit 0.18.0 ruby lib
+require './lib/motion-kit/version'
 
 Gem::Specification.new do |s|
   s.name = "motion-kit"
-  s.version = "0.18.0"
+  s.version = MotionKit::VERSION
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
