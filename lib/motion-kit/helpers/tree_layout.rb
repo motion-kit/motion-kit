@@ -432,6 +432,19 @@ module MotionKit
       removed
     end
 
+    def remove_view(element_id, view)
+      unless is_parent_layout?
+        return parent_layout.remove_view(element_id, view)
+      end
+      removed = forget_view(element_id, view)
+      if removed
+        context(self.view) do
+          self.apply(:remove_child, removed)
+        end
+      end
+      removed
+    end
+
     # Removes a view from the list of elements this layout is "tracking", but
     # leaves it in the view hierarchy.  Returns the views that were removed.
     def forget(element_id)
@@ -446,6 +459,18 @@ module MotionKit
       removed
     end
 
+    def forget_view(element_id, view)
+      unless is_parent_layout?
+        return parent_layout.remove_view(element_id, view)
+      end
+      removed = nil
+      context(self.view) do
+        removed = @elements[element_id].delete(view)
+      end
+      removed
+    end
+
+
     def create_default_root_context
       if @assign_root
         # Originally I thought default_root should be `apply`ied like other
@@ -458,7 +483,7 @@ module MotionKit
       end
     end
 
-  protected
+    protected
 
     # This method builds the layout and returns the root view.
     def build_view
