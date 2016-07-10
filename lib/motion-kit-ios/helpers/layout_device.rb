@@ -6,6 +6,14 @@ module MotionKit
       UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone
     end
 
+    def iphone55?
+      iphone? && UIScreen.mainScreen.bounds.size.width == 414 && UIScreen.mainScreen.bounds.size.height == 736
+    end
+
+    def iphone47?
+      iphone? && UIScreen.mainScreen.bounds.size.width == 375 && UIScreen.mainScreen.bounds.size.height == 667
+    end
+
     def iphone4?
       iphone? && UIScreen.mainScreen.bounds.size.width == 320 && UIScreen.mainScreen.bounds.size.height == 568
     end
