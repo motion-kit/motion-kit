@@ -436,7 +436,7 @@ module MotionKit
       unless is_parent_layout?
         return parent_layout.remove_view(element_id, view)
       end
-      removed = forget_view(element_id, view)
+      removed = forget_tree(element_id, view)
       if removed
         context(self.view) do
           self.apply(:remove_child, removed)
@@ -463,13 +463,28 @@ module MotionKit
       unless is_parent_layout?
         return parent_layout.remove_view(element_id, view)
       end
+      # mp "forgetting #{element_id}, #{view}"
       removed = nil
       context(self.view) do
-        removed = @elements[element_id].delete(view)
+        removed = @elements[element_id].delete(view) if @elements[element_id]
       end
       removed
     end
 
+    # returns the root view that was removed, if any
+    def forget_tree(element_id, view)
+      removed = forget_view(element_id, view)
+      if view.subviews
+        view.subviews.each do | sub |
+          if (sub_ids = sub.motion_kit_meta[:motion_kit_ids])
+            sub_ids.each do | sub_id |
+              forget_tree(sub_id, sub) || []
+            end
+          end
+        end
+      end
+      removed
+    end
 
     def create_default_root_context
       if @assign_root
