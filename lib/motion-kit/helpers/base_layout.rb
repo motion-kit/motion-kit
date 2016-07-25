@@ -92,6 +92,8 @@ module MotionKit
       return new_target unless block
       # this little line is incredibly important; the context is only set on
       # the top-level Layout object.
+
+      # mp "MOTIONKIT CONTEXT is #{new_target} meta: #{new_target.motion_kit_meta}"
       return parent_layout.context(new_target, &block) unless is_parent_layout?
 
       if new_target.is_a?(Symbol)
