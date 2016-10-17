@@ -32,6 +32,10 @@ module MotionKit
       target.setTitleShadowColor(value, forState: state)
     end
 
+    def title_font(font)
+      target.titleLabel.setFont(font)
+    end
+
     def background_image(value)
       background_image(value, state: UIControlStateNormal)
     end
