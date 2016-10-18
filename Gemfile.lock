@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    motion-kit (1.0.2)
+    motion-kit (1.0.3)
 
 GEM
   remote: https://rubygems.org/
