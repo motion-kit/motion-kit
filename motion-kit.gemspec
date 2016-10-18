@@ -23,5 +23,5 @@ Gem::Specification.new do |s|
     s.specification_version = 4
   end
 
-  s.add_development_dependency(%q<dbt>, [">= 1.1.5", "~> 1.1"])
+  s.add_dependency(%q<dbt>, [">= 1.1.5", "~> 1.1"])
 end
