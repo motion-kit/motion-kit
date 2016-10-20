@@ -208,7 +208,8 @@ end
 In MotionKit, it is easy to add views on the fly using the same API as used during layout. 
 ```ruby
 def add_button style, button_title
-  context get(:inputs)  #Two very useful methods for accessing/modifying previously added views
+
+  context get(:inputs) do #Two very useful methods for accessing/modifying previously added views
     add UIButton, :dynamic_button do 
       title button_title
       constraints do # if using autolayout
