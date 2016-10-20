@@ -215,7 +215,7 @@ module MotionKit
     # If there is no context, a default root view can be created if that has
     # been enabled (e.g. within the `layout` method).  The block is run in the
     # context of the new view.
-    def add(element, element_id=nil, &block)
+    def add(element, element_id=nil, options={}, &block)
       # make sure we have a target - raises NoContextError if none exists
       self.target
 
@@ -226,7 +226,7 @@ module MotionKit
       # We want to be sure that the element has a supeview or superlayer before
       # the style method is called.
       element = initialize_element(element, element_id)
-      self.apply(:add_child, element)
+      self.apply(:add_child, element, options)
       style_and_context(element, element_id, &block)
 
       element
