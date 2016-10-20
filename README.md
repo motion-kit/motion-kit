@@ -203,6 +203,31 @@ end
 ```
 
 
+### Dynamically adding views
+
+In MotionKit, it is easy to add views on the fly using the same API as used during layout. 
+```ruby
+def add_button style, button_title
+
+  context get(:inputs) do #Two very useful methods for accessing/modifying previously added views
+    add UIButton, :dynamic_button do 
+      title button_title
+      constraints do # if using autolayout
+        ...
+      end
+    end
+  end
+end
+```
+
+During layout, z-order is determined by the sequence in which views are added to the hierarchy. You can control this dynamically by supplying :behind, :in_front_of, or :z_index options
+```ruby
+add UIImageView, :highlight_square, behind: get(:dynamic_button)
+add UIImageView, :x_marks_the_spot, in_front_of: @selected_label 
+add UILabel, :subterranian_marker, z_index: 4 #becomes the 4th view in the subview hierarchy
+```
+
+
 ### Styles are compiled, simple, and clean
 
 In MotionKit, when you define a method that has the same name as a view
