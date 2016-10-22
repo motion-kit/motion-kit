@@ -220,7 +220,7 @@ def add_button style, button_title
 end
 ```
 
-During layout, z-order is determined by the sequence in which views are added to the hierarchy. You can control this dynamically by supplying :behind, :in_front_of, or :z_index options
+During layout, z-order is determined by the sequence in which views are added to the hierarchy. You can control this dynamically by supplying :behind, :in_front_of, or :z_index options (:z_index not supported in OS X)
 ```ruby
 add UIImageView, :highlight_square, behind: get(:dynamic_button)
 add UIImageView, :x_marks_the_spot, in_front_of: @selected_label 
