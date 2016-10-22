@@ -19,8 +19,16 @@ module MotionKit
         defer: false)
     end
 
-    def add_child(subview)
-      target.contentView.addSubview(subview)
+    def add_child(subview, options={})
+      if (sibling = options[:behind])
+        target.contentView.addSubview(subview, positioned: NSWindowBelow, relativeTo: sibling)
+      elsif (sibling = options[:in_front_of])
+        target.contentView.addSubview(subview, positioned: NSWindowAbove, relativeTo: sibling)
+      elsif (z_index = options[:z_index])
+        NSLog('Warning! :z_index option not supported in OS X when adding a child view')
+      else
+        target.contentView.addSubview(subview)
+      end
     end
 
     def remove_child(subview)

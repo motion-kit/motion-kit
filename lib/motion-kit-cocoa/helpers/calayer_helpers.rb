@@ -9,7 +9,7 @@ module MotionKit
       self.class.targets.layer
     end
 
-    def add_child(subview)
+    def add_child(subview, options={})
       target.addSublayer(subview)
     end
 

@@ -16,7 +16,7 @@ module MotionKit
       menu_class.alloc.init
     end
 
-    def add_child(submenu)
+    def add_child(submenu, options={})
       target.addItem(submenu)
     end
 
