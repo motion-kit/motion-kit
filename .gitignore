@@ -17,3 +17,4 @@ nbproject
 .ruby-version
 .bundle/*
 samples/ios/*/vendor
+/logo
