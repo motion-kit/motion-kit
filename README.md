@@ -1035,6 +1035,76 @@ class LoginLayout < MotionKit::Layout
 end
 ```
 
+### MK::Appearance
+
+MotionKit includes a nice lightweight UIAppearance DSL. Just create a subclass, like this:
+
+```ruby
+class TestAppearance < MK::Appearance
+
+  def build
+    style UIView do
+      background_color UIColor.orangeColor
+    end
+
+    style UILabel do
+      font UIFont.systemFontOfSize(15)
+    end
+
+    style UIToolbar do
+      bar_tint_color UIColor.blueColor
+      background_image UIImage.imageNamed('Default-568h'), toolbar_position:UIToolbarPositionAny, bar_metrics:UIBarMetricsDefault
+      shadow_image UIImage.imageNamed('Default-568h'), toolbar_position:UIToolbarPositionAny
+    end
+
+    style UITableViewCell do
+      separator_inset UIEdgeInsetsMake(1.0, 2.0, 3.0, 4.0)
+    end
+
+    style UITableView do
+      separator_inset UIEdgeInsetsMake(1.0, 2.0, 3.0, 4.0)
+      section_index_color UIColor.purpleColor
+      section_index_background_color UIColor.greenColor
+      section_index_tracking_background_color UIColor.clearColor
+    end
+  end
+
+end
+```
+
+Then, call it in your AppDelegate:
+
+```ruby
+class AppDelegate
+  def application(app, didFinishLaunchingWithOptions:options)
+    MyAppearance.new.build
+  end
+end
+```
+
+#### Nesting appearance defaults
+
+You can also nest appearances. For example, in the following contrived code, the UILabel
+will only have a blue background if it's contained in a UIScrollView OR a UITableView
+that is contained a UIView subclass called MyBigView.
+
+```ruby
+class TestAppearance < MK::Appearance
+
+  def build
+    style MyBigView do # main wrapper
+      style UIScrollView, UITableView do # Either UIScrollView or UITableView
+        style UILabel do # actual appearance target
+          background_color UIColor.orangeColor
+        end
+      end
+    end
+  end
+
+end
+```
+
+
 ### Using SweetKit
 
 The [SweetKit][] gem combines MotionKit and SugarCube.  The helpers it provides
